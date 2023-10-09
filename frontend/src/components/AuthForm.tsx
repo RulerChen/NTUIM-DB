@@ -1,25 +1,23 @@
 'use client';
 
-// import axios from 'axios';
-// import { signIn, useSession } from 'next-auth/react';
 import { useCallback, useState } from 'react';
-import { BsGithub, BsGoogle } from 'react-icons/bs';
+import { useRouter } from 'next/navigation';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-// import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
+import { BsGithub, BsGoogle } from 'react-icons/bs';
 
-import { Input } from '@/components/ui/input';
+import axios from '@/lib/axios';
+
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import AuthSocialButton from './AuthSocialButton';
-// import { toast } from 'react-hot-toast';
+import Input from '@/components/LoginInput';
+import AuthSocialButton from '@/components/AuthSocialButton';
 
 type Variant = 'LOGIN' | 'REGISTER';
 
 const AuthForm = () => {
   // const session = useSession();
-  // const router = useRouter();
+  const router = useRouter();
   const [variant, setVariant] = useState<Variant>('LOGIN');
-  const [isLoading, setIsLoading] = useState(false);
 
   // useEffect(() => {
   //   if (session?.status === 'authenticated') {
@@ -36,9 +34,10 @@ const AuthForm = () => {
   }, [variant]);
 
   const {
-    // register,
+    register,
     handleSubmit,
-    // formState: { errors },
+    formState: { errors, isSubmitting },
+    reset,
   } = useForm<FieldValues>({
     defaultValues: {
       name: '',
@@ -47,61 +46,49 @@ const AuthForm = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = (_data) => {
-    setIsLoading(true);
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    if (variant === 'LOGIN') {
+      axios
+        .post(`/user/login`, data)
+        .then((res) => {
+          if (res.status === 200) {
+            toast.success('登入成功');
+            router.push('/secret');
+          }
+        })
+        .catch(() => {
+          toast.error('登入失敗');
+        })
+        .finally(() => reset());
+    }
 
-    // if (variant === 'REGISTER') {
-    //   axios
-    //     .post('/api/register', data)
-    //     .then(() =>
-    //       signIn('credentials', {
-    //         ...data,
-    //         redirect: false,
-    //       })
-    //     )
-    //     .then((callback) => {
-    //       if (callback?.error) {
-    //         toast.error('Invalid credentials!');
-    //       }
-
-    //       if (callback?.ok) {
-    //         router.push('/conversations');
-    //       }
-    //     })
-    //     .catch(() => toast.error('Something went wrong!'))
-    //     .finally(() => setIsLoading(false));
-    // }
-
-    // if (variant === 'LOGIN') {
-    //   signIn('credentials', {
-    //     ...data,
-    //     redirect: false,
-    //   })
-    //     .then((callback) => {
-    //       if (callback?.error) {
-    //         toast.error('Invalid credentials!');
-    //       }
-
-    //       if (callback?.ok) {
-    //         router.push('/conversations');
-    //       }
-    //     })
-    //     .finally(() => setIsLoading(false));
-    // }
+    if (variant === 'REGISTER') {
+      axios
+        .post(`/user/register`, data)
+        .then((res) => {
+          if (res.status === 200) {
+            toast.success('註冊成功');
+            router.push('/secret');
+          }
+        })
+        .catch(() => {
+          toast.error('註冊失敗');
+        })
+        .finally(() => reset());
+    }
   };
 
-  const socialAction = (_action: string) => {
-    // setIsLoading(true);
-    // signIn(action, { redirect: false })
-    //   .then((callback) => {
-    //     if (callback?.error) {
-    //       toast.error('Invalid credentials!');
-    //     }
-    //     if (callback?.ok) {
-    //       router.push('/conversations');
-    //     }
-    //   })
-    //   .finally(() => setIsLoading(false));
+  const socialAction = (action: string) => {
+    switch (action) {
+      case 'google':
+        // signIn('google', { callbackUrl: 'http://localhost:3000/conversations' });
+        break;
+      case 'github':
+        // signIn('github', { callbackUrl: 'http://localhost:3000/conversations' });
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -109,45 +96,36 @@ const AuthForm = () => {
       <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {variant === 'REGISTER' && (
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="name">名字</Label>
-              <Input
-                disabled={isLoading}
-                // register={register}
-                // errors={errors}
-                required
-                id="name"
-                // label="Name"
-              />
-            </div>
+            <Input
+              disabled={isSubmitting}
+              register={register}
+              errors={errors}
+              required
+              id="name"
+              label="姓名"
+            />
           )}
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="email">電子郵件</Label>
-            <Input
-              disabled={isLoading}
-              // register={register}
-              // errors={errors}
-              required
-              id="email"
-              // label="Email address"
-              type="email"
-            />
-          </div>
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="password">密碼</Label>
-            <Input
-              disabled={isLoading}
-              // register={register}
-              // errors={errors}
-              required
-              id="password"
-              // label="Password"
-              type="password"
-            />
-          </div>
+          <Input
+            disabled={isSubmitting}
+            register={register}
+            errors={errors}
+            required
+            id="email"
+            label="電子郵件"
+            type="email"
+          />
+          <Input
+            disabled={isSubmitting}
+            register={register}
+            errors={errors}
+            required
+            id="password"
+            label="密碼"
+            type="password"
+          />
           <div>
-            <Button disabled={isLoading} type="submit" variant="fullwidth">
-              {variant === 'LOGIN' ? 'Sign in' : 'Register'}
+            <Button disabled={isSubmitting} type="submit" variant="fullwidth">
+              {variant === 'LOGIN' ? '登入' : '註冊'}
             </Button>
           </div>
         </form>

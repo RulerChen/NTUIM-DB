@@ -1,8 +1,9 @@
 import express from 'express';
 import compression from 'compression';
 import cors from 'cors';
-import { Client } from 'pg';
-import { env } from '@/utils/env';
+import { createTable } from './models/init';
+
+import routes from '@/routes';
 
 const app = express();
 
@@ -17,13 +18,9 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const _client = new Client({
-  host: env.PGHOST,
-  port: env.PGPORT,
-  database: env.PGDATABASE,
-  user: env.PGUSER,
-  password: env.PGPASSWORD,
-});
+app.use('/api', routes);
+
+createTable();
 
 app.listen(8080, () => {
   console.log('server is running on http://localhost:8080');
