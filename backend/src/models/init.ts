@@ -11,13 +11,13 @@ export async function createTable() {
 
   async function initSQL() {
     try {
-      await client.connect(); // 連線到資料庫
-      await client.query(sqlQuery); // 執行 SQL 查詢
+      await client.connect();
+      await client.query(sqlQuery);
       console.log('SQL init success');
     } catch (err) {
       console.error('SQL init error', err);
     } finally {
-      client.end(); // 結束連線
+      client.end();
     }
   }
 

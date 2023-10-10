@@ -1,10 +1,12 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { BsGithub, BsGoogle } from 'react-icons/bs';
+
+import { AuthContext } from '@/context/auth';
 
 import axios from '@/lib/axios';
 
@@ -15,15 +17,15 @@ import AuthSocialButton from '@/components/AuthSocialButton';
 type Variant = 'LOGIN' | 'REGISTER';
 
 const AuthForm = () => {
-  // const session = useSession();
   const router = useRouter();
+  const { isLoggedIn } = useContext(AuthContext);
   const [variant, setVariant] = useState<Variant>('LOGIN');
 
-  // useEffect(() => {
-  //   if (session?.status === 'authenticated') {
-  //     router.push('/conversations');
-  //   }
-  // }, [session?.status, router]);
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push('/secret');
+    }
+  }, [router, isLoggedIn]);
 
   const toggleVariant = useCallback(() => {
     if (variant === 'LOGIN') {
@@ -49,7 +51,9 @@ const AuthForm = () => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     if (variant === 'LOGIN') {
       axios
-        .post(`/user/login`, data)
+        .post(`/user/login`, data, {
+          withCredentials: true,
+        })
         .then((res) => {
           if (res.status === 200) {
             toast.success('登入成功');
