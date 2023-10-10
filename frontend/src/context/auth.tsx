@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, createContext, useEffect } from 'react';
 import axios from '@/lib/axios';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -15,9 +15,9 @@ export const AuthContext = createContext<AuthContextType>({
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [initialRedirectDone, setInitialRedirectDone] = useState(false);
 
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     async function isAuth() {
@@ -25,19 +25,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (res.data) {
           setIsLoggedIn(true);
         }
-        setInitialRedirectDone(true);
       });
     }
     isAuth();
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
-    if (initialRedirectDone) {
-      if (!isLoggedIn) {
-        router.push('/');
-      }
+    if (!isLoggedIn) {
+      router.push('/');
     }
-  }, [isLoggedIn, initialRedirectDone, router]);
+  }, [isLoggedIn, router]);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>{children}</AuthContext.Provider>
