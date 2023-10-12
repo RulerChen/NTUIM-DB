@@ -6,6 +6,4 @@ export const dbConfig = {
   database: env.PGDATABASE,
   user: env.PGUSER,
   password: env.PGPASSWORD,
-  idleTimeoutMillis: 20000,
-  connectionTimeoutMillis: 20000,
 };

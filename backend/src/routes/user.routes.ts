@@ -2,16 +2,17 @@ import express from 'express';
 import passport from 'passport';
 
 import { login, register } from '@/controllers/user.controller';
+import { frontendUrl } from '@/utils/url';
 
 const router = express.Router();
 
-router.get('/isAuthenticated', (req, res) => {
-  if (req.isAuthenticated()) {
-    res.status(200).json({ message: 'Authenticated' });
-  }
-});
-
-router.post('/login', passport.authenticate('local'), login);
+// const isAuth = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+//   if (req.isAuthenticated()) {
+//     next();
+//   } else {
+//     res.redirect(`${frontendUrl}`);
+//   }
+// };
 
 router.get(
   '/google',
@@ -19,31 +20,26 @@ router.get(
     scope: ['email', 'profile'],
   })
 );
-
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: 'http://localhost:3000' }),
-  function (req, res) {
-    res.redirect('http://localhost:3000/secret');
+  passport.authenticate('google', { failureRedirect: `${frontendUrl}` }),
+  (req, res) => {
+    res.redirect(`${frontendUrl}/secret`);
   }
 );
 
 router.get('/facebook', passport.authorize('facebook', { scope: ['email'] }));
-
 router.get(
   '/facebook/callback',
   passport.authenticate('facebook', {
-    failureRedirect: 'http://localhost:3000',
+    failureRedirect: `${frontendUrl}`,
   }),
-  function (req, res) {
-    res.redirect('http://localhost:3000/secret');
+  (req, res) => {
+    res.redirect(`${frontendUrl}/secret`);
   }
 );
 
-router.get('/', (req, res) => {
-  res.status(200).json({ message: 'OK' });
-});
-
+router.post('/login', passport.authenticate('local'), login);
 router.post('/register', register);
 
 export default router;
