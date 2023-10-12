@@ -5,15 +5,14 @@ import { dbConfig } from '@/config/db.config';
 
 export const register = async (req: Request, res: Response) => {
   console.log(req.body);
-  const { email, username, password } = req.body;
+  const { email, name, password } = req.body;
   const client = new Client(dbConfig);
   client.connect();
   const query = `
         INSERT INTO users (email, username, password)
         VALUES ($1, $2, $3)
-        RETURNING *;
     `;
-  const values = [email, username, password];
+  const values = [email, name, password];
   try {
     const result = await client.query(query, values);
     res.status(201).json(result.rows[0]);

@@ -13,6 +13,37 @@ router.get('/isAuthenticated', (req, res) => {
 
 router.post('/login', passport.authenticate('local'), login);
 
+router.get(
+  '/google',
+  passport.authenticate('google', {
+    scope: ['email', 'profile'],
+  })
+);
+
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { failureRedirect: 'http://localhost:3000' }),
+  function (req, res) {
+    res.redirect('http://localhost:3000/secret');
+  }
+);
+
+router.get('/facebook', passport.authorize('facebook', { scope: ['email'] }));
+
+router.get(
+  '/facebook/callback',
+  passport.authenticate('facebook', {
+    failureRedirect: 'http://localhost:3000',
+  }),
+  function (req, res) {
+    res.redirect('http://localhost:3000/secret');
+  }
+);
+
+router.get('/', (req, res) => {
+  res.status(200).json({ message: 'OK' });
+});
+
 router.post('/register', register);
 
 export default router;
