@@ -1,14 +1,12 @@
 'use client';
 
-import { useCallback, useState, useEffect, useContext } from 'react';
+import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { BsGithub, BsGoogle } from 'react-icons/bs';
+import { BsGoogle, BsFacebook } from 'react-icons/bs';
 
-import { AuthContext } from '@/context/auth';
-
-import axios from '@/lib/axios';
+import axios, { url } from '@/lib/axios';
 
 import { Button } from '@/components/ui/button';
 import Input from '@/components/LoginInput';
@@ -18,14 +16,7 @@ type Variant = 'LOGIN' | 'REGISTER';
 
 const AuthForm = () => {
   const router = useRouter();
-  const { isLoggedIn } = useContext(AuthContext);
   const [variant, setVariant] = useState<Variant>('LOGIN');
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.push('/secret');
-    }
-  }, [router, isLoggedIn]);
 
   const toggleVariant = useCallback(() => {
     if (variant === 'LOGIN') {
@@ -42,7 +33,7 @@ const AuthForm = () => {
     reset,
   } = useForm<FieldValues>({
     defaultValues: {
-      name: '',
+      username: '',
       email: '',
       password: '',
     },
@@ -70,25 +61,24 @@ const AuthForm = () => {
       axios
         .post(`/user/register`, data)
         .then((res) => {
-          if (res.status === 200) {
+          if (res.status === 201) {
             toast.success('註冊成功');
-            router.push('/secret');
+            setVariant('LOGIN');
           }
         })
         .catch(() => {
           toast.error('註冊失敗');
-        })
-        .finally(() => reset());
+        });
     }
   };
 
   const socialAction = (action: string) => {
     switch (action) {
       case 'google':
-        // signIn('google', { callbackUrl: 'http://localhost:3000/conversations' });
+        window.location.href = `${url}/user/google`;
         break;
-      case 'github':
-        // signIn('github', { callbackUrl: 'http://localhost:3000/conversations' });
+      case 'facebook':
+        window.location.href = `${url}/user/facebook`;
         break;
       default:
         break;
@@ -105,7 +95,7 @@ const AuthForm = () => {
               register={register}
               errors={errors}
               required
-              id="name"
+              id="username"
               label="姓名"
             />
           )}
@@ -146,7 +136,7 @@ const AuthForm = () => {
 
           <div className="mt-6 flex gap-2">
             <AuthSocialButton icon={BsGoogle} onClick={() => socialAction('google')} />
-            <AuthSocialButton icon={BsGithub} onClick={() => socialAction('github')} />
+            <AuthSocialButton icon={BsFacebook} onClick={() => socialAction('facebook')} />
           </div>
         </div>
         <div className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-500">

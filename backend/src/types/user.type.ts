@@ -3,8 +3,3 @@ export type User = {
   password: string;
   email: string;
 };
-
-export type UserSerialized = {
-  _id?: string;
-  email?: string;
-};
