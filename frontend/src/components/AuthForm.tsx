@@ -58,6 +58,10 @@ const AuthForm = () => {
     }
 
     if (variant === 'REGISTER') {
+      if (data.password !== data.confirmed_password) {
+        toast.error('密碼不一致');
+        return;
+      }
       axios
         .post(`/user/register`, data)
         .then((res) => {
@@ -117,6 +121,17 @@ const AuthForm = () => {
             label="密碼"
             type="password"
           />
+          {variant === 'REGISTER' && (
+            <Input
+              disabled={isSubmitting}
+              register={register}
+              errors={errors}
+              required
+              id="confirmed_password"
+              label="確認密碼"
+              type='password'
+            />
+          )}
           <div>
             <Button disabled={isSubmitting} type="submit" variant="fullwidth">
               {variant === 'LOGIN' ? '登入' : '註冊'}
