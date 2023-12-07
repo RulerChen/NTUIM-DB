@@ -44,6 +44,7 @@ const UserMenu = ({ currentUser = true }: UserMenuProps) => {
                 <MenuItem label="我主持的活動" onClick={() => router.push('/unchange_route')} />
                 <MenuItem label="我追蹤的活動" onClick={() => router.push('/unchange_route')} />
                 <MenuItem label="我參加的活動" onClick={() => router.push('/unchange_route')} />
+                <MenuItem label="聊天室" onClick={() => router.push('/unchange_route')} />
                 <hr />
                 <MenuItem label="登出" onClick={() => {}} />
               </>
