@@ -96,7 +96,7 @@ export const createActivity = async (req: Request, res: Response) => {
 export const getActivityByDescription = async (req: Request, res: Response) => {
   // only input description
   console.log(req.body);
-  const { descryption } = req.body;
+  const { description } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
@@ -105,7 +105,7 @@ export const getActivityByDescription = async (req: Request, res: Response) => {
     where Description like $1
     and status = 'active';
     `;
-  const values = ['%' + descryption + '%'];
+  const values = ['%' + description + '%'];
   try {
     const result = await client.query(query, values);
     res.status(200).json(result.rows);
