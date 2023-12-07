@@ -274,15 +274,15 @@ export const getChatgroup = async (req: Request, res: Response) => {
     client.end();
   }
 };
-export const getChat = async (req: Request, res: Response) => { 
+export const getMessage = async (req: Request, res: Response) => { 
   console.log(req.body);
   const { chatgroup_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
     select *
-    from chat
-    where chatgroup_id = $1;
+    message as m
+    where m.chatgroup_id = $1;
     `;
   const values = [chatgroup_id];
   try {
@@ -415,7 +415,7 @@ export const kickMember = async (req: Request, res: Response) => {
   } finally {
     client.end();
   }
-}
+};
 export const findActivityNeedAttention = async (req: Request, res: Response) => {
   const client = new Client(dbConfig);
   await client.connect();
@@ -436,4 +436,36 @@ export const findActivityNeedAttention = async (req: Request, res: Response) => 
     client.end();
   }
 }
-
+export const getAllActivity = async (req: Request, res: Response) => {
+  const client = new Client(dbConfig);
+  await client.connect();
+  const query = `
+      select *
+      from activity
+      where status = 'active';
+    `;
+  try {
+    const result = await client.query(query);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(400).json(err);
+  } finally {
+    client.end();
+  }
+};
+export const getAllMember = async (req: Request, res: Response) => { 
+  const client = new Client(dbConfig);
+  await client.connect();
+  const query = `
+    select *
+    from member;
+    `;
+  try { 
+    const result = await client.query(query);
+    res.status(200).json(result.rows);
+  } catch (err) { 
+    res.status(400).json(err);
+  } finally {
+    client.end();
+  } 
+}
