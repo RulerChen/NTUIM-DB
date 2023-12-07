@@ -49,6 +49,7 @@ const Input = ({ label, id, register, required, errors, type = 'text', disabled 
             errors[id] && 'focus:ring-rose-500',
             disabled && 'opacity-50 cursor-default'
           )}
+          min={0}
         />
       </div>
     </div>

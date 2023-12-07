@@ -1,6 +1,110 @@
-CREATE TABLE IF NOT EXISTS users (
-  email VARCHAR(255) PRIMARY KEY,
-  username VARCHAR(255) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+CREATE TABLE IF NOT EXISTS MEMBER (
+    Member_id VARCHAR(100) PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Email VARCHAR(50) NOT NULL UNIQUE,
+    Phone VARCHAR(20) NOT NULL DEFAULT '0000000000',
+    Age INT NOT NULL DEFAULT 18,
+    Password VARCHAR(256) NOT NULL,
+    Member_role VARCHAR(11) NOT NULL CHECK (Member_role IN ('Admin', 'Student', 'Non-student')) DEFAULT 'Non-student'
 );
+
+CREATE TABLE IF NOT EXISTS STUDENT (
+    Student_id VARCHAR(100) PRIMARY KEY,
+    Member_id VARCHAR(100) NOT NULL UNIQUE,
+    School_name VARCHAR(50) NOT NULL,
+    Department VARCHAR(50) NOT NULL,
+    Grade VARCHAR(10) NOT NULL,
+    FOREIGN KEY (Member_id) REFERENCES MEMBER(Member_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS ACTIVITY (
+    Activity_id VARCHAR(100) PRIMARY KEY,
+    Description VARCHAR(500) NOT NULL,
+    Event_start_timestamp timestamp NOT NULL,
+    Event_end_timestamp timestamp NOT NULL,
+    Location VARCHAR(500) NOT NULL,
+    Capacity INT NOT NULL,
+    Status CHAR(10) NOT NULL CHECK (Status IN ('cancel','active')),
+    Register_start_timestamp timestamp NOT NULL,
+    Register_end_timestamp timestamp NOT NULL,
+    Non_student_fee INT NOT NULL,
+    Student_fee INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS MEMBER_FOLLOW_ACTIVITY (
+    Member_id VARCHAR(100),
+    Activity_id VARCHAR(100),
+    PRIMARY KEY (Member_id, Activity_id),
+	FOREIGN KEY (Member_id) REFERENCES MEMBER(Member_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS MEMBER_JOIN_ACTIVITY (
+    Member_id VARCHAR(100),
+    Activity_id VARCHAR(100),
+    Join_timestamp timestamp NOT NULL,
+    PRIMARY KEY (Member_id, Activity_id, Join_timestamp),
+    FOREIGN KEY (Member_id) REFERENCES MEMBER(Member_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS MEMBER_QUIT_ACTIVITY (
+    Member_id VARCHAR(100),
+    Activity_id VARCHAR(100),
+    Kick_admin_id VARCHAR(100),
+    Quit_timestamp timestamp NOT NULL,
+    PRIMARY KEY (Member_id, Activity_id, Quit_timestamp),
+    FOREIGN KEY (Member_id) REFERENCES MEMBER(Member_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Kick_admin_id) REFERENCES MEMBER(Member_id) ON DELETE SET NULL ON UPDATE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS ACTIVITY_ROLE (
+    Member_id VARCHAR(100),
+    Activity_id VARCHAR(100),
+    Activity_role VARCHAR(11) NOT NULL CHECK (Activity_role IN ('Host', 'Participant')),
+    PRIMARY KEY (Member_id, Activity_id),
+    FOREIGN KEY (Member_id) REFERENCES MEMBER(Member_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS ACTIVITY_RATING (
+    Member_id VARCHAR(100),
+    Activity_id VARCHAR(100),
+    Score FLOAT NOT NULL,
+    Comment VARCHAR(255) NOT NULL,
+    PRIMARY KEY (Member_id, Activity_id),
+    FOREIGN KEY (Member_id) REFERENCES MEMBER(Member_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS ACTIVITY_REQUIREMENT (
+    Activity_id VARCHAR(100) PRIMARY KEY,
+    Requirement VARCHAR(500) NOT NULL,
+    FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS ACTIVITY_TOPIC_TAG (
+    Activity_id VARCHAR(100),
+    Activity_tag VARCHAR(20) NOT NULL,
+    PRIMARY KEY (Activity_id, Activity_tag),
+    FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS CHAT_GROUP (
+    Chatgroup_id VARCHAR(100) PRIMARY KEY,
+    Activity_id VARCHAR(100) NOT NULL UNIQUE,
+    Chat_name VARCHAR(20) NOT NULL,
+    FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS MESSAGE (
+    Message_id VARCHAR(100) PRIMARY KEY,
+    Chatgroup_id VARCHAR(100),
+    Member_id VARCHAR(100),
+    Message_time timestamp NOT NULL,
+    Message_text VARCHAR(500) NOT NULL,
+    FOREIGN KEY (Chatgroup_id) REFERENCES CHAT_GROUP(Chatgroup_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Member_id) REFERENCES MEMBER(Member_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+

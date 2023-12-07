@@ -17,6 +17,7 @@ type Variant = 'LOGIN' | 'REGISTER';
 const AuthForm = () => {
   const router = useRouter();
   const [variant, setVariant] = useState<Variant>('LOGIN');
+  const [isStudent, setIsStudent] = useState(false);
 
   const toggleVariant = useCallback(() => {
     if (variant === 'LOGIN') {
@@ -36,10 +37,21 @@ const AuthForm = () => {
       username: '',
       email: '',
       password: '',
+      confirmed_password: '',
+      age: 0,
+      phone_number: '',
+      isStudent: false,
+      school_name: '',
+      department: '',
+      grade: '',
     },
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    data = {
+      ...data,
+      age: Number(data.age),
+    };
     if (variant === 'LOGIN') {
       axios
         .post(`/user/login`, data, {
@@ -122,15 +134,72 @@ const AuthForm = () => {
             type="password"
           />
           {variant === 'REGISTER' && (
-            <Input
-              disabled={isSubmitting}
-              register={register}
-              errors={errors}
-              required
-              id="confirmed_password"
-              label="確認密碼"
-              type='password'
-            />
+            <>
+              <Input
+                disabled={isSubmitting}
+                register={register}
+                errors={errors}
+                required
+                id="confirmed_password"
+                label="確認密碼"
+                type="password"
+              />
+              {/* age shoud > 0 */}
+              <Input
+                disabled={isSubmitting}
+                register={register}
+                errors={errors}
+                required
+                id="age"
+                label="年紀"
+                type="number"
+              />
+              <Input
+                disabled={isSubmitting}
+                register={register}
+                errors={errors}
+                required
+                id="phone_number"
+                label="電話號碼"
+              />
+              <div className="flex items-center">
+                <input
+                  id="isStudent"
+                  type="checkbox"
+                  className="focus:ring-sky-600 h-4 w-4 text-sky-600 border-gray-300 rounded"
+                  {...register('isStudent')}
+                  onChange={() => setIsStudent(!isStudent)}
+                />
+                <label htmlFor="isStudent" className="ml-2 block text-sm text-gray-900">
+                  我是學生
+                </label>
+              </div>
+              {isStudent && (
+                <>
+                  <Input
+                    disabled={isSubmitting}
+                    register={register}
+                    errors={errors}
+                    id="school_name"
+                    label="學校名稱"
+                  />
+                  <Input
+                    disabled={isSubmitting}
+                    register={register}
+                    errors={errors}
+                    id="department"
+                    label="系所名稱"
+                  />
+                  <Input
+                    disabled={isSubmitting}
+                    register={register}
+                    errors={errors}
+                    id="grade"
+                    label="年級"
+                  />
+                </>
+              )}
+            </>
           )}
           <div>
             <Button disabled={isSubmitting} type="submit" variant="fullwidth">

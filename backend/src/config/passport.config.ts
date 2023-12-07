@@ -4,6 +4,8 @@ import { Strategy as FacebookStrategy } from 'passport-facebook';
 
 import passport from 'passport';
 import { Client } from 'pg';
+import bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
 
 import { dbConfig } from '@/config/db.config';
 import { env } from '@/utils/env';
@@ -15,32 +17,29 @@ passport.use(
     {
       usernameField: 'email',
     },
-    function (email, password, done) {
+    async function (email, password, done) {
       const client = new Client(dbConfig);
-      client.connect();
-      const query = `SELECT * FROM users WHERE email = $1`;
+      await client.connect();
+      const query = `SELECT * FROM member WHERE email = $1`;
       const values = [email];
 
-      client
-        .query(query, values)
-        .then((result) => {
-          if (result.rows.length === 0) {
-            return done(null, false, { message: 'Incorrect email' });
+      try {
+        const result = await client.query(query, values);
+        if (result.rows.length === 0) {
+          return done(null, false, { message: 'Incorrect email' });
+        } else {
+          const user = result.rows[0];
+          if (!bcrypt.compareSync(password, user.password)) {
+            return done(null, false, { message: 'Incorrect password' });
           } else {
-            const user = result.rows[0];
-            if (user.password !== password) {
-              return done(null, false, { message: 'Incorrect password' });
-            } else {
-              return done(null, user);
-            }
+            return done(null, user);
           }
-        })
-        .catch((err) => {
-          done(err.stack);
-        })
-        .finally(() => {
-          client.end();
-        });
+        }
+      } catch (err) {
+        return done(err);
+      } finally {
+        await client.end();
+      }
     }
   )
 );
@@ -52,41 +51,37 @@ passport.use(
       clientSecret: env.GOOGLE_CLIENT_SECRET,
       callbackURL: `${backendurl}/user/google/callback`,
     },
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
       const { email, name } = profile._json;
+      const { id } = profile;
       const client = new Client(dbConfig);
-      client.connect();
-      const query = `SELECT * FROM users WHERE email = $1`;
+      await client.connect();
+      const query = `SELECT * FROM member WHERE email = $1`;
       const values = [email];
-      client
-        .query(query, values)
-        .then((result) => {
-          if (result.rows.length === 0) {
-            const query_add = `
-            INSERT INTO users (email, username, password)
-            VALUES ($1, $2, $3)
-            RETURNING *;
-            `;
-            const values_add = [email, name, ''];
-            client
-              .query(query_add, values_add)
-              .then((result_add) => {
-                console.log(result_add.rows[0]);
-                return done(null, result_add.rows[0]);
-              })
-              .catch((err) => {
-                done(err.stack);
-              });
-          }
-          const user = result.rows[0];
-          return done(null, user);
-        })
-        .catch((err) => {
-          done(err.stack);
-        })
-        .finally(() => {
-          client.end();
-        });
+
+      try {
+        const result = await client.query(query, values);
+        if (result.rows.length === 0) {
+          const randomPassword = uuidv4();
+          const saltRounds = 10;
+          const hashedPassword = bcrypt.hashSync(randomPassword, saltRounds);
+
+          const query_add = `
+          INSERT INTO member (member_id, email, name, password, member_role)
+          VALUES ($1, $2, $3, $4, $5)
+          `;
+
+          const values_add = [id, email, name, hashedPassword, 'Non-student'];
+          await client.query(query_add, values_add);
+        }
+        const res = await client.query(query, values);
+        const user = res.rows[0];
+        return done(null, user);
+      } catch (err) {
+        return done(err as Error);
+      } finally {
+        await client.end();
+      }
     }
   )
 );
@@ -101,40 +96,35 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       const { email, name } = profile._json;
+      const { id } = profile;
       const client = new Client(dbConfig);
       await client.connect();
-      const query = `SELECT * FROM users WHERE email = $1`;
+      const query = `SELECT * FROM member WHERE email = $1`;
       const values = [email];
 
-      client
-        .query(query, values)
-        .then((result) => {
-          if (result.rows.length === 0) {
-            const query_add = `
-            INSERT INTO users (email, username, password)
-            VALUES ($1, $2, $3)
-            RETURNING *;
-            `;
-            const values_add = [email, name, ''];
-            client
-              .query(query_add, values_add)
-              .then((result_add) => {
-                console.log(result_add.rows[0]);
-                return done(null, result_add.rows[0]);
-              })
-              .catch((err) => {
-                done(err.stack);
-              });
-          }
-          const user = result.rows[0];
-          return done(null, user);
-        })
-        .catch((err) => {
-          done(err.stack);
-        })
-        .finally(() => {
-          client.end();
-        });
+      try {
+        const result = await client.query(query, values);
+        if (result.rows.length === 0) {
+          const randomPassword = uuidv4();
+          const saltRounds = 10;
+          const hashedPassword = bcrypt.hashSync(randomPassword, saltRounds);
+
+          const query_add = `
+          INSERT INTO member (member_id, email, name, password, member_role)
+          VALUES ($1, $2, $3, $4, $5)
+          `;
+
+          const values_add = [id, email, name, hashedPassword, 'Non-student'];
+          await client.query(query_add, values_add);
+        }
+        const res = await client.query(query, values);
+        const user = res.rows[0];
+        return done(null, user);
+      } catch (err) {
+        return done(err as Error);
+      } finally {
+        await client.end();
+      }
     }
   )
 );
@@ -144,26 +134,24 @@ passport.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser((user: User, done) => {
+passport.deserializeUser(async (user: User, done) => {
   console.log('deserializeUser', user);
   const client = new Client(dbConfig);
-  client.connect();
-  const query = `SELECT * FROM users WHERE email = $1`;
+  await client.connect();
+  const query = `SELECT * FROM member WHERE email = $1`;
   const values = [user.email];
-  client
-    .query(query, values)
-    .then((result) => {
-      if (result.rows.length === 0) {
-        return done(null, false);
-      } else {
-        const user = result.rows[0];
-        return done(null, user);
-      }
-    })
-    .catch((err) => {
-      done(err.stack);
-    })
-    .finally(() => {
-      client.end();
-    });
+
+  try {
+    const result = await client.query(query, values);
+    if (result.rows.length === 0) {
+      return done(null, false);
+    } else {
+      const user = result.rows[0];
+      return done(null, user);
+    }
+  } catch (err) {
+    return done(err);
+  } finally {
+    await client.end();
+  }
 });
