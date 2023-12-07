@@ -4,11 +4,30 @@ import { Separator } from '@/components/ui/separator';
 
 const UserSideBar = () => {
   return (
-    <div className="flex flex-col justify-center px-8 py-6">
-      <Button className="bg-slate-200 text-black rounded-lg hover:text-white">
-        <Link href="/user/profile">修改個人資料</Link>
-      </Button>
-      <Separator orientation="horizontal" className="my-2 bg-black" />
+    <div className="rounded-xl shadow-md bg-white my-10">
+      <div className="flex flex-col">
+        <Button className="bg-white text-black rounded-lg h-[10vh] hover:bg-neutral-100 transition font-semibold">
+          <Link href="/user/profile" className="text-lg">
+            修改個人資料
+          </Link>
+        </Button>
+        <Separator orientation="horizontal" className="my-2 bg-black" />
+        <Button className="bg-white text-black rounded-lg h-[10vh] hover:bg-neutral-100 transition font-semibold">
+          <Link href="/user/unroute" className="text-lg">
+            我主持的活動
+          </Link>
+        </Button>
+        <Button className="bg-white text-black rounded-lg h-[10vh] hover:bg-neutral-100 transition font-semibold">
+          <Link href="/user/unroute" className="text-lg">
+            我追蹤的活動
+          </Link>
+        </Button>
+        <Button className="bg-white text-black rounded-lg h-[10vh] hover:bg-neutral-100 transition font-semibold">
+          <Link href="/user/unroute" className="text-lg">
+            我參加的活動
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 };

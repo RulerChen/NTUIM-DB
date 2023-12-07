@@ -17,6 +17,11 @@ const UserMenu = ({ currentUser = true }: UserMenuProps) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleClick = (path: string) => {
+    router.push(path);
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
@@ -36,14 +41,11 @@ const UserMenu = ({ currentUser = true }: UserMenuProps) => {
             {currentUser ? (
               <>
                 {/* TODO: add route */}
-                <MenuItem
-                  label="修改個人資料"
-                  onClick={() => router.push('/user?category=修改個人資料')}
-                />
-                <MenuItem label="進入會員中心" onClick={() => router.push('/user')} />
-                <MenuItem label="我主持的活動" onClick={() => router.push('/unchange_route')} />
-                <MenuItem label="我追蹤的活動" onClick={() => router.push('/unchange_route')} />
-                <MenuItem label="我參加的活動" onClick={() => router.push('/unchange_route')} />
+                <MenuItem label="修改個人資料" onClick={() => handleClick('/user/profile')} />
+                <MenuItem label="進入會員中心" onClick={() => handleClick('/user')} />
+                <MenuItem label="我主持的活動" onClick={() => handleClick('/unchange_route')} />
+                <MenuItem label="我追蹤的活動" onClick={() => handleClick('/unchange_route')} />
+                <MenuItem label="我參加的活動" onClick={() => handleClick('/unchange_route')} />
                 <hr />
                 <MenuItem label="登出" onClick={() => {}} />
               </>
