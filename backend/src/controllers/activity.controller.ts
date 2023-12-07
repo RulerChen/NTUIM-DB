@@ -25,15 +25,26 @@ export const createActivity = async (req: Request, res: Response) => {
 
   const activity_id = uuidv4();
   const chatgroup_id = uuidv4();
- 
+
   const client = new Client(dbConfig);
   await client.connect();
   const query_activity = `
     INSERT INTO activity (activity_id, Description, Event_start_timestamp, Event_end_timestamp, Location, Capacity, Status, Register_start_timestamp, Register_end_timestamp, Non_student_fee, Student_fee)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);
     `;
-  const values_activity = [activity_id, descryption, event_start_timestamp, event_end_timestamp, Location, capacity, status, register_start_timestamp, register_end_timestamp, non_student_fee, Student_fee];
-  
+  const values_activity = [
+    activity_id,
+    descryption,
+    event_start_timestamp,
+    event_end_timestamp,
+    Location,
+    capacity,
+    status,
+    register_start_timestamp,
+    register_end_timestamp,
+    non_student_fee,
+    Student_fee,
+  ];
   try {
     await client.query(query_activity, values_activity);
 
@@ -72,8 +83,7 @@ export const createActivity = async (req: Request, res: Response) => {
     const values_activity_role = [member_id, activity_id];
     await client.query(query_activity_role, values_activity_role);
 
-
-    res.status(201).json({activity_id: activity_id, chatgroup_id: chatgroup_id});
+    res.status(201).json({ activity_id: activity_id, chatgroup_id: chatgroup_id });
   } catch (err) {
     res.status(400).json(err);
   } finally {
@@ -81,7 +91,8 @@ export const createActivity = async (req: Request, res: Response) => {
   }
 };
 
-export const getActivityByDescription = async (req: Request, res: Response) => {// only input description
+export const getActivityByDescription = async (req: Request, res: Response) => {
+  // only input description
   console.log(req.body);
   const { descryption } = req.body;
   const client = new Client(dbConfig);
@@ -102,7 +113,8 @@ export const getActivityByDescription = async (req: Request, res: Response) => {
     client.end();
   }
 };
-export const getActivityByTimeandTopic = async (req: Request, res: Response) => {// only input tag
+export const getActivityByTimeandTopic = async (req: Request, res: Response) => {
+  // only input tag and time
   console.log(req.body);
   const { activity_tag, event_start_timestamp, event_end_timestamp } = req.body;
   const client = new Client(dbConfig);
@@ -125,7 +137,8 @@ export const getActivityByTimeandTopic = async (req: Request, res: Response) => 
     client.end();
   }
 };
-export const followActivity = async (req: Request, res: Response) => {// only input location
+export const followActivity = async (req: Request, res: Response) => {
+  // only input location
   console.log(req.body);
   const { member_id, activity_id } = req.body;
   const client = new Client(dbConfig);
@@ -144,7 +157,7 @@ export const followActivity = async (req: Request, res: Response) => {// only in
     client.end();
   }
 };
-export const joinActivity = async( req: Request, res: Response) => {
+export const joinActivity = async (req: Request, res: Response) => {
   console.log(req.body);
   const { member_id, activity_id } = req.body;
   const client = new Client(dbConfig);
@@ -165,7 +178,7 @@ export const joinActivity = async( req: Request, res: Response) => {
     client.end();
   }
 };
-export const quitActivity = async( req: Request, res: Response) => {  
+export const quitActivity = async (req: Request, res: Response) => {
   console.log(req.body);
   const { member_id, activity_id } = req.body;
   const client = new Client(dbConfig);
@@ -186,7 +199,7 @@ export const quitActivity = async( req: Request, res: Response) => {
     client.end();
   }
 };
-export const getJoinedActivity = async (req: Request, res: Response) => { 
+export const getJoinedActivity = async (req: Request, res: Response) => {
   console.log(req.body);
   const { member_id } = req.body;
   const client = new Client(dbConfig);
@@ -209,7 +222,7 @@ export const getJoinedActivity = async (req: Request, res: Response) => {
     client.end();
   }
 };
-export const getFollowedActivity = async (req: Request, res: Response) => { 
+export const getFollowedActivity = async (req: Request, res: Response) => {
   console.log(req.body);
   const { member_id } = req.body;
   const client = new Client(dbConfig);
@@ -231,7 +244,7 @@ export const getFollowedActivity = async (req: Request, res: Response) => {
     client.end();
   }
 };
-export const getHostedActivity = async (req: Request, res: Response) => { 
+export const getHostedActivity = async (req: Request, res: Response) => {
   console.log(req.body);
   const { member_id } = req.body;
   const client = new Client(dbConfig);
@@ -274,7 +287,7 @@ export const getChatgroup = async (req: Request, res: Response) => {
     client.end();
   }
 };
-export const getMessage = async (req: Request, res: Response) => { 
+export const getMessage = async (req: Request, res: Response) => {
   console.log(req.body);
   const { chatgroup_id } = req.body;
   const client = new Client(dbConfig);
@@ -293,8 +306,8 @@ export const getMessage = async (req: Request, res: Response) => {
   } finally {
     client.end();
   }
-}
-export const insertMessage = async (req: Request, res: Response) => { 
+};
+export const insertMessage = async (req: Request, res: Response) => {
   console.log(req.body);
   const { chatgroup_id, member_id, message_text } = req.body;
   const client = new Client(dbConfig);
@@ -313,7 +326,7 @@ export const insertMessage = async (req: Request, res: Response) => {
   } finally {
     client.end();
   }
-}
+};
 export const rateActivity = async (req: Request, res: Response) => {
   console.log(req.body);
   const { activity_id, member_id, score, comment } = req.body;
@@ -332,7 +345,7 @@ export const rateActivity = async (req: Request, res: Response) => {
   } finally {
     client.end();
   }
-}
+};
 export const getActivityRating = async (req: Request, res: Response) => {
   console.log(req.body);
   const { activity_id } = req.body;
@@ -353,7 +366,7 @@ export const getActivityRating = async (req: Request, res: Response) => {
   } finally {
     client.end();
   }
-}
+};
 export const getActivityNumber = async (req: Request, res: Response) => {
   console.log(req.body);
   const { activity_id } = req.body;
@@ -373,7 +386,7 @@ export const getActivityNumber = async (req: Request, res: Response) => {
   } finally {
     client.end();
   }
-}
+};
 export const getActivityMember = async (req: Request, res: Response) => {
   console.log(req.body);
   const { activity_id } = req.body;
@@ -394,7 +407,7 @@ export const getActivityMember = async (req: Request, res: Response) => {
   } finally {
     client.end();
   }
-}
+};
 export const kickMember = async (req: Request, res: Response) => {
   console.log(req.body);
   const { activity_id, member_id } = req.body;
@@ -435,7 +448,7 @@ export const findActivityNeedAttention = async (req: Request, res: Response) => 
   } finally {
     client.end();
   }
-}
+};
 export const getAllActivity = async (req: Request, res: Response) => {
   const client = new Client(dbConfig);
   await client.connect();
@@ -453,19 +466,21 @@ export const getAllActivity = async (req: Request, res: Response) => {
     client.end();
   }
 };
-export const getAllMember = async (req: Request, res: Response) => { 
+export const getAllMember = async (req: Request, res: Response) => {
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
     select *
     from member;
     `;
-  try { 
+  try {
     const result = await client.query(query);
     res.status(200).json(result.rows);
-  } catch (err) { 
+  } catch (err) {
     res.status(400).json(err);
   } finally {
     client.end();
-  } 
-}
+  }
+};
+
+// done first part
