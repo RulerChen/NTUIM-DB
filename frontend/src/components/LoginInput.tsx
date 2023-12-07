@@ -11,9 +11,19 @@ interface InputProps {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
   disabled?: boolean;
+  defaultValue?: string;
 }
 
-const Input = ({ label, id, register, required, errors, type = 'text', disabled }: InputProps) => {
+const Input = ({
+  label,
+  id,
+  register,
+  required,
+  errors,
+  type = 'text',
+  disabled,
+  defaultValue,
+}: InputProps) => {
   return (
     <div>
       <label htmlFor={id} className="block text-sm font-medium leading-6 text-gray-900">
@@ -21,6 +31,7 @@ const Input = ({ label, id, register, required, errors, type = 'text', disabled 
       </label>
       <div className="mt-2">
         <input
+          defaultValue={defaultValue}
           id={id}
           type={type}
           autoComplete={id}

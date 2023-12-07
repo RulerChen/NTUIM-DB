@@ -60,7 +60,7 @@ const eventCatogories: { title: string; href: string; description: string }[] = 
 const userCatogories: { title: string; href: string; description: string }[] = [
   {
     title: '修改個人資料',
-    href: '/user?category=修改個人資料',
+    href: '/user/profile',
     description: '修改個人資料',
   },
   {
@@ -70,7 +70,7 @@ const userCatogories: { title: string; href: string; description: string }[] = [
   },
   {
     title: '進入會員中心',
-    href: '/user',
+    href: '/user/profile',
     description: '進入會員中心',
   },
 ];
@@ -99,7 +99,7 @@ const MainHeaderBar = () => {
               </NavigationMenuContent>
             </NavigationMenuItem>
           </Link>
-          <Link href="/user" legacyBehavior passHref>
+          <Link href="/user/profile" legacyBehavior passHref>
             <NavigationMenuItem className="rounded-lg hover:border-b-4 hover:bg-gray-200 hover:border-cyan-100">
               <NavigationMenuTrigger>會員中心</NavigationMenuTrigger>
               <NavigationMenuContent>
