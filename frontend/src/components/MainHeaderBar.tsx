@@ -99,7 +99,7 @@ const MainHeaderBar = () => {
               </NavigationMenuContent>
             </NavigationMenuItem>
           </Link>
-          <Link href="/users" legacyBehavior passHref>
+          <Link href="/user" legacyBehavior passHref>
             <NavigationMenuItem className="rounded-lg hover:border-b-4 hover:bg-gray-200 hover:border-cyan-100">
               <NavigationMenuTrigger>會員中心</NavigationMenuTrigger>
               <NavigationMenuContent>
