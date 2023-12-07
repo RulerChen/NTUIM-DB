@@ -20,7 +20,7 @@ export const createActivity = async (req: Request, res: Response) => {
     Student_fee,
     requirement,
     chatname,
-    activity_tag,
+    activity_tags,
   } = req.body;
 
   const activity_id = uuidv4();
@@ -69,12 +69,14 @@ export const createActivity = async (req: Request, res: Response) => {
     const values_activity_requirement = [activity_id, requirement];
     await client.query(query_activity_requirement, values_activity_requirement);
 
-    const query_activity_tag = `  
+    activity_tags.forEach(async (activity_tag: string) => {
+      const query_activity_tag = `  
     INSERT INTO ACTIVITY_TOPIC_TAG (activity_id, Activity_tag)
     VALUES ($1, $2);
     `;
-    const values_activity_tag = [activity_id, activity_tag];
-    await client.query(query_activity_tag, values_activity_tag);
+      const values_activity_tag = [activity_id, activity_tag];
+      await client.query(query_activity_tag, values_activity_tag);
+    });
 
     const query_activity_role = `
     INSERT INTO activity_role (Member_id, activity_id, activity_role)
@@ -113,21 +115,65 @@ export const getActivityByDescription = async (req: Request, res: Response) => {
     client.end();
   }
 };
-export const getActivityByTimeandTopic = async (req: Request, res: Response) => {
+export const getActivityByTime = async (req: Request, res: Response) => {
   // only input tag and time
   console.log(req.body);
-  const { activity_tag, event_start_timestamp, event_end_timestamp } = req.body;
+  const { event_start_timestamp, event_end_timestamp } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
     SELECT *
     FROM activity
-    where activity_tag = $1
-    and event_start_timestamp > $2
-    and event_end_timestamp < $3
+    and event_start_timestamp > $1
+    and event_end_timestamp < $2
     and status = 'active';
     `;
-  const values = [activity_tag, event_start_timestamp, event_end_timestamp];
+  const values = [event_start_timestamp, event_end_timestamp];
+  try {
+    const result = await client.query(query, values);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(400).json(err);
+  } finally {
+    client.end();
+  }
+};
+export const getActivityByTag = async (req: Request, res: Response) => {
+  console.log(req.body);
+  const { activity_tag } = req.body;
+  const client = new Client(dbConfig);
+  await client.connect();
+  const query = `
+    select *
+    from activity as a
+    join activity_topic_tag as at on at.activity_id = a.activity_id
+    where at.activity_tag = $1
+    and a.status = 'active';
+    `;
+  const values = [activity_tag];
+  try {
+    const result = await client.query(query, values);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(400).json(err);
+  } finally {
+    client.end();
+  }
+};
+export const getJoinedActivityByTag = async (req: Request, res: Response) => {
+  console.log(req.body);
+  const { member_id, activity_tag } = req.body;
+  const client = new Client(dbConfig);
+  await client.connect();
+  const query = `
+    select *
+    from activity as a
+    inner join activity_role as ar on a.activity_id = ar.activity_id
+    inner join activity_topic_tag as at on at.activity_id = a.activity_id
+    where at.activity_tag = $2
+    and ar.member_id = $1
+    `;
+  const values = [member_id, activity_tag];
   try {
     const result = await client.query(query, values);
     res.status(200).json(result.rows);
