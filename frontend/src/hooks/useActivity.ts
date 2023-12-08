@@ -22,6 +22,17 @@ import instance from '@/lib/axios';
 
 export default function useActivity() {
   /* TODO: route may change */
+
+  //getAllActivity
+  const getAllActivity = async (category: string | null) => {
+    const { data } = await instance.get('/activity', {
+      params: {
+        category,
+      },
+    });
+    return data;
+  };
+
   //createActivity
   const createActivity = async (activity: createActivityPayload) => {
     return instance.post('/activity', activity);
@@ -127,11 +138,6 @@ export default function useActivity() {
   //findActivityNeedAttention
   const findActivityNeedAttention = async () => {
     return instance.get(`/activity/attention`);
-  };
-
-  //getAllActivity
-  const getAllActivity = async () => {
-    return instance.get(`/activity`);
   };
 
   //getAllMember

@@ -1,10 +1,25 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Container from '@/components/Container';
 import Card from '@/components/cards/Card';
 
-import { getCardData } from '@/api/cardData.api';
+import useActivity from '@/hooks/useActivity';
+import type { CardData } from '@/lib/shared_types';
 
-export default async function Home() {
-  const cardData = await getCardData();
+export default function Home() {
+  const [cardData, setCardData] = useState<CardData[]>([]);
+
+  const { getAllActivity } = useActivity();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAllActivity('all');
+      setCardData(data);
+    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container>

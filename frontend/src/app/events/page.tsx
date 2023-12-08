@@ -5,8 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import Container from '@/components/Container';
 import Card from '@/components/cards/Card';
 
-import { CardData } from '@/types/card.type';
-import axios from '@/lib/axios';
+import useActivity from '@/hooks/useActivity';
+import type { CardData } from '@/lib/shared_types';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -14,16 +14,15 @@ export default function Page() {
 
   const [cardData, setCardData] = useState<CardData[]>([]);
 
+  const { getAllActivity } = useActivity();
+
   useEffect(() => {
-    const fetchCardData = async () => {
-      const { data } = await axios.get('/activity', {
-        params: {
-          category,
-        },
-      });
+    const fetchData = async () => {
+      const data = await getAllActivity(category);
       setCardData(data);
     };
-    fetchCardData();
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
 
   return (
