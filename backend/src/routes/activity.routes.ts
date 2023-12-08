@@ -31,6 +31,8 @@ router.get('/', getActivityAll);
 // createActivity
 router.post('/', createActivity);
 
+router.get('/', getActivityAll);
+
 //getActivityByDescription
 router.get('/:description', getActivityByDescription);
 
