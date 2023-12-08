@@ -23,62 +23,62 @@ export const categories = [
   {
     label: '瀏覽全部',
     icon: FaList,
-    href: '/events?category=瀏覽全部',
+    href: '/events?category=all',
   },
   {
     label: '演講',
     icon: CiMicrophoneOn,
-    href: '/events?category=演講',
+    href: '/events?category=lecture',
   },
   {
     label: '影音觀賞',
     icon: MdMovie,
-    href: '/events?category=影音觀賞',
+    href: '/events?category=video',
   },
   {
     label: '工作坊',
     icon: FaTools,
-    href: '/events?category=工作坊',
+    href: '/events?category=workshop',
   },
   {
     label: '聯誼',
     icon: FaUsers,
-    href: '/events?category=聯誼',
+    href: '/events?category=fellowship',
   },
   {
     label: '語言交換',
     icon: FaLanguage,
-    href: '/events?category=語言交換',
+    href: '/events?category=languages',
   },
   {
     label: '運動',
     icon: FaRunning,
-    href: '/events?category=運動',
+    href: '/events?category=sport',
   },
   {
     label: '戶外活動',
     icon: FaTree,
-    href: '/events?category=戶外活動',
+    href: '/events?category=activity',
   },
   {
     label: '遊戲',
     icon: FaGamepad,
-    href: '/events?category=遊戲',
+    href: '/events?category=game',
   },
   {
     label: '考試',
     icon: FaPencilAlt,
-    href: '/events?category=考試',
+    href: '/events?category=exam',
   },
   {
     label: '讀書會',
     icon: FaBook,
-    href: '/events?category=讀書會',
+    href: '/events?category=study',
   },
   {
     label: '其他',
     icon: CiMicrophoneOn,
-    href: '/events?category=其他',
+    href: '/events?category=other',
   },
 ];
 

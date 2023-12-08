@@ -9,7 +9,6 @@ import {
   getActivityMember,
   getActivityNumber,
   getActivityRating,
-  getAllActivity,
   getAllMember,
   getChatgroup,
   getFollowedActivity,
@@ -27,10 +26,10 @@ import express from 'express';
 
 const router = express.Router();
 
+router.get('/', getActivityAll);
+
 // createActivity
 router.post('/', createActivity);
-
-router.get('/', getActivityAll);
 
 //getActivityByDescription
 router.get('/:description', getActivityByDescription);
@@ -88,9 +87,6 @@ router.delete('/:activity_id/:member_id', kickMember);
 
 //findActivityNeedAttention
 router.get('/attention', findActivityNeedAttention);
-
-//getAllActivity
-router.get('/', getAllActivity);
 
 //getAllMember
 router.get('/member', getAllMember);
