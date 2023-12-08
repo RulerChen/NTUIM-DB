@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { AiOutlineMenu } from 'react-icons/ai';
 import { useRouter } from 'next/navigation';
 
 import MenuItem from './MenuItem';
+import { Button } from '@/components/ui/button';
 import Avatar from '../Avatar';
 
+import { AiOutlineMenu } from 'react-icons/ai';
 interface UserMenuProps {
   // currentUser?: SafeUser | null;
   currentUser?: null | boolean;
@@ -25,6 +26,7 @@ const UserMenu = ({ currentUser = true }: UserMenuProps) => {
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
+        <Button onClick={() => router.push('/activity/create')}> 新增活動 </Button>
         <div
           onClick={() => setIsOpen(!isOpen)}
           className="p-4 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
@@ -36,7 +38,7 @@ const UserMenu = ({ currentUser = true }: UserMenuProps) => {
         </div>
       </div>
       {isOpen && (
-        <div className="absolute rounded-xl shadow-md w-[40vw] md:w-[180%] bg-white overflow-hidden right-0 top-12 text-sm">
+        <div className="absolute rounded-xl shadow-md w-[40vw] md:w-[75%] bg-white overflow-hidden right-0 top-12 text-sm">
           <div className="flex flex-col cursor-pointer">
             {currentUser ? (
               <>

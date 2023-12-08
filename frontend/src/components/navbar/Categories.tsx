@@ -23,7 +23,7 @@ export const categories = [
   {
     label: '瀏覽全部',
     icon: FaList,
-    href: '/events',
+    href: '/events?category=瀏覽全部',
   },
   {
     label: '演講',
@@ -86,7 +86,7 @@ const Categories = () => {
   const params = useSearchParams();
   const category = params?.get('category');
   const pathname = usePathname();
-  const isMainPage = pathname === '/';
+  const isMainPage = pathname === '/' || pathname === '/events';
 
   if (!isMainPage) {
     return null;
