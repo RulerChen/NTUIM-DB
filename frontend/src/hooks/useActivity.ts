@@ -1,34 +1,34 @@
 import {
-  createActivityData,
-  followActivityData,
-  getActivityByDescriptionData,
-  getActivityByTagData,
-  getActivityByTimeData,
-  getActivityNumberData,
-  getActivityRatingData,
-  getChatgroupData,
-  getFollowedActivityData,
-  getHostedActivityData,
-  getJoinedActivityByTagData,
-  getJoinedActivityData,
-  getMessageData,
-  insertMessageData,
-  joinActivityData,
-  kickMemberData,
-  quitActivityData,
-  rateActivityData,
+  createActivityPayload,
+  followActivityPayload,
+  getActivityByDescriptionPayload,
+  getActivityByTagPayload,
+  getActivityByTimePayload,
+  getActivityNumberPayload,
+  getActivityRatingPayload,
+  getChatgroupPayload,
+  getFollowedActivityPayload,
+  getHostedActivityPayload,
+  getJoinedActivityByTagPayload,
+  getJoinedActivityPayload,
+  getMessagePayload,
+  insertMessagePayload,
+  joinActivityPayload,
+  kickMemberPayload,
+  quitActivityPayload,
+  rateActivityPayload,
 } from '@/lib/shared_types';
 import instance from '@/lib/axios';
 
 export default function useActivity() {
   /* TODO: route may change */
   //createActivity
-  const createActivity = async (activity: createActivityData) => {
+  const createActivity = async (activity: createActivityPayload) => {
     return instance.post('/activity', activity);
   };
 
   //getActivityByDescription
-  const getActivityByDescription = async ({ description }: getActivityByDescriptionData) => {
+  const getActivityByDescription = async ({ description }: getActivityByDescriptionPayload) => {
     return instance.get(`/activity/${description}`);
   };
 
@@ -36,62 +36,62 @@ export default function useActivity() {
   const getActivityByTime = async ({
     event_start_timestamp,
     event_end_timestamp,
-  }: getActivityByTimeData) => {
+  }: getActivityByTimePayload) => {
     return instance.get(`/activity/${event_start_timestamp}/${event_end_timestamp}`);
   };
 
   //getActivityByTag
-  const getActivityByTag = async ({ activity_tag }: getActivityByTagData) => {
+  const getActivityByTag = async ({ activity_tag }: getActivityByTagPayload) => {
     return instance.get(`/activity/${activity_tag}`);
   };
 
   //getJoinedActivityByTag
-  const getJoinedActivityByTag = async ({ activity_tag }: getJoinedActivityByTagData) => {
+  const getJoinedActivityByTag = async ({ activity_tag }: getJoinedActivityByTagPayload) => {
     return instance.get(`/activity/${activity_tag}/join`);
   };
 
   //followActivity
-  const followActivity = async ({ activity_id, member_id }: followActivityData) => {
+  const followActivity = async ({ activity_id, member_id }: followActivityPayload) => {
     return instance.post('/activity/follow', { activity_id, member_id });
   };
 
   //joinActivity
-  const joinActivity = async ({ activity_id, member_id }: joinActivityData) => {
+  const joinActivity = async ({ activity_id, member_id }: joinActivityPayload) => {
     return instance.post('/activity/join', { activity_id, member_id });
   };
 
   //quitActivity
-  const quitActivity = async ({ activity_id, member_id }: quitActivityData) => {
+  const quitActivity = async ({ activity_id, member_id }: quitActivityPayload) => {
     return instance.delete(`/activity/${activity_id}/${member_id}`);
   };
 
   //getJoinedActivity
-  const getJoinedActivity = async ({ member_id }: getJoinedActivityData) => {
+  const getJoinedActivity = async ({ member_id }: getJoinedActivityPayload) => {
     return instance.get(`/activity/join/${member_id}`);
   };
 
   //getFollowedActivity
-  const getFollowedActivity = async ({ member_id }: getFollowedActivityData) => {
+  const getFollowedActivity = async ({ member_id }: getFollowedActivityPayload) => {
     return instance.get(`/activity/follow/${member_id}`);
   };
 
   //getHostedActivity
-  const getHostedActivity = async ({ member_id }: getHostedActivityData) => {
+  const getHostedActivity = async ({ member_id }: getHostedActivityPayload) => {
     return instance.get(`/activity/host/${member_id}`);
   };
 
   //getChatgroup
-  const getChatgroup = async ({ activity_id }: getChatgroupData) => {
+  const getChatgroup = async ({ activity_id }: getChatgroupPayload) => {
     return instance.get(`/activity/${activity_id}/chatgroup`);
   };
 
   //getMessage
-  const getMessage = async ({ chatgroup_id }: getMessageData) => {
+  const getMessage = async ({ chatgroup_id }: getMessagePayload) => {
     return instance.get(`/activity/chatgroup/${chatgroup_id}/message`);
   };
 
   //insertMessage
-  const insertMessage = async ({ chatgroup_id, member_id, message_text }: insertMessageData) => {
+  const insertMessage = async ({ chatgroup_id, member_id, message_text }: insertMessagePayload) => {
     return instance.post(`/activity/chatgroup/message`, {
       chatgroup_id,
       member_id,
@@ -100,27 +100,27 @@ export default function useActivity() {
   };
 
   //rateActivity
-  const rateActivity = async ({ activity_id, member_id, score, comment }: rateActivityData) => {
+  const rateActivity = async ({ activity_id, member_id, score, comment }: rateActivityPayload) => {
     return instance.post(`/activity/rate`, { activity_id, member_id, score, comment });
   };
 
   //getActivityRating
-  const getActivityRating = async ({ activity_id }: getActivityRatingData) => {
+  const getActivityRating = async ({ activity_id }: getActivityRatingPayload) => {
     return instance.get(`/activity/${activity_id}/rating`);
   };
 
   //getActivityNumber
-  const getActivityNumber = async ({ activity_id }: getActivityNumberData) => {
+  const getActivityNumber = async ({ activity_id }: getActivityNumberPayload) => {
     return instance.get(`/activity/${activity_id}/number`);
   };
 
   //getActivityMember
-  const getActivityMember = async ({ activity_id }: getActivityNumberData) => {
+  const getActivityMember = async ({ activity_id }: getActivityNumberPayload) => {
     return instance.get(`/activity/${activity_id}/member`);
   };
 
   //kickMember
-  const kickMember = async ({ activity_id, member_id }: kickMemberData) => {
+  const kickMember = async ({ activity_id, member_id }: kickMemberPayload) => {
     return instance.delete(`/activity/${activity_id}/${member_id}`);
   };
 

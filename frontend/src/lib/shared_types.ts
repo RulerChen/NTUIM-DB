@@ -38,49 +38,50 @@ export type MemberData = z.infer<typeof MemberDataSchema>;
 
 export type ChatgroupData = z.infer<typeof ChatgroupDataSchema>;
 
-export type createActivityData = Omit<ActivityData, 'activity_id'> &
+export type createActivityPayload = Omit<ActivityData, 'activity_id'> &
   Pick<ChatgroupData, 'chatname'>;
 
-export type getActivityByDescriptionData = Pick<ActivityData, 'description'>;
+export type getActivityByDescriptionPayload = Pick<ActivityData, 'description'>;
 
-export type getActivityByTimeData = Pick<
+export type getActivityByTimePayload = Pick<
   ActivityData,
   'event_start_timestamp' | 'event_end_timestamp'
 >;
 
-export type getActivityByTagData = { activity_tag: string };
+export type getActivityByTagPayload = { activity_tag: string };
 
-export type getJoinedActivityByTagData = getActivityByTagData;
+export type getJoinedActivityByTagPayload = { activity_tag: string };
 
-export type followActivityData = Pick<ActivityData, 'activity_id'> & Pick<MemberData, 'member_id'>;
+export type followActivityPayload = Pick<ActivityData, 'activity_id'> &
+  Pick<MemberData, 'member_id'>;
 
-export type joinActivityData = Pick<ActivityData, 'activity_id'> & Pick<MemberData, 'member_id'>;
+export type joinActivityPayload = Pick<ActivityData, 'activity_id'> & Pick<MemberData, 'member_id'>;
 
-export type quitActivityData = Pick<ActivityData, 'activity_id'> & Pick<MemberData, 'member_id'>;
+export type quitActivityPayload = Pick<ActivityData, 'activity_id'> & Pick<MemberData, 'member_id'>;
 
-export type getJoinedActivityData = Pick<MemberData, 'member_id'>;
+export type getJoinedActivityPayload = Pick<MemberData, 'member_id'>;
 
-export type getFollowedActivityData = getJoinedActivityData;
+export type getFollowedActivityPayload = Pick<MemberData, 'member_id'>;
 
-export type getHostedActivityData = getJoinedActivityData;
+export type getHostedActivityPayload = Pick<MemberData, 'member_id'>;
 
-export type getChatgroupData = Pick<ActivityData, 'activity_id'>;
+export type getChatgroupPayload = Pick<ActivityData, 'activity_id'>;
 
-export type getMessageData = Pick<ChatgroupData, 'chatgroup_id'>;
+export type getMessagePayload = Pick<ChatgroupData, 'chatgroup_id'>;
 
-export type insertMessageData = Pick<ChatgroupData, 'chatgroup_id'> & {
+export type insertMessagePayload = Pick<ChatgroupData, 'chatgroup_id'> & {
   message_text: string;
 } & Pick<MemberData, 'member_id'>;
 
-export type rateActivityData = Pick<ActivityData, 'activity_id'> & {
+export type rateActivityPayload = Pick<ActivityData, 'activity_id'> & {
   score: number;
   comment: string;
 } & Pick<MemberData, 'member_id'>;
 
-export type getActivityRatingData = Pick<ActivityData, 'activity_id'>;
+export type getActivityRatingPayload = Pick<ActivityData, 'activity_id'>;
 
-export type getActivityNumberData = Pick<ActivityData, 'activity_id'>;
+export type getActivityNumberPayload = Pick<ActivityData, 'activity_id'>;
 
-export type getActivityMemberData = Pick<ActivityData, 'activity_id'>;
+export type getActivityMemberPayload = Pick<ActivityData, 'activity_id'>;
 
-export type kickMemberData = Pick<ActivityData, 'activity_id'> & Pick<MemberData, 'member_id'>;
+export type kickMemberPayload = Pick<ActivityData, 'activity_id'> & Pick<MemberData, 'member_id'>;
