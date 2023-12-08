@@ -8,7 +8,7 @@ export const createActivity = async (req: Request, res: Response) => {
   console.log(req.body);
   const {
     member_id,
-    descryption,
+    description,
     event_start_timestamp,
     event_end_timestamp,
     Location,
@@ -34,7 +34,7 @@ export const createActivity = async (req: Request, res: Response) => {
     `;
   const values_activity = [
     activity_id,
-    descryption,
+    description,
     event_start_timestamp,
     event_end_timestamp,
     Location,

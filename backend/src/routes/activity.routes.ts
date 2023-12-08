@@ -3,7 +3,8 @@ import {
   findActivityNeedAttention,
   followActivity,
   getActivityByDescription,
-  getActivityByTimeAndTopic,
+  getActivityByTag,
+  getActivityByTime,
   getActivityMember,
   getActivityNumber,
   getActivityRating,
@@ -13,6 +14,7 @@ import {
   getFollowedActivity,
   getHostedActivity,
   getJoinedActivity,
+  getJoinedActivityByTag,
   getMessage,
   insertMessage,
   joinActivity,
@@ -30,8 +32,14 @@ router.post('/', createActivity);
 //getActivityByDescription
 router.get('/:description', getActivityByDescription);
 
-//getActivityByTimeAndTopic
-router.get('/:activity_tag/:event_start_timestamp/:event_end_timestamp', getActivityByTimeAndTopic);
+//getActivityByTime
+router.get('/:event_start_timestamp/:event_end_timestamp', getActivityByTime);
+
+//getActivityByTag
+router.get('/:activity_tag', getActivityByTag);
+
+//getJoinedActivityByTag
+router.get('/:activity_tag/join', getJoinedActivityByTag);
 
 //followActivity
 router.post('/follow', followActivity);
@@ -40,25 +48,25 @@ router.post('/follow', followActivity);
 router.post('/join', joinActivity);
 
 //quitActivity
-router.delete('/:member_id/:activity_id', quitActivity);
+router.delete('/:activity_id/:member_id', quitActivity);
 
 //getJoinedActivity
-router.get('/:member_id/join', getJoinedActivity);
+router.get('/join/:member_id', getJoinedActivity);
 
 //getFollowedActivity
-router.get('/:member_id/follow', getFollowedActivity);
+router.get('/follow/:member_id', getFollowedActivity);
 
 //getHostedActivity
-router.get('/:member_id/host', getHostedActivity);
+router.get('/host/:member_id', getHostedActivity);
 
 //getChatgroup
-router.get('/chatgroup/:activity_id', getChatgroup);
+router.get('/:activity_id/chatgroup', getChatgroup);
 
 //getMessage
-router.get('/message/:chatgroup_id', getMessage);
+router.get('/chatgroup/:chatgroup_id/message', getMessage);
 
 //insertMessage
-router.post('/message', insertMessage);
+router.post('/chatgroup/message', insertMessage);
 
 //rateActivity
 router.post('/rate', rateActivity);
@@ -73,7 +81,7 @@ router.get('/:activity_id/number', getActivityNumber);
 router.get('/:activity_id/member', getActivityMember);
 
 //kickMember
-router.delete('/:member_id/:activity_id', kickMember);
+router.delete('/:activity_id/:member_id', kickMember);
 
 //findActivityNeedAttention
 router.get('/attention', findActivityNeedAttention);
