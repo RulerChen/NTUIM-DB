@@ -1,5 +1,6 @@
 import {
   createActivity,
+  getActivityAll,
   findActivityNeedAttention,
   followActivity,
   getActivityByDescription,
@@ -28,6 +29,8 @@ const router = express.Router();
 
 // createActivity
 router.post('/', createActivity);
+
+router.get('/', getActivityAll);
 
 //getActivityByDescription
 router.get('/:description', getActivityByDescription);

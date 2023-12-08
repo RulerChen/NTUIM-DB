@@ -93,6 +93,31 @@ export const createActivity = async (req: Request, res: Response) => {
   }
 };
 
+// get 20 activities data
+export const getActivityAll = async (req: Request, res: Response) => {
+  const client = new Client(dbConfig);
+  await client.connect();
+  const timestamp = new Date().toISOString();
+  const query = `
+    SELECT *
+    FROM activity
+    where status = 'active'
+    and register_start_timestamp < $1
+    and register_end_timestamp > $1
+    order by register_start_timestamp desc
+    limit 20;
+    `;
+  const values = [timestamp];
+  try {
+    const result = await client.query(query, values);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(400).json(err);
+  } finally {
+    client.end();
+  }
+};
+
 export const getActivityByDescription = async (req: Request, res: Response) => {
   // only input description
   console.log(req.body);
