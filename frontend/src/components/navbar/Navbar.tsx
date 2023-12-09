@@ -1,4 +1,4 @@
-// import { SafeUser } from '@/app/types';
+'use client';
 
 import Categories from './Categories';
 import Container from '../Container';
@@ -6,12 +6,17 @@ import Logo from './Logo';
 import Search from './Search';
 import UserMenu from './UserMenu';
 
-interface NavbarProps {
-  // currentUser?: SafeUser | null;
-  currentUser?: null;
-}
+import { useEffect } from 'react';
+import { useMember } from '@/hooks/useMember';
 
-const Navbar = ({ currentUser }: NavbarProps) => {
+const Navbar = () => {
+  const { fetchMember } = useMember();
+
+  useEffect(() => {
+    fetchMember();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="fixed w-full bg-white z-10 shadow-sm">
       <div className="py-4 border-b-[1px]">
@@ -19,7 +24,7 @@ const Navbar = ({ currentUser }: NavbarProps) => {
           <div className="flex flex-row items-center justify-between gap-3 md:gap-0">
             <Logo />
             <Search />
-            <UserMenu currentUser={currentUser} />
+            <UserMenu />
           </div>
         </Container>
       </div>

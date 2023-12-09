@@ -60,3 +60,8 @@ export const register = async (req: Request, res: Response) => {
 export const login = (req: Request, res: Response) => {
   res.status(200).json(req.user);
 };
+
+export const isLogin = (req: Request, res: Response) => {
+  console.log('islogin', req.user);
+  res.status(200).json(req.user);
+};

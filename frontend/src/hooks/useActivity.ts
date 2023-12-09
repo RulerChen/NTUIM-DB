@@ -78,12 +78,22 @@ export default function useActivity() {
 
   //getJoinedActivity
   const getJoinedActivity = async ({ member_id }: getJoinedActivityPayload) => {
-    return instance.get(`/activity/join/${member_id}`);
+    const { data } = await instance.get(`/activity/join/`, {
+      params: {
+        member_id,
+      },
+    });
+    return data;
   };
 
   //getFollowedActivity
   const getFollowedActivity = async ({ member_id }: getFollowedActivityPayload) => {
-    return instance.get(`/activity/follow/${member_id}`);
+    const { data } = await instance.get(`/activity/follow/`, {
+      params: {
+        member_id,
+      },
+    });
+    return data;
   };
 
   //getHostedActivity

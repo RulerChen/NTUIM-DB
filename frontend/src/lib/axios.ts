@@ -5,6 +5,7 @@ export const url =
 
 const instance = axios.create({
   baseURL: url,
+  withCredentials: true,
 });
 
 export default instance;
