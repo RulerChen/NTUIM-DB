@@ -60,3 +60,12 @@ export const register = async (req: Request, res: Response) => {
 export const login = (req: Request, res: Response) => {
   res.status(200).json(req.user);
 };
+
+export const logout = (req: Request, res: Response) => {
+  req.logout((err) => {
+    if (err) {
+      res.status(500).json(err);
+    }
+    res.status(200).json('You have successfully logged out!');
+  });
+};

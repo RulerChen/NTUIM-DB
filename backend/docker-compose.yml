@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
+      POSTGRES_PASSWORD: 123
       PGDATA: /var/lib/postgresql/data
     volumes:
       - ./pg-data:/var/lib/postgresql/data

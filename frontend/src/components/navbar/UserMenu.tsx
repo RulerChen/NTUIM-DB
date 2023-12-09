@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import Avatar from '../Avatar';
 
 import { AiOutlineMenu } from 'react-icons/ai';
+import instance from '@/lib/axios';
+import toast from 'react-hot-toast';
 interface UserMenuProps {
   // currentUser?: SafeUser | null;
   currentUser?: null | boolean;
@@ -21,6 +23,14 @@ const UserMenu = ({ currentUser = true }: UserMenuProps) => {
   const handleClick = (path: string) => {
     router.push(path);
     setIsOpen(!isOpen);
+  };
+
+  const logout = () => {
+    instance.post('/user/logout').then(() => {
+      toast.success('登出成功');
+      setIsOpen(!isOpen);
+      router.push('/login');
+    });
   };
 
   return (
@@ -50,9 +60,9 @@ const UserMenu = ({ currentUser = true }: UserMenuProps) => {
                 <MenuItem label="我主持的活動" onClick={() => handleClick('/unchange_route')} />
                 <MenuItem label="我追蹤的活動" onClick={() => handleClick('/unchange_route')} />
                 <MenuItem label="我參加的活動" onClick={() => handleClick('/unchange_route')} />
-                <MenuItem label="聊天室" onClick={() => router.push('/unchange_route')} />
+                <MenuItem label="聊天室" onClick={() => handleClick('/unchange_route')} />
                 <hr />
-                <MenuItem label="登出" onClick={() => {}} />
+                <MenuItem label="登出" onClick={() => logout()} />
               </>
             ) : (
               <>

@@ -70,7 +70,7 @@ const UserProfileForm = () => {
 
   return (
     <div className="sm:mx-auto sm:w-full sm:max-w-md sm:py-10 lg:max-w-xl xl:max-w-2xl">
-      <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10 space-y-6">
+      <div className="bg-white px-4 py-8 shadow sm:rounded-xl sm:px-10 space-y-6">
         <div className="text-xl font-semibold">使用者個人資料</div>
         <Separator orientation="horizontal" className="bg-black" />
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>

@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 
-import { login, register } from '@/controllers/user.controller';
+import { login, logout, register } from '@/controllers/user.controller';
 import { frontendUrl } from '@/utils/url';
 
 const router = express.Router();
@@ -39,5 +39,7 @@ router.post(
   login
 );
 router.post('/register', register);
+
+router.post('/logout', logout);
 
 export default router;
