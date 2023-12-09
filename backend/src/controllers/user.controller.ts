@@ -61,6 +61,11 @@ export const login = (req: Request, res: Response) => {
   res.status(200).json(req.user);
 };
 
+export const isLogin = (req: Request, res: Response) => {
+  console.log('islogin', req.user);
+  res.status(200).json(req.user);
+};
+
 export const logout = (req: Request, res: Response) => {
   req.logout((err) => {
     if (err) {

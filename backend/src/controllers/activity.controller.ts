@@ -6,6 +6,7 @@ import { dbConfig } from '../config/db.config';
 
 // get 20 activities data
 export const getActivityAll = async (req: Request, res: Response) => {
+  // // console.log('activity', req.user);
   const category = req.query.category;
 
   const client = new Client(dbConfig);
@@ -55,7 +56,7 @@ export const getActivityAll = async (req: Request, res: Response) => {
 };
 
 export const createActivity = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // // console.log(req.body);
   const {
     member_id,
     description,
@@ -145,7 +146,7 @@ export const createActivity = async (req: Request, res: Response) => {
 
 export const getActivityByDescription = async (req: Request, res: Response) => {
   // only input description
-  console.log(req.body);
+  // // console.log(req.body);
   const { description } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -167,7 +168,7 @@ export const getActivityByDescription = async (req: Request, res: Response) => {
 };
 export const getActivityByTime = async (req: Request, res: Response) => {
   // only input tag and time
-  console.log(req.body);
+  // // console.log(req.body);
   const { event_start_timestamp, event_end_timestamp } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -189,7 +190,7 @@ export const getActivityByTime = async (req: Request, res: Response) => {
   }
 };
 export const getActivityByTag = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // // console.log(req.body);
   const { activity_tag } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -211,7 +212,7 @@ export const getActivityByTag = async (req: Request, res: Response) => {
   }
 };
 export const getJoinedActivityByTag = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { member_id, activity_tag } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -233,28 +234,49 @@ export const getJoinedActivityByTag = async (req: Request, res: Response) => {
     client.end();
   }
 };
+
 export const followActivity = async (req: Request, res: Response) => {
-  // only input location
-  console.log(req.body);
   const { member_id, activity_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
-  const query = `
-    INSERT INTO MEMBER_Follow_ACTIVITY (activity_id, member_id)
-    VALUES ($1, $2);
+
+  // check if the user follows the activity
+  const query_check = `
+    select *
+    from MEMBER_Follow_ACTIVITY
+    where member_id = $1
+    and activity_id = $2;
     `;
-  const values = [activity_id, member_id];
-  await client.query(query, values);
+  const values_check = [member_id, activity_id];
   try {
-    res.status(201).json("You've successfully followed the activity!");
+    const result_check = await client.query(query_check, values_check);
+    if (result_check.rows.length !== 0) {
+      const query_delete = `
+      delete from MEMBER_Follow_ACTIVITY
+      where member_id = $1
+      and activity_id = $2;
+      `;
+      const values_delete = [member_id, activity_id];
+      await client.query(query_delete, values_delete);
+      res.status(201).json("You've successfully unfollowed the activity!");
+    } else {
+      const query = `
+      INSERT INTO MEMBER_Follow_ACTIVITY (activity_id, member_id)
+      VALUES ($1, $2);
+      `;
+      const values = [activity_id, member_id];
+      await client.query(query, values);
+      res.status(201).json("You've successfully followed the activity!");
+    }
   } catch (err) {
     res.status(400).json(err);
   } finally {
-    client.end();
+    await client.end();
   }
 };
+
 export const joinActivity = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { member_id, activity_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -275,7 +297,7 @@ export const joinActivity = async (req: Request, res: Response) => {
   }
 };
 export const quitActivity = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { member_id, activity_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -296,7 +318,7 @@ export const quitActivity = async (req: Request, res: Response) => {
   }
 };
 export const getJoinedActivity = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { member_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -318,17 +340,18 @@ export const getJoinedActivity = async (req: Request, res: Response) => {
     client.end();
   }
 };
+
 export const getFollowedActivity = async (req: Request, res: Response) => {
-  console.log(req.body);
-  const { member_id } = req.body;
+  const member_id = req.query.member_id;
+  // // console.log(req);
+  console.log('123');
+
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
-    select *
-    from activity as a
-    inner join MEMBER_Follow_ACTIVITY as mfa on a.activity_id = mfa.activity_id
+    select mfa.activity_id
+    from member_follow_activity as mfa
     where mfa.member_id = $1
-    and a.status = 'active';
     `;
   const values = [member_id];
   try {
@@ -337,11 +360,11 @@ export const getFollowedActivity = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(400).json(err);
   } finally {
-    client.end();
+    await client.end();
   }
 };
 export const getHostedActivity = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { member_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -364,7 +387,7 @@ export const getHostedActivity = async (req: Request, res: Response) => {
   }
 };
 export const getChatgroup = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { activity_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -384,7 +407,7 @@ export const getChatgroup = async (req: Request, res: Response) => {
   }
 };
 export const getMessage = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { chatgroup_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -404,7 +427,7 @@ export const getMessage = async (req: Request, res: Response) => {
   }
 };
 export const insertMessage = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { chatgroup_id, member_id, message_text } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -424,7 +447,7 @@ export const insertMessage = async (req: Request, res: Response) => {
   }
 };
 export const rateActivity = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { activity_id, member_id, score, comment } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -443,7 +466,7 @@ export const rateActivity = async (req: Request, res: Response) => {
   }
 };
 export const getActivityRating = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { activity_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -464,7 +487,7 @@ export const getActivityRating = async (req: Request, res: Response) => {
   }
 };
 export const getActivityNumber = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { activity_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -484,7 +507,7 @@ export const getActivityNumber = async (req: Request, res: Response) => {
   }
 };
 export const getActivityMember = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { activity_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
@@ -505,7 +528,7 @@ export const getActivityMember = async (req: Request, res: Response) => {
   }
 };
 export const kickMember = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { activity_id, member_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();

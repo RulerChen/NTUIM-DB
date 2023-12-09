@@ -1,11 +1,18 @@
 import express from 'express';
 import passport from 'passport';
 
-import { login, logout, register } from '@/controllers/user.controller';
+import { isLogin, login, logout, register } from '@/controllers/user.controller';
 import { frontendUrl } from '@/utils/url';
 
 const router = express.Router();
 
+const authCheck = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (req.user) {
+    next();
+  } else {
+    res.status(401).json('You are not logged in');
+  }
+};
 router.get(
   '/google',
   passport.authenticate('google', {
@@ -30,15 +37,11 @@ router.get(
   })
 );
 
-router.post(
-  '/login',
-  passport.authenticate('local', {
-    successReturnToOrRedirect: `${frontendUrl}`,
-    failureRedirect: `${frontendUrl}/login`,
-  }),
-  login
-);
+router.post('/login', passport.authenticate('local'), login);
+
 router.post('/register', register);
+
+router.get('/isLogin', authCheck, isLogin);
 
 router.post('/logout', logout);
 

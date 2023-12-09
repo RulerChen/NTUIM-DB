@@ -1,4 +1,5 @@
 'use client';
+
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import HeartButton from '../HeartButton';
@@ -7,9 +8,10 @@ import type { CardData } from '@/lib/shared_types';
 
 interface CardProps {
   data: CardData;
+  follow?: boolean;
 }
 
-const Card = ({ data }: CardProps) => {
+const Card = ({ data, follow }: CardProps) => {
   const router = useRouter();
 
   return (
@@ -25,9 +27,10 @@ const Card = ({ data }: CardProps) => {
             className="object-cover h-full w-full group-hover:scale-110 transition"
             src={'/images/placeholder.jpg'}
             alt="Listing"
+            priority
           />
           <div className="absolute top-3 right-3">
-            <HeartButton id={data.activity_id} />
+            <HeartButton id={data.activity_id} isFollow={follow} />
           </div>
         </div>
         <div className="font-semibold text-lg">{data.title}</div>
