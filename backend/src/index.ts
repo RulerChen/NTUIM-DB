@@ -2,6 +2,7 @@ import express from 'express';
 import compression from 'compression';
 import cors from 'cors';
 import session from 'express-session';
+import cookieParser from 'cookie-parser';
 import passport from 'passport';
 
 import { createTable } from '@/models/init';
@@ -15,19 +16,26 @@ app.use(
   cors({
     credentials: true,
     origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   })
 );
 
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
   session({
     secret: env.SECRET_KEY,
     name: 'database_user',
-    saveUninitialized: false,
     resave: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7, secure: false, domain: 'localhost' },
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      secure: false,
+      domain: 'localhost',
+      sameSite: false,
+    },
   })
 );
 app.use(passport.initialize());

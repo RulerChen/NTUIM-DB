@@ -8,15 +8,14 @@ import { Button } from '@/components/ui/button';
 import Avatar from '../Avatar';
 
 import { AiOutlineMenu } from 'react-icons/ai';
-interface UserMenuProps {
-  // currentUser?: SafeUser | null;
-  currentUser?: null | boolean;
-}
 
-const UserMenu = ({ currentUser = true }: UserMenuProps) => {
+import { useMember } from '@/hooks/useMember';
+
+const UserMenu = () => {
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
+  const { member } = useMember();
 
   const handleClick = (path: string) => {
     router.push(path);
@@ -42,7 +41,7 @@ const UserMenu = ({ currentUser = true }: UserMenuProps) => {
       {isOpen && (
         <div className="absolute rounded-xl shadow-md w-[40vw] md:w-[75%] bg-white overflow-hidden right-0 top-12 text-sm">
           <div className="flex flex-col cursor-pointer">
-            {currentUser ? (
+            {member ? (
               <>
                 {/* TODO: add route */}
                 <MenuItem label="進入會員中心" onClick={() => handleClick('/user')} />
@@ -56,7 +55,7 @@ const UserMenu = ({ currentUser = true }: UserMenuProps) => {
               </>
             ) : (
               <>
-                <MenuItem label="登入" onClick={() => {}} />
+                <MenuItem label="登入" onClick={() => router.push('/login')} />
               </>
             )}
           </div>
