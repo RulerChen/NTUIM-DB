@@ -5,9 +5,13 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import { Separator } from '@/components/ui/separator';
+import { useMember } from '@/hooks/useMember';
 
 const UserProfileForm = () => {
   const [isStudent, setIsStudent] = useState(false);
+  const { member } = useMember();
+  console.log(member);
+  const { username, email, age, phone_number, isStudent: isStudent_, password } = member!;
 
   const {
     register,
@@ -75,6 +79,7 @@ const UserProfileForm = () => {
         <Separator orientation="horizontal" className="bg-black" />
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <Input
+            defaultValue={username}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -83,6 +88,7 @@ const UserProfileForm = () => {
             label="姓名"
           />
           <Input
+            defaultValue={email}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -92,6 +98,7 @@ const UserProfileForm = () => {
             type="email"
           />
           <Input
+            defaultValue={password}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -101,6 +108,7 @@ const UserProfileForm = () => {
             type="password"
           />
           <Input
+            defaultValue={password}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -111,6 +119,7 @@ const UserProfileForm = () => {
           />
           {/* age shoud > 0 */}
           <Input
+            defaultValue={'' + age}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -120,6 +129,7 @@ const UserProfileForm = () => {
             type="number"
           />
           <Input
+            defaultValue={phone_number}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -129,6 +139,7 @@ const UserProfileForm = () => {
           />
           <div className="flex items-center">
             <input
+              defaultChecked={isStudent_ === 'Student' ? true : false}
               id="isStudent"
               type="checkbox"
               className="focus:ring-sky-600 h-4 w-4 text-sky-600 border-gray-300 rounded"
