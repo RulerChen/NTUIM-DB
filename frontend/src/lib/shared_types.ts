@@ -2,20 +2,21 @@ import { z } from 'zod';
 
 export type ActivityData = {
   activity_id: string;
+  title: string;
   description: string;
   event_start_timestamp: Date;
   event_end_timestamp: Date;
-  Location: string;
+  location: string;
   capacity: number;
   status: 'cancel' | 'active';
   register_start_timestamp: Date;
   register_end_timestamp: Date;
   non_student_fee: number;
-  Student_fee: number;
+  student_fee: number;
+  activity_tag: string;
 
   //雖然不屬於activity table，但是為了方便，所以放在這裡
   requirement: string;
-  activity_tags: string[];
 };
 
 const MemberDataSchema = z.object({
@@ -33,6 +34,8 @@ const ChatgroupDataSchema = z.object({
   activity_id: z.string().min(1).max(100),
   chatname: z.string().min(1).max(20),
 });
+
+export type CardData = Omit<ActivityData, 'requirement'>;
 
 export type MemberData = z.infer<typeof MemberDataSchema>;
 

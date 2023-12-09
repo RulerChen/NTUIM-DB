@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS STUDENT (
 
 CREATE TABLE IF NOT EXISTS ACTIVITY (
     Activity_id VARCHAR(100) PRIMARY KEY,
+    Title VARCHAR(50) NOT NULL,
     Description VARCHAR(500) NOT NULL,
     Event_start_timestamp timestamp NOT NULL,
     Event_end_timestamp timestamp NOT NULL,
@@ -28,7 +29,8 @@ CREATE TABLE IF NOT EXISTS ACTIVITY (
     Register_start_timestamp timestamp NOT NULL,
     Register_end_timestamp timestamp NOT NULL,
     Non_student_fee INT NOT NULL,
-    Student_fee INT NOT NULL
+    Student_fee INT NOT NULL,
+    Activity_tag VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS MEMBER_FOLLOW_ACTIVITY (
@@ -55,7 +57,7 @@ CREATE TABLE IF NOT EXISTS MEMBER_QUIT_ACTIVITY (
     Quit_timestamp timestamp NOT NULL,
     PRIMARY KEY (Member_id, Activity_id, Quit_timestamp),
     FOREIGN KEY (Member_id) REFERENCES MEMBER(Member_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE
     -- FOREIGN KEY (Kick_admin_id) REFERENCES MEMBER(Member_id) ON DELETE SET NULL ON UPDATE SET NULL
 );
 
@@ -84,12 +86,12 @@ CREATE TABLE IF NOT EXISTS ACTIVITY_REQUIREMENT (
     FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS ACTIVITY_TOPIC_TAG (
-    Activity_id VARCHAR(100),
-    Activity_tag VARCHAR(20) NOT NULL,
-    PRIMARY KEY (Activity_id, Activity_tag),
-    FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+-- CREATE TABLE IF NOT EXISTS ACTIVITY_TOPIC_TAG (
+--     Activity_id VARCHAR(100),
+--     Activity_tag VARCHAR(20) NOT NULL,
+--     PRIMARY KEY (Activity_id, Activity_tag),
+--     FOREIGN KEY (Activity_id) REFERENCES ACTIVITY(Activity_id) ON DELETE CASCADE ON UPDATE CASCADE
+-- );
 
 CREATE TABLE IF NOT EXISTS CHAT_GROUP (
     Chatgroup_id VARCHAR(100) PRIMARY KEY,

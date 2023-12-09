@@ -4,6 +4,56 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { dbConfig } from '../config/db.config';
 
+// get 20 activities data
+export const getActivityAll = async (req: Request, res: Response) => {
+  const category = req.query.category;
+
+  const client = new Client(dbConfig);
+  await client.connect();
+  const timestamp = new Date().toISOString();
+
+  if (category === 'all' || category === undefined) {
+    const query = `
+      SELECT *
+      FROM activity
+      where status = 'active'
+      and register_start_timestamp < $1
+      and register_end_timestamp > $1
+      order by register_start_timestamp desc
+      limit 20;
+      `;
+    const values = [timestamp];
+    try {
+      const result = await client.query(query, values);
+      res.status(200).json(result.rows);
+    } catch (err) {
+      res.status(400).json(err);
+    } finally {
+      client.end();
+    }
+  } else {
+    const query = `
+    SELECT *
+    FROM activity
+    where status = 'active'
+    and register_start_timestamp < $1
+    and register_end_timestamp > $1
+    and activity_tag = $2
+    order by register_start_timestamp desc
+    limit 20;
+    `;
+    const values = [timestamp, category];
+    try {
+      const result = await client.query(query, values);
+      res.status(200).json(result.rows);
+    } catch (err) {
+      res.status(400).json(err);
+    } finally {
+      client.end();
+    }
+  }
+};
+
 export const createActivity = async (req: Request, res: Response) => {
   console.log(req.body);
   const {
@@ -495,23 +545,7 @@ export const findActivityNeedAttention = async (req: Request, res: Response) => 
     client.end();
   }
 };
-export const getAllActivity = async (req: Request, res: Response) => {
-  const client = new Client(dbConfig);
-  await client.connect();
-  const query = `
-      select *
-      from activity
-      where status = 'active';
-    `;
-  try {
-    const result = await client.query(query);
-    res.status(200).json(result.rows);
-  } catch (err) {
-    res.status(400).json(err);
-  } finally {
-    client.end();
-  }
-};
+
 export const getAllMember = async (req: Request, res: Response) => {
   const client = new Client(dbConfig);
   await client.connect();
