@@ -7,7 +7,7 @@ import {
   getActivityNumberPayload,
   getActivityRatingPayload,
   getChatgroupPayload,
-  getFollowedActivityPayload,
+  // getFollowedActivityPayload,
   getHostedActivityPayload,
   getJoinedActivityByTagPayload,
   getJoinedActivityPayload,
@@ -87,12 +87,8 @@ export default function useActivity() {
   };
 
   //getFollowedActivity
-  const getFollowedActivity = async ({ member_id }: getFollowedActivityPayload) => {
-    const { data } = await instance.get(`/activity/follow/`, {
-      params: {
-        member_id,
-      },
-    });
+  const getFollowedActivity = async () => {
+    const { data } = await instance.get(`/activity/follow/`);
     return data;
   };
 

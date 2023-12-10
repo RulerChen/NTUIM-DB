@@ -6,7 +6,7 @@ import { dbConfig } from '../config/db.config';
 
 // get 20 activities data
 export const getActivityAll = async (req: Request, res: Response) => {
-  // // console.log('activity', req.user);
+  // console.log('activity', req.user);
   const category = req.query.category;
 
   const client = new Client(dbConfig);
@@ -54,7 +54,6 @@ export const getActivityAll = async (req: Request, res: Response) => {
     }
   }
 };
-
 export const createActivity = async (req: Request, res: Response) => {
   // // console.log(req.body);
   const {
@@ -143,7 +142,6 @@ export const createActivity = async (req: Request, res: Response) => {
     client.end();
   }
 };
-
 export const getActivityByDescription = async (req: Request, res: Response) => {
   // only input description
   // // console.log(req.body);
@@ -234,7 +232,6 @@ export const getJoinedActivityByTag = async (req: Request, res: Response) => {
     client.end();
   }
 };
-
 export const followActivity = async (req: Request, res: Response) => {
   const { member_id, activity_id } = req.body;
   const client = new Client(dbConfig);
@@ -274,7 +271,6 @@ export const followActivity = async (req: Request, res: Response) => {
     await client.end();
   }
 };
-
 export const joinActivity = async (req: Request, res: Response) => {
   // console.log(req.body);
   const { member_id, activity_id } = req.body;
@@ -340,11 +336,8 @@ export const getJoinedActivity = async (req: Request, res: Response) => {
     client.end();
   }
 };
-
 export const getFollowedActivity = async (req: Request, res: Response) => {
-  const member_id = req.query.member_id;
-  // // console.log(req);
-  console.log('123');
+  const { member_id } = req.user as any;
 
   const client = new Client(dbConfig);
   await client.connect();
@@ -568,7 +561,6 @@ export const findActivityNeedAttention = async (req: Request, res: Response) => 
     client.end();
   }
 };
-
 export const getAllMember = async (req: Request, res: Response) => {
   const client = new Client(dbConfig);
   await client.connect();
