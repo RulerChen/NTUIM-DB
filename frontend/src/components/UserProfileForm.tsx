@@ -1,80 +1,91 @@
 'use client';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import Input from '@/components/LoginInput';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import { Separator } from '@/components/ui/separator';
+import { useMember } from '@/hooks/useMember';
+import { UpdateUserPayload } from '@/lib/shared_types';
+import axios from '@/lib/axios';
 
 const UserProfileForm = () => {
   const [isStudent, setIsStudent] = useState(false);
-
+  const { member, student } = useMember();
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FieldValues>({
     defaultValues: {
-      username: '',
-      email: '',
-      password: '',
-      confirmed_password: '',
-      age: 0,
-      phone_number: '',
-      isStudent: false,
+      username: member?.name,
+      email: member?.email,
+      password: member?.password,
+      confirmed_password: member?.password,
+      age: member?.age,
+      phone_number: member?.phone,
+      isStudent: member?.member_role === 'Student' ? true : false,
       school_name: '',
       department: '',
       grade: '',
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = () => {
-    toast.error('後端尚未實作');
-    // data = {
-    //   ...data,
-    //   age: Number(data.age),
-    // };
-    // if (variant === 'LOGIN') {
-    //   axios
-    //     .post(`/user/login`, data, {
-    //       withCredentials: true,
-    //     })
-    //     .then((res) => {
-    //       if (res.status === 200) {
-    //         toast.success('登入成功');
-    //         router.push('/secret');
-    //       }
-    //     })
-    //     .catch(() => {
-    //       toast.error('登入失敗');
-    //     })
-    //     .finally(() => reset());
-    // }
-    // if (variant === 'REGISTER') {
-    //   if (data.password !== data.confirmed_password) {
-    //     toast.error('密碼不一致');
-    //     return;
-    //   }
-    //   axios
-    //     .post(`/user/register`, data)
-    //     .then((res) => {
-    //       if (res.status === 201) {
-    //         toast.success('註冊成功');
-    //       }
-    //     })
-    //     .catch(() => {
-    //       toast.error('註冊失敗');
-    //     });
-    // }
+  useEffect(() => {
+    if (member?.member_role === 'Student') {
+      setIsStudent(true);
+      setValue('isStudent', true);
+    }
+  }, [member?.member_role, setValue]);
+
+  useEffect(() => {
+    console.log(student);
+    if (student) {
+      setValue('school_name', student.school_name);
+      setValue('department', student.department);
+      setValue('grade', student.grade);
+    }
+  }, [student, setValue]);
+
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    data = {
+      ...data,
+      age: Number(data.age),
+    };
+    const role = member?.member_role;
+    const user: UpdateUserPayload = {
+      name: data.username,
+      phone: data.phone_number,
+      email: data.email,
+      password: data.password,
+      age: data.age,
+      member_role: data.isStudent ? 'Student' : role!,
+      school_name: data.school_name,
+      department: data.department,
+      grade: data.grade,
+    };
+    axios
+      .put(`/user/`, user)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          toast.success('更新成功');
+        }
+      })
+      .catch(() => {
+        toast.error('更新失敗');
+      });
   };
 
   return (
     <div className="sm:mx-auto sm:w-full sm:max-w-md sm:py-10 lg:max-w-xl xl:max-w-2xl">
-      <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10 space-y-6">
+      <div className="bg-white px-4 py-8 shadow sm:rounded-xl sm:px-10 space-y-6">
         <div className="text-xl font-semibold">使用者個人資料</div>
         <Separator orientation="horizontal" className="bg-black" />
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <Input
+            defaultValue={member?.name}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -83,6 +94,7 @@ const UserProfileForm = () => {
             label="姓名"
           />
           <Input
+            defaultValue={member?.email}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -92,6 +104,7 @@ const UserProfileForm = () => {
             type="email"
           />
           <Input
+            defaultValue={member?.password}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -101,6 +114,7 @@ const UserProfileForm = () => {
             type="password"
           />
           <Input
+            defaultValue={member?.password}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -111,6 +125,7 @@ const UserProfileForm = () => {
           />
           {/* age shoud > 0 */}
           <Input
+            defaultValue={member?.age}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -120,6 +135,7 @@ const UserProfileForm = () => {
             type="number"
           />
           <Input
+            defaultValue={member?.phone}
             disabled={isSubmitting}
             register={register}
             errors={errors}

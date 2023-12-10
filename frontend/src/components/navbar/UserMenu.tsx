@@ -10,6 +10,7 @@ import Avatar from '../Avatar';
 import { AiOutlineMenu } from 'react-icons/ai';
 
 import { useMember } from '@/hooks/useMember';
+// import toast from '@/context/toast';
 
 const UserMenu = () => {
   const router = useRouter();
@@ -55,7 +56,7 @@ const UserMenu = () => {
                 <MenuItem label="我主持的活動" onClick={() => handleClick('/unchange_route')} />
                 <MenuItem label="我追蹤的活動" onClick={() => handleClick('/unchange_route')} />
                 <MenuItem label="我參加的活動" onClick={() => handleClick('/unchange_route')} />
-                <MenuItem label="聊天室" onClick={() => router.push('/unchange_route')} />
+                <MenuItem label="聊天室" onClick={() => handleClick('/unchange_route')} />
                 <hr />
                 <MenuItem label="登出" onClick={handleLogout} />
               </>

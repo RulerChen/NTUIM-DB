@@ -26,7 +26,7 @@ const MemberDataSchema = z.object({
   password: z.string().min(1).max(256),
   age: z.number().int().gte(0),
   phone: z.string().min(1).max(20),
-  isStudent: z.enum(['Admin', 'Student', 'Non-student']),
+  member_role: z.enum(['Admin', 'Student', 'Non-student']),
 });
 
 const ChatgroupDataSchema = z.object({
@@ -35,11 +35,26 @@ const ChatgroupDataSchema = z.object({
   chatname: z.string().min(1).max(20),
 });
 
+const StudentDataSchema = z.object({
+  member_id: z.string().max(100),
+  student_id: z.string().max(100),
+  school_name: z.string().min(1).max(50),
+  department: z.string().min(1).max(50),
+  grade: z.number().int().gte(0),
+});
+
 export type CardData = Omit<ActivityData, 'requirement'>;
 
 export type MemberData = z.infer<typeof MemberDataSchema>;
 
 export type ChatgroupData = z.infer<typeof ChatgroupDataSchema>;
+
+export type StudentData = z.infer<typeof StudentDataSchema>;
+
+export type UpdateUserPayload = Omit<MemberData, 'member_id'> &
+  Omit<StudentData, 'member_id' | 'student_id'>;
+
+export type UpdateUserResponse = StudentData;
 
 export type createActivityPayload = Omit<ActivityData, 'activity_id'> &
   Pick<ChatgroupData, 'chatname'>;
