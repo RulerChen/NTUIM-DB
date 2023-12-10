@@ -1,6 +1,9 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+
 import axios from '@/lib/axios';
 
 import { Label } from '@/components/ui/label';
@@ -14,6 +17,7 @@ import { categories } from '@/components/navbar/Categories';
 import clsx from 'clsx';
 
 export default function Page() {
+  const router = useRouter();
   const [topic, setTopic] = useState<string>('');
   const {
     register,
@@ -36,14 +40,37 @@ export default function Page() {
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    if (data.event_start_timestamp > data.event_end_timestamp) {
+      toast.error('活動開始時間不得晚於活動結束時間');
+      return;
+    } else if (data.register_start_timestamp > data.register_end_timestamp) {
+      toast.error('註冊開始時間不得晚於註冊結束時間');
+      return;
+    } else if (data.event_end_timestamp < data.register_end_timestamp) {
+      toast.error('活動結束時間不得晚於註冊結束時間');
+      return;
+    } else if (data.non_student_fee < data.student_fee) {
+      toast.error('非學生價不得低於學生價');
+      return;
+    }
     data = {
       ...data,
+      category: topic,
       capacity: Number(data.capacity),
       student_fee: Number(data.student_fee),
       non_student_fee: Number(data.non_student_fee),
     };
-    axios.post(`/activity`, data);
-    console.log(data);
+    axios
+      .post(`/activity`, data)
+      .then((res) => {
+        if (res.status === 201) {
+          toast.success('新增成功');
+          router.push('/');
+        }
+      })
+      .catch(() => {
+        toast.error('新增失敗');
+      });
   };
   return (
     <div className="mx-auto max-w-[850px] space-y-6">
@@ -115,6 +142,7 @@ export default function Page() {
                   type="number"
                   {...register('capacity')}
                   disabled={isSubmitting}
+                  min={1}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -162,22 +190,25 @@ export default function Page() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="tags">選擇主題</Label>
+                <Label htmlFor="tags">選擇類別</Label>
                 <div className="flex flex-wrap gap-2" id="tags">
-                  {categories.map((category) => (
-                    <Badge
-                      className={clsx(
-                        `px-2, py-1, text-white, rounded, ${
-                          topic === category.type ? 'bg-sky-600' : 'bg-gray-400'
-                        }`
-                      )}
-                      key={category.type}
-                      onClick={() => setTopic(category.type)}
-                      {...register('category')}
-                    >
-                      {category.label}
-                    </Badge>
-                  ))}
+                  {categories.map(
+                    (category) =>
+                      category.type !== 'all' && (
+                        <Badge
+                          className={clsx(
+                            `px-2 py-1 text-white rounded ${
+                              topic === category.type ? 'bg-sky-600' : 'bg-gray-200 text-gray-800'
+                            }`
+                          )}
+                          key={category.type}
+                          onClick={() => setTopic(category.type)}
+                          {...register('category')}
+                        >
+                          {category.label}
+                        </Badge>
+                      )
+                  )}
                 </div>
               </div>
               <Button className="w-full" type="submit">

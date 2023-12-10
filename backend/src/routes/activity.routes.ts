@@ -29,14 +29,14 @@ const router = express.Router();
 
 router.get('/', getActivityAll);
 
+// createActivity
+router.post('/', isAuth, createActivity);
+
 // followActivity
 router.post('/follow', isAuth, followActivity);
 
 //getFollowedActivity
 router.get('/follow', isAuth, getFollowedActivity);
-
-// createActivity
-router.post('/', createActivity);
 
 //getActivityByDescription
 // router.get('/:description', getActivityByDescription);
