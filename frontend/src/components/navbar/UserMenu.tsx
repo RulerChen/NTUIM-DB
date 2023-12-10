@@ -15,11 +15,17 @@ const UserMenu = () => {
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
-  const { member } = useMember();
+  const { member, logout } = useMember();
 
   const handleClick = (path: string) => {
     router.push(path);
     setIsOpen(!isOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsOpen(!isOpen);
+    router.push('/');
   };
 
   return (
@@ -51,7 +57,7 @@ const UserMenu = () => {
                 <MenuItem label="我參加的活動" onClick={() => handleClick('/unchange_route')} />
                 <MenuItem label="聊天室" onClick={() => router.push('/unchange_route')} />
                 <hr />
-                <MenuItem label="登出" onClick={() => {}} />
+                <MenuItem label="登出" onClick={handleLogout} />
               </>
             ) : (
               <>

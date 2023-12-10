@@ -15,6 +15,7 @@ interface actions {
   setMember: (member: MemberData) => void;
   fetchMember: () => void;
   fetchFollowActivity: () => void;
+  logout: () => void;
 }
 
 export const useMember = create<state & actions>((set) => ({
@@ -33,5 +34,10 @@ export const useMember = create<state & actions>((set) => ({
   fetchFollowActivity: async () => {
     const { data } = await axios.get(`/activity/follow`);
     set({ follow_activity: data });
+  },
+  logout: async () => {
+    await axios.post(`/user/logout`);
+    set({ member: null });
+    set({ follow_activity: [] });
   },
 }));

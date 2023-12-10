@@ -62,8 +62,8 @@ export default function useActivity() {
   };
 
   //followActivity
-  const followActivity = async ({ activity_id, member_id }: followActivityPayload) => {
-    return instance.post('/activity/follow', { activity_id, member_id });
+  const followActivity = async ({ activity_id }: followActivityPayload) => {
+    return instance.post('/activity/follow', { activity_id });
   };
 
   //joinActivity

@@ -20,7 +20,7 @@ const AuthForm = () => {
   const router = useRouter();
   const [variant, setVariant] = useState<Variant>('LOGIN');
   const [isStudent, setIsStudent] = useState(false);
-  const { setMember } = useMember();
+  const { fetchMember } = useMember();
   const toggleVariant = useCallback(() => {
     if (variant === 'LOGIN') {
       setVariant('REGISTER');
@@ -64,7 +64,7 @@ const AuthForm = () => {
             toast.success('登入成功');
             router.push('/');
           }
-          setMember(res.data);
+          fetchMember();
         })
         .catch(() => {
           toast.error('登入失敗');

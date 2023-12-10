@@ -233,7 +233,8 @@ export const getJoinedActivityByTag = async (req: Request, res: Response) => {
   }
 };
 export const followActivity = async (req: Request, res: Response) => {
-  const { member_id, activity_id } = req.body;
+  const { member_id } = req.user as any;
+  const { activity_id } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
 

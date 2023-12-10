@@ -23,10 +23,17 @@ import {
   // rateActivity,
 } from '@/controllers/activity.controller';
 import express from 'express';
+import { isAuth } from '@/utils/isAuth';
 
 const router = express.Router();
 
 router.get('/', getActivityAll);
+
+// followActivity
+router.post('/follow', isAuth, followActivity);
+
+//getFollowedActivity
+router.get('/follow', isAuth, getFollowedActivity);
 
 // createActivity
 // router.post('/', createActivity);
@@ -43,9 +50,6 @@ router.get('/', getActivityAll);
 //getJoinedActivityByTag
 // router.get('/:activity_tag/join', getJoinedActivityByTag);
 
-//followActivity
-router.post('/follow', followActivity);
-
 //joinActivity
 // router.post('/join', joinActivity);
 
@@ -54,9 +58,6 @@ router.post('/follow', followActivity);
 
 //getJoinedActivity
 // router.get('/join/:member_id', getJoinedActivity);
-
-//getFollowedActivity
-router.get('/follow', getFollowedActivity);
 
 //getHostedActivity
 // router.get('/host/:member_id', getHostedActivity);
