@@ -1,5 +1,5 @@
 import {
-  // createActivity,
+  createActivity,
   getActivityAll,
   // findActivityNeedAttention,
   followActivity,
@@ -9,7 +9,7 @@ import {
   // getActivityMember,
   // getActivityNumber,
   // getActivityRating,
-  // getAllMember,
+  getAllMember,
   // getChatgroup,
   getFollowedActivity,
   // getHostedActivity,
@@ -21,6 +21,8 @@ import {
   // kickMember,
   // quitActivity,
   // rateActivity,
+  deleteActivity,
+  deleteUser
 } from '@/controllers/activity.controller';
 import express from 'express';
 import { isAuth } from '@/utils/isAuth';
@@ -36,7 +38,7 @@ router.post('/follow', isAuth, followActivity);
 router.get('/follow', isAuth, getFollowedActivity);
 
 // createActivity
-// router.post('/', createActivity);
+//router.post('/', createActivity);
 
 //getActivityByDescription
 // router.get('/:description', getActivityByDescription);
@@ -90,6 +92,12 @@ router.get('/follow', isAuth, getFollowedActivity);
 // router.get('/attention', findActivityNeedAttention);
 
 //getAllMember
-// router.get('/member', getAllMember);
+router.get('/member', getAllMember);
+
+//deleteActivity
+router.delete('/:activity_id', deleteActivity);
+
+//deleteUser
+router.delete('/:member_id', deleteUser);
 
 export default router;

@@ -151,6 +151,11 @@ export default function useActivity() {
     return instance.get(`/activity/member`);
   };
 
+  //deleteActivity
+  const deleteActivity = async ({ activity_id }: deleteActivityPayload) => {
+    return instance.delete(`/activity/${activity_id}`);
+  };
+
   return {
     createActivity,
     getActivityByDescription,
@@ -174,5 +179,6 @@ export default function useActivity() {
     findActivityNeedAttention,
     getAllActivity,
     getAllMember,
+    deleteActivity,
   };
 }
