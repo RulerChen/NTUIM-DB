@@ -15,7 +15,6 @@ const HeartButton = ({ id, isFollow }: HeartButtonProps) => {
 
   const toggleFavorite = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
-    console.log('member', member);
     if (!member) return;
     await followActivity({ activity_id: id });
     fetchFollowActivity();
