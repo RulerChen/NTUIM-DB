@@ -1,44 +1,42 @@
 'use client';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import Input from '@/components/LoginInput';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import { Separator } from '@/components/ui/separator';
 import { useMember } from '@/hooks/useMember';
-import { MemberData } from '@/lib/shared_types';
 
 const UserProfileForm = () => {
   const [isStudent, setIsStudent] = useState(false);
   const { member } = useMember();
-  console.log(member);
-  const {
-    email,
-    name,
-    age,
-    phone,
-    isStudent: isStudent_,
-    password,
-  } = member as MemberData & { name: string } & { phone: string };
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FieldValues>({
     defaultValues: {
-      username: name,
-      email: email,
-      password: password,
-      confirmed_password: password,
-      age: age,
-      phone_number: phone,
-      isStudent: isStudent_ === 'Student' ? true : false,
+      username: member?.name,
+      email: member?.email,
+      password: member?.password,
+      confirmed_password: member?.password,
+      age: member?.age,
+      phone_number: member?.phone,
+      isStudent: member?.member_role === 'Student' ? true : false,
       school_name: '',
       department: '',
       grade: '',
     },
   });
+
+  useEffect(() => {
+    if (member?.member_role === 'Student') {
+      setIsStudent(true);
+      setValue('isStudent', true);
+    }
+  }, [member?.member_role, setValue]);
 
   const onSubmit: SubmitHandler<FieldValues> = () => {
     toast.error('後端尚未實作');
@@ -87,7 +85,7 @@ const UserProfileForm = () => {
         <Separator orientation="horizontal" className="bg-black" />
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <Input
-            defaultValue={name}
+            defaultValue={member?.name}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -96,7 +94,7 @@ const UserProfileForm = () => {
             label="姓名"
           />
           <Input
-            defaultValue={email}
+            defaultValue={member?.email}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -106,7 +104,7 @@ const UserProfileForm = () => {
             type="email"
           />
           <Input
-            defaultValue={password}
+            defaultValue={member?.password}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -116,7 +114,7 @@ const UserProfileForm = () => {
             type="password"
           />
           <Input
-            defaultValue={password}
+            defaultValue={member?.password}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -127,7 +125,7 @@ const UserProfileForm = () => {
           />
           {/* age shoud > 0 */}
           <Input
-            defaultValue={age}
+            defaultValue={member?.age}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -137,7 +135,7 @@ const UserProfileForm = () => {
             type="number"
           />
           <Input
-            defaultValue={phone}
+            defaultValue={member?.phone}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -147,7 +145,6 @@ const UserProfileForm = () => {
           />
           <div className="flex items-center">
             <input
-              defaultChecked={isStudent_ === 'Student' ? true : false}
               id="isStudent"
               type="checkbox"
               className="focus:ring-sky-600 h-4 w-4 text-sky-600 border-gray-300 rounded"

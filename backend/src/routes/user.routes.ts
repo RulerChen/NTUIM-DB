@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 
-import { isLogin, login, logout, register } from '@/controllers/user.controller';
+import { isLogin, login, register, logout } from '@/controllers/user.controller';
 import { isAuth } from '@/utils/isAuth';
 import { frontendUrl } from '@/utils/url';
 

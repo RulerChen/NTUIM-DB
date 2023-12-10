@@ -10,26 +10,23 @@ import Avatar from '../Avatar';
 import { AiOutlineMenu } from 'react-icons/ai';
 
 import { useMember } from '@/hooks/useMember';
-import instance from '@/lib/axios';
 // import toast from '@/context/toast';
 
 const UserMenu = () => {
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
-  const { member } = useMember();
+  const { member, logout } = useMember();
 
   const handleClick = (path: string) => {
     router.push(path);
     setIsOpen(!isOpen);
   };
 
-  const logout = () => {
-    instance.post('/user/logout').then(() => {
-      // toast.success('登出成功');
-      setIsOpen(!isOpen);
-      router.push('/login');
-    });
+  const handleLogout = () => {
+    logout();
+    setIsOpen(!isOpen);
+    router.push('/');
   };
 
   return (
@@ -61,7 +58,7 @@ const UserMenu = () => {
                 <MenuItem label="我參加的活動" onClick={() => handleClick('/unchange_route')} />
                 <MenuItem label="聊天室" onClick={() => handleClick('/unchange_route')} />
                 <hr />
-                <MenuItem label="登出" onClick={() => logout()} />
+                <MenuItem label="登出" onClick={handleLogout} />
               </>
             ) : (
               <>

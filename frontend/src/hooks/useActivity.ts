@@ -7,7 +7,7 @@ import {
   getActivityNumberPayload,
   getActivityRatingPayload,
   getChatgroupPayload,
-  getFollowedActivityPayload,
+  // getFollowedActivityPayload,
   getHostedActivityPayload,
   getJoinedActivityByTagPayload,
   getJoinedActivityPayload,
@@ -62,8 +62,8 @@ export default function useActivity() {
   };
 
   //followActivity
-  const followActivity = async ({ activity_id, member_id }: followActivityPayload) => {
-    return instance.post('/activity/follow', { activity_id, member_id });
+  const followActivity = async ({ activity_id }: followActivityPayload) => {
+    return instance.post('/activity/follow', { activity_id });
   };
 
   //joinActivity
@@ -87,12 +87,8 @@ export default function useActivity() {
   };
 
   //getFollowedActivity
-  const getFollowedActivity = async ({ member_id }: getFollowedActivityPayload) => {
-    const { data } = await instance.get(`/activity/follow/`, {
-      params: {
-        member_id,
-      },
-    });
+  const getFollowedActivity = async () => {
+    const { data } = await instance.get(`/activity/follow/`);
     return data;
   };
 
