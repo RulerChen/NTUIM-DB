@@ -6,11 +6,12 @@ import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import { Separator } from '@/components/ui/separator';
 import { useMember } from '@/hooks/useMember';
+import { UpdateUserPayload } from '@/lib/shared_types';
+import axios from '@/lib/axios';
 
 const UserProfileForm = () => {
   const [isStudent, setIsStudent] = useState(false);
-  const { member } = useMember();
-
+  const { member, student } = useMember();
   const {
     register,
     handleSubmit,
@@ -38,44 +39,43 @@ const UserProfileForm = () => {
     }
   }, [member?.member_role, setValue]);
 
-  const onSubmit: SubmitHandler<FieldValues> = () => {
-    toast.error('後端尚未實作');
-    // data = {
-    //   ...data,
-    //   age: Number(data.age),
-    // };
-    // if (variant === 'LOGIN') {
-    //   axios
-    //     .post(`/user/login`, data, {
-    //       withCredentials: true,
-    //     })
-    //     .then((res) => {
-    //       if (res.status === 200) {
-    //         toast.success('登入成功');
-    //         router.push('/secret');
-    //       }
-    //     })
-    //     .catch(() => {
-    //       toast.error('登入失敗');
-    //     })
-    //     .finally(() => reset());
-    // }
-    // if (variant === 'REGISTER') {
-    //   if (data.password !== data.confirmed_password) {
-    //     toast.error('密碼不一致');
-    //     return;
-    //   }
-    //   axios
-    //     .post(`/user/register`, data)
-    //     .then((res) => {
-    //       if (res.status === 201) {
-    //         toast.success('註冊成功');
-    //       }
-    //     })
-    //     .catch(() => {
-    //       toast.error('註冊失敗');
-    //     });
-    // }
+  useEffect(() => {
+    console.log(student);
+    if (student) {
+      setValue('school_name', student.school_name);
+      setValue('department', student.department);
+      setValue('grade', student.grade);
+    }
+  }, [student, setValue]);
+
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    data = {
+      ...data,
+      age: Number(data.age),
+    };
+    const role = member?.member_role;
+    const user: UpdateUserPayload = {
+      name: data.username,
+      phone: data.phone_number,
+      email: data.email,
+      password: data.password,
+      age: data.age,
+      member_role: data.isStudent ? 'Student' : role!,
+      school_name: data.school_name,
+      department: data.department,
+      grade: data.grade,
+    };
+    axios
+      .put(`/user/`, user)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          toast.success('更新成功');
+        }
+      })
+      .catch(() => {
+        toast.error('更新失敗');
+      });
   };
 
   return (

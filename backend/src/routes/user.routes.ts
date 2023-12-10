@@ -1,7 +1,14 @@
 import express from 'express';
 import passport from 'passport';
 
-import { isLogin, login, register, logout } from '@/controllers/user.controller';
+import {
+  isLogin,
+  login,
+  register,
+  logout,
+  updateUser,
+  getStudentInfo,
+} from '@/controllers/user.controller';
 import { isAuth } from '@/utils/isAuth';
 import { frontendUrl } from '@/utils/url';
 
@@ -36,5 +43,9 @@ router.post('/register', register);
 router.get('/isLogin', isAuth, isLogin);
 
 router.post('/logout', logout);
+
+router.put('/', isAuth, updateUser);
+
+router.get('/student', isAuth, getStudentInfo);
 
 export default router;

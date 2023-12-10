@@ -59,6 +59,60 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
+export const updateUser = async (req: Request, res: Response) => {
+  const { member_id } = req.user as any;
+  const { email, name, age, phone, member_role, school_name, department, grade } = req.body;
+  console.log(req.body);
+  const client = new Client(dbConfig);
+  await client.connect();
+  const query = `
+    UPDATE member
+    SET email = $1, name = $2, age = $3, phone = $4, member_role = $5
+    WHERE member_id = $6;
+    `;
+  const values = [email, name, age, phone, member_role, member_id];
+
+  try {
+    await client.query(query, values);
+    if (member_role === 'Student') {
+      const query_student = `
+      UPDATE student
+      SET school_name = $1, department = $2, grade = $3
+      WHERE member_id = $4;
+      `;
+      const values_student = [school_name, department, grade, member_id];
+      await client.query(query_student, values_student);
+    }
+    res.status(200).json("You've successfully updated your profile!");
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  } finally {
+    client.end();
+  }
+};
+
+export const getStudentInfo = async (req: Request, res: Response) => {
+  const { member_id } = req.user as any;
+  console.log(member_id);
+  const client = new Client(dbConfig);
+  await client.connect();
+  const query = `
+  select * from student 
+  where member_id = $1;
+  `;
+  const values = [member_id];
+
+  try {
+    const result = await client.query(query, values);
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    res.status(400).json(err);
+  } finally {
+    client.end();
+  }
+};
+
 export const login = (req: Request, res: Response) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   passport.authenticate('local', (err: any, user: any, info: any) => {
