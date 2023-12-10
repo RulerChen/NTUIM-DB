@@ -1,4 +1,8 @@
 'use client';
+import { useState } from 'react';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import axios from '@/lib/axios';
+
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -7,8 +11,40 @@ import { Badge } from '@/components/ui/badge';
 import { CardContent, Card } from '@/components/ui/card';
 
 import { categories } from '@/components/navbar/Categories';
+import clsx from 'clsx';
 
 export default function Page() {
+  const [topic, setTopic] = useState<string>('');
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<FieldValues>({
+    defaultValues: {
+      title: '',
+      description: '',
+      event_start_timestamp: '',
+      event_end_timestamp: '',
+      location: '',
+      capacity: 0,
+      register_start_timestamp: '',
+      register_end_timestamp: '',
+      student_fee: 0,
+      non_student_fee: 0,
+      category: '',
+    },
+  });
+
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    data = {
+      ...data,
+      capacity: Number(data.capacity),
+      student_fee: Number(data.student_fee),
+      non_student_fee: Number(data.non_student_fee),
+    };
+    axios.post(`/activity`, data);
+    console.log(data);
+  };
   return (
     <div className="mx-auto max-w-[850px] space-y-6">
       <div className="space-y-2 text-center">
@@ -16,67 +52,139 @@ export default function Page() {
       </div>
       <Card>
         <CardContent>
-          <div className="space-y-4">
-            <div className="space-y-2 mt-2">
-              <Label htmlFor="title">標題</Label>
-              <Input id="title" placeholder="新增標題" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="description">描述</Label>
-              <Textarea id="description" placeholder="新增描述" required />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="event-start">活動開始時間</Label>
-                <Input id="event-start" required type="datetime-local" />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-4">
+              <div className="space-y-2 mt-2">
+                <Label htmlFor="title">標題</Label>
+                <Input
+                  id="title"
+                  placeholder="新增標題"
+                  {...register('title')}
+                  required
+                  disabled={isSubmitting}
+                />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="event-end">活動結束時間</Label>
-                <Input id="event-end" required type="datetime-local" />
+                <Label htmlFor="description">描述</Label>
+                <Textarea
+                  id="description"
+                  placeholder="新增描述"
+                  {...register('description')}
+                  required
+                  disabled={isSubmitting}
+                />
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="location">地點</Label>
-              <Input id="location" placeholder="新增地點" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="capacity">人數</Label>
-              <Input id="capacity" placeholder="新增人數" required type="number" />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="event-start">活動開始時間</Label>
+                  <Input
+                    id="event-start"
+                    required
+                    type="datetime-local"
+                    {...register('event_start_timestamp')}
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="event-end">活動結束時間</Label>
+                  <Input
+                    id="event-end"
+                    required
+                    type="datetime-local"
+                    {...register('event_end_timestamp')}
+                    disabled={isSubmitting}
+                  />
+                </div>
+              </div>
               <div className="space-y-2">
-                <Label htmlFor="register-start">註冊開始時間</Label>
-                <Input id="register-start" required type="datetime-local" />
+                <Label htmlFor="location">地點</Label>
+                <Input
+                  id="location"
+                  placeholder="新增地點"
+                  required
+                  {...register('location')}
+                  disabled={isSubmitting}
+                />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="register-end">註冊結束時間</Label>
-                <Input id="register-end" required type="datetime-local" />
+                <Label htmlFor="capacity">人數</Label>
+                <Input
+                  id="capacity"
+                  placeholder="新增人數"
+                  required
+                  type="number"
+                  {...register('capacity')}
+                  disabled={isSubmitting}
+                />
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="register-start">註冊開始時間</Label>
+                  <Input
+                    id="register-start"
+                    required
+                    type="datetime-local"
+                    {...register('register_start_timestamp')}
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="register-end">註冊結束時間</Label>
+                  <Input
+                    id="register-end"
+                    required
+                    type="datetime-local"
+                    disabled={isSubmitting}
+                    {...register('register_end_timestamp')}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="student-fee">學生價</Label>
+                  <Input
+                    id="student-fee"
+                    required
+                    type="number"
+                    {...register('student_fee')}
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="non-student-fee">非學生價</Label>
+                  <Input
+                    id="non-student-fee"
+                    required
+                    type="number"
+                    {...register('non_student_fee')}
+                    disabled={isSubmitting}
+                  />
+                </div>
+              </div>
               <div className="space-y-2">
-                <Label htmlFor="student-fee">學生價</Label>
-                <Input id="student-fee" required type="number" />
+                <Label htmlFor="tags">選擇主題</Label>
+                <div className="flex flex-wrap gap-2" id="tags">
+                  {categories.map((category) => (
+                    <Badge
+                      className={clsx(
+                        `px-2, py-1, text-white, rounded, ${
+                          topic === category.type ? 'bg-sky-600' : 'bg-gray-400'
+                        }`
+                      )}
+                      key={category.type}
+                      onClick={() => setTopic(category.type)}
+                      {...register('category')}
+                    >
+                      {category.label}
+                    </Badge>
+                  ))}
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="non-student-fee">非學生價</Label>
-                <Input id="non-student-fee" required type="number" />
-              </div>
+              <Button className="w-full" type="submit">
+                新增活動
+              </Button>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="tags">選擇主題</Label>
-              <div className="flex flex-wrap gap-2" id="tags">
-                {categories.map((category) => (
-                  <Badge className="px-2 py-1 text-white rounded" key={category.type}>
-                    {category.label}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-            <Button className="w-full" type="submit">
-              新增活動
-            </Button>
-          </div>
+          </form>
         </CardContent>
       </Card>
     </div>

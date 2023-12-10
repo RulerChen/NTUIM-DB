@@ -1,8 +1,9 @@
 import {
-  // createActivity,
   getActivityAll,
-  // findActivityNeedAttention,
+  createActivity,
   followActivity,
+  getFollowedActivity,
+  // findActivityNeedAttention,
   // getActivityByDescription,
   // getActivityByTag,
   // getActivityByTime,
@@ -11,7 +12,6 @@ import {
   // getActivityRating,
   // getAllMember,
   // getChatgroup,
-  getFollowedActivity,
   // getHostedActivity,
   // getJoinedActivity,
   // getJoinedActivityByTag,
@@ -36,7 +36,7 @@ router.post('/follow', isAuth, followActivity);
 router.get('/follow', isAuth, getFollowedActivity);
 
 // createActivity
-// router.post('/', createActivity);
+router.post('/', createActivity);
 
 //getActivityByDescription
 // router.get('/:description', getActivityByDescription);
