@@ -22,10 +22,10 @@ export type ActivityData = {
 const MemberDataSchema = z.object({
   member_id: z.string().max(100),
   email: z.string().email().min(1).max(50),
-  username: z.string().min(1).max(50),
+  name: z.string().min(1).max(50),
   password: z.string().min(1).max(256),
   age: z.number().int().gte(0),
-  phone_number: z.string().min(1).max(20),
+  phone: z.string().min(1).max(20),
   isStudent: z.enum(['Admin', 'Student', 'Non-student']),
 });
 
@@ -55,8 +55,7 @@ export type getActivityByTagPayload = { activity_tag: string };
 
 export type getJoinedActivityByTagPayload = { activity_tag: string };
 
-export type followActivityPayload = Pick<ActivityData, 'activity_id'> &
-  Pick<MemberData, 'member_id'>;
+export type followActivityPayload = Pick<ActivityData, 'activity_id'>;
 
 export type joinActivityPayload = Pick<ActivityData, 'activity_id'> & Pick<MemberData, 'member_id'>;
 

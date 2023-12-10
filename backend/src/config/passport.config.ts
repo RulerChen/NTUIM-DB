@@ -130,12 +130,12 @@ passport.use(
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 passport.serializeUser((user: any, done) => {
-  console.log('serializeUser', user.member_id);
+  // console.log('serializeUser', user.member_id);
   done(null, user.member_id);
 });
 
 passport.deserializeUser(async (member_id: string, done) => {
-  console.log('deserializeUser', member_id);
+  // console.log('deserializeUser', member_id);
   const client = new Client(dbConfig);
   await client.connect();
   const query = `SELECT * FROM member WHERE member_id = $1`;
