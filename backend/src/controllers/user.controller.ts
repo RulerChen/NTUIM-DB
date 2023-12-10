@@ -1,9 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Client } from 'pg';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
+import passport from 'passport';
 
 import { dbConfig } from '@/config/db.config';
+
 export const register = async (req: Request, res: Response) => {
   console.log(req.body);
   const {
@@ -58,19 +60,29 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const login = (req: Request, res: Response) => {
-  res.status(200).json(req.user);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  passport.authenticate('local', (err: any, user: any, info: any) => {
+    if (!user || err) {
+      return res.status(400).json({ message: info.messages });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        throw err;
+      }
+      return res.status(200).json(user);
+    });
+  })(req, res);
+};
+
+export const logout = (req: Request, res: Response, next: NextFunction) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.status(200).json({ message: 'You have successfully logged out' });
+  });
 };
 
 export const isLogin = (req: Request, res: Response) => {
-  console.log('islogin', req.user);
   res.status(200).json(req.user);
-};
-
-export const logout = (req: Request, res: Response) => {
-  req.logout((err) => {
-    if (err) {
-      res.status(500).json(err);
-    }
-    res.status(200).json('You have successfully logged out!');
-  });
 };

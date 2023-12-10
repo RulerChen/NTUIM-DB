@@ -2,8 +2,8 @@ import express from 'express';
 import compression from 'compression';
 import cors from 'cors';
 import session from 'express-session';
-import cookieParser from 'cookie-parser';
 import passport from 'passport';
+import MongoStore from 'connect-mongo';
 
 import { createTable } from '@/models/init';
 import routes from '@/routes';
@@ -20,21 +20,26 @@ app.use(
   })
 );
 
+app.set('trust proxy', 1);
+
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(
   session({
     secret: env.SECRET_KEY,
     name: 'database_user',
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      collectionName: 'sessions',
+    }),
     resave: false,
     saveUninitialized: false,
     cookie: {
+      path: '/',
       maxAge: 1000 * 60 * 60 * 24 * 7,
       secure: false,
       domain: 'localhost',
-      sameSite: false,
     },
   })
 );

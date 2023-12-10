@@ -6,12 +6,20 @@ import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import { Separator } from '@/components/ui/separator';
 import { useMember } from '@/hooks/useMember';
+import { MemberData } from '@/lib/shared_types';
 
 const UserProfileForm = () => {
   const [isStudent, setIsStudent] = useState(false);
   const { member } = useMember();
   console.log(member);
-  const { username, email, age, phone_number, isStudent: isStudent_, password } = member!;
+  const {
+    email,
+    name,
+    age,
+    phone,
+    isStudent: isStudent_,
+    password,
+  } = member as MemberData & { name: string } & { phone: string };
 
   const {
     register,
@@ -19,13 +27,13 @@ const UserProfileForm = () => {
     formState: { errors, isSubmitting },
   } = useForm<FieldValues>({
     defaultValues: {
-      username: '',
-      email: '',
-      password: '',
-      confirmed_password: '',
-      age: 0,
-      phone_number: '',
-      isStudent: false,
+      username: name,
+      email: email,
+      password: password,
+      confirmed_password: password,
+      age: age,
+      phone_number: phone,
+      isStudent: isStudent_ === 'Student' ? true : false,
       school_name: '',
       department: '',
       grade: '',
@@ -79,7 +87,7 @@ const UserProfileForm = () => {
         <Separator orientation="horizontal" className="bg-black" />
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <Input
-            defaultValue={username}
+            defaultValue={name}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -119,7 +127,7 @@ const UserProfileForm = () => {
           />
           {/* age shoud > 0 */}
           <Input
-            defaultValue={'' + age}
+            defaultValue={age}
             disabled={isSubmitting}
             register={register}
             errors={errors}
@@ -129,7 +137,7 @@ const UserProfileForm = () => {
             type="number"
           />
           <Input
-            defaultValue={phone_number}
+            defaultValue={phone}
             disabled={isSubmitting}
             register={register}
             errors={errors}

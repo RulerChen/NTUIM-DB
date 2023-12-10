@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { dbConfig } from '@/config/db.config';
 import { env } from '@/utils/env';
 import { backendurl } from '@/utils/url';
-import type { User } from '@/types/user.type';
 
 passport.use(
   new LocalStrategy(
@@ -129,17 +128,18 @@ passport.use(
   )
 );
 
-passport.serializeUser((user, done) => {
-  console.log('serializeUser', user);
-  done(null, user);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+passport.serializeUser((user: any, done) => {
+  console.log('serializeUser', user.member_id);
+  done(null, user.member_id);
 });
 
-passport.deserializeUser(async (user: User, done) => {
-  console.log('deserializeUser', user);
+passport.deserializeUser(async (member_id: string, done) => {
+  console.log('deserializeUser', member_id);
   const client = new Client(dbConfig);
   await client.connect();
-  const query = `SELECT * FROM member WHERE email = $1`;
-  const values = [user.email];
+  const query = `SELECT * FROM member WHERE member_id = $1`;
+  const values = [member_id];
 
   try {
     const result = await client.query(query, values);
