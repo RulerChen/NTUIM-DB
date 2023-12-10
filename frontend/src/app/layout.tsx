@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: 'Our final project for database.',
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh-tw">
       <body className={font.className}>
