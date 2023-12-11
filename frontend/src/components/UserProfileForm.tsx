@@ -21,8 +21,6 @@ const UserProfileForm = () => {
     defaultValues: {
       username: member?.name,
       email: member?.email,
-      password: member?.password,
-      confirmed_password: member?.password,
       age: member?.age,
       phone_number: member?.phone,
       isStudent: member?.member_role === 'Student' ? true : false,
@@ -54,11 +52,12 @@ const UserProfileForm = () => {
       age: Number(data.age),
     };
     const role = member?.member_role;
+    const hashed_password = member?.password;
     const user: UpdateUserPayload = {
       name: data.username,
       phone: data.phone_number,
       email: data.email,
-      password: data.password,
+      password: hashed_password!,
       age: data.age,
       member_role: data.isStudent ? 'Student' : role!,
       school_name: data.school_name,
@@ -102,26 +101,6 @@ const UserProfileForm = () => {
             id="email"
             label="電子郵件"
             type="email"
-          />
-          <Input
-            defaultValue={member?.password}
-            disabled={isSubmitting}
-            register={register}
-            errors={errors}
-            required
-            id="password"
-            label="密碼"
-            type="password"
-          />
-          <Input
-            defaultValue={member?.password}
-            disabled={isSubmitting}
-            register={register}
-            errors={errors}
-            required
-            id="confirmed_password"
-            label="確認密碼"
-            type="password"
           />
           {/* age shoud > 0 */}
           <Input

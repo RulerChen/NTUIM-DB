@@ -54,6 +54,8 @@ export type StudentData = z.infer<typeof StudentDataSchema>;
 export type UpdateUserPayload = Omit<MemberData, 'member_id'> &
   Omit<StudentData, 'member_id' | 'student_id'>;
 
+export type UpdateUserPasswordPayload = { old_password: string; new_password: string };
+
 export type UpdateUserResponse = StudentData;
 
 export type createActivityPayload = Omit<ActivityData, 'activity_id'> &
