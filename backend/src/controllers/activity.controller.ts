@@ -3,6 +3,7 @@ import { Client } from 'pg';
 import { v4 as uuidv4 } from 'uuid';
 
 import { dbConfig } from '../config/db.config';
+import { nowDate } from '@/utils/nowDate';
 
 // get 20 activities data
 export const getActivityAll = async (req: Request, res: Response) => {
@@ -11,15 +12,14 @@ export const getActivityAll = async (req: Request, res: Response) => {
 
   const client = new Client(dbConfig);
   await client.connect();
-  const timestamp = new Date().toISOString();
+  const timestamp = nowDate();
 
   if (category === 'all' || category === undefined) {
     const query = `
       SELECT *
       FROM activity
       where status = 'active'
-      and register_start_timestamp < $1
-      and register_end_timestamp > $1
+      and event_end_timestamp > $1
       order by register_start_timestamp desc
       limit 20;
       `;
@@ -37,10 +37,9 @@ export const getActivityAll = async (req: Request, res: Response) => {
     SELECT *
     FROM activity
     where status = 'active'
-    and register_start_timestamp < $1
-    and register_end_timestamp > $1
+    and event_end_timestamp > $1    
     and activity_tag = $2
-    order by register_start_timestamp desc
+    order by register_start_timestamp asc
     limit 20;
     `;
     const values = [timestamp, category];
