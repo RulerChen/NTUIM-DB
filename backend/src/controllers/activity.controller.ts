@@ -3,6 +3,7 @@ import { Client } from 'pg';
 import { v4 as uuidv4 } from 'uuid';
 
 import { dbConfig } from '../config/db.config';
+import { nowDate } from '@/utils/nowDate';
 
 // get 20 activities data
 export const getActivityAll = async (req: Request, res: Response) => {
@@ -11,15 +12,14 @@ export const getActivityAll = async (req: Request, res: Response) => {
 
   const client = new Client(dbConfig);
   await client.connect();
-  const timestamp = new Date().toISOString();
+  const timestamp = nowDate();
 
   if (category === 'all' || category === undefined) {
     const query = `
       SELECT *
       FROM activity
       where status = 'active'
-      and register_start_timestamp < $1
-      and register_end_timestamp > $1
+      and event_end_timestamp > $1
       order by register_start_timestamp desc
       limit 20;
       `;
@@ -37,10 +37,9 @@ export const getActivityAll = async (req: Request, res: Response) => {
     SELECT *
     FROM activity
     where status = 'active'
-    and register_start_timestamp < $1
-    and register_end_timestamp > $1
+    and event_end_timestamp > $1    
     and activity_tag = $2
-    order by register_start_timestamp desc
+    order by register_start_timestamp asc
     limit 20;
     `;
     const values = [timestamp, category];
@@ -143,26 +142,25 @@ export const createActivity = async (req: Request, res: Response) => {
     await client.end();
   }
 };
-export const getActivityByDescription = async (req: Request, res: Response) => {
-  // only input description
-  // // console.log(req.body);
-  const { description } = req.body;
+export const getActivityByTitle = async (req: Request, res: Response) => {
+  const { title } = req.query;
+
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
     SELECT *
     FROM activity
-    where Description like $1
+    where title like $1
     and status = 'active';
     `;
-  const values = ['%' + description + '%'];
+  const values = ['%' + title + '%'];
   try {
     const result = await client.query(query, values);
     res.status(200).json(result.rows);
   } catch (err) {
     res.status(400).json(err);
   } finally {
-    client.end();
+    await client.end();
   }
 };
 export const getActivityByTime = async (req: Request, res: Response) => {

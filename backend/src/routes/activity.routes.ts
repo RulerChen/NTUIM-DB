@@ -3,8 +3,8 @@ import {
   createActivity,
   followActivity,
   getFollowedActivity,
+  getActivityByTitle,
   // findActivityNeedAttention,
-  // getActivityByDescription,
   // getActivityByTag,
   // getActivityByTime,
   // getActivityMember,
@@ -38,8 +38,8 @@ router.post('/follow', isAuth, followActivity);
 //getFollowedActivity
 router.get('/follow', isAuth, getFollowedActivity);
 
-//getActivityByDescription
-// router.get('/:description', getActivityByDescription);
+// getActivityByTitle
+router.get('/title', getActivityByTitle);
 
 //getActivityByTime
 // router.get('/:event_start_timestamp/:event_end_timestamp', getActivityByTime);
