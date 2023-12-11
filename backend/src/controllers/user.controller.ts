@@ -92,6 +92,36 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
+export const updateUserPassword = async (req: Request, res: Response) => {
+  const { member_id, password } = req.user as any;
+  const { new_password, old_password } = req.body;
+  if (!bcrypt.compareSync(old_password, password)) {
+    res.status(400).json('Your old password is wrong!');
+    return;
+  }
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(new_password, saltRounds);
+
+  const client = new Client(dbConfig);
+  await client.connect();
+  const query = `
+    UPDATE member
+    SET password = $1
+    WHERE member_id = $2;
+    `;
+  const values = [hashedPassword, member_id];
+
+  try {
+    await client.query(query, values);
+    res.status(200).json("You've successfully updated your password!");
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  } finally {
+    client.end();
+  }
+};
+
 export const getStudentInfo = async (req: Request, res: Response) => {
   const { member_id } = req.user as any;
   console.log(member_id);
