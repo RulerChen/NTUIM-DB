@@ -8,6 +8,7 @@ import {
   logout,
   updateUser,
   getStudentInfo,
+  updateUserPassword,
 } from '@/controllers/user.controller';
 import { isAuth } from '@/utils/isAuth';
 import { frontendUrl } from '@/utils/url';
@@ -45,6 +46,8 @@ router.get('/isLogin', isAuth, isLogin);
 router.post('/logout', logout);
 
 router.put('/', isAuth, updateUser);
+
+router.put('/password', isAuth, updateUserPassword);
 
 router.get('/student', isAuth, getStudentInfo);
 
