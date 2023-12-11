@@ -59,7 +59,7 @@ export type UpdateUserResponse = StudentData;
 export type createActivityPayload = Omit<ActivityData, 'activity_id'> &
   Pick<ChatgroupData, 'chatname'>;
 
-export type getActivityByDescriptionPayload = Pick<ActivityData, 'description'>;
+export type getActivityByTitlePayload = Pick<ActivityData, 'title'>;
 
 export type getActivityByTimePayload = Pick<
   ActivityData,

@@ -142,26 +142,25 @@ export const createActivity = async (req: Request, res: Response) => {
     await client.end();
   }
 };
-export const getActivityByDescription = async (req: Request, res: Response) => {
-  // only input description
-  // // console.log(req.body);
-  const { description } = req.body;
+export const getActivityByTitle = async (req: Request, res: Response) => {
+  const { title } = req.query;
+
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
     SELECT *
     FROM activity
-    where Description like $1
+    where title like $1
     and status = 'active';
     `;
-  const values = ['%' + description + '%'];
+  const values = ['%' + title + '%'];
   try {
     const result = await client.query(query, values);
     res.status(200).json(result.rows);
   } catch (err) {
     res.status(400).json(err);
   } finally {
-    client.end();
+    await client.end();
   }
 };
 export const getActivityByTime = async (req: Request, res: Response) => {

@@ -1,7 +1,6 @@
 import {
-  createActivityPayload,
   followActivityPayload,
-  getActivityByDescriptionPayload,
+  getActivityByTitlePayload,
   getActivityByTagPayload,
   getActivityByTimePayload,
   getActivityNumberPayload,
@@ -33,14 +32,14 @@ export default function useActivity() {
     return data;
   };
 
-  //createActivity
-  const createActivity = async (activity: createActivityPayload) => {
-    return instance.post('/activity', activity);
-  };
-
   //getActivityByDescription
-  const getActivityByDescription = async ({ description }: getActivityByDescriptionPayload) => {
-    return instance.get(`/activity/${description}`);
+  const getActivityByTitle = async ({ title }: getActivityByTitlePayload) => {
+    const { data } = await instance.get('/activity/title', {
+      params: {
+        title,
+      },
+    });
+    return data;
   };
 
   //getActivityByTime
@@ -152,8 +151,7 @@ export default function useActivity() {
   };
 
   return {
-    createActivity,
-    getActivityByDescription,
+    getActivityByTitle,
     getActivityByTime,
     getActivityByTag,
     getJoinedActivityByTag,
