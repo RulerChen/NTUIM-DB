@@ -1,8 +1,9 @@
 import {
-  // createActivity,
   getActivityAll,
-  // findActivityNeedAttention,
+  createActivity,
   followActivity,
+  getFollowedActivity,
+  // findActivityNeedAttention,
   // getActivityByDescription,
   // getActivityByTag,
   // getActivityByTime,
@@ -11,7 +12,6 @@ import {
   // getActivityRating,
   // getAllMember,
   // getChatgroup,
-  getFollowedActivity,
   // getHostedActivity,
   // getJoinedActivity,
   // getJoinedActivityByTag,
@@ -29,14 +29,14 @@ const router = express.Router();
 
 router.get('/', getActivityAll);
 
+// createActivity
+router.post('/', isAuth, createActivity);
+
 // followActivity
 router.post('/follow', isAuth, followActivity);
 
 //getFollowedActivity
 router.get('/follow', isAuth, getFollowedActivity);
-
-// createActivity
-// router.post('/', createActivity);
 
 //getActivityByDescription
 // router.get('/:description', getActivityByDescription);

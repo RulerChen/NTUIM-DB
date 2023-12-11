@@ -55,54 +55,55 @@ export const getActivityAll = async (req: Request, res: Response) => {
   }
 };
 export const createActivity = async (req: Request, res: Response) => {
-  // // console.log(req.body);
+  const { member_id } = req.user as any;
   const {
-    member_id,
+    title,
     description,
     event_start_timestamp,
     event_end_timestamp,
-    Location,
+    location,
     capacity,
-    status,
     register_start_timestamp,
     register_end_timestamp,
     non_student_fee,
-    Student_fee,
-    requirement,
-    chatname,
-    activity_tags,
+    student_fee,
+    category,
   } = req.body;
+  const status = 'active';
 
   const activity_id = uuidv4();
   const chatgroup_id = uuidv4();
 
   const client = new Client(dbConfig);
   await client.connect();
-  const query_activity = `
-    INSERT INTO activity (activity_id, Description, Event_start_timestamp, Event_end_timestamp, Location, Capacity, Status, Register_start_timestamp, Register_end_timestamp, Non_student_fee, Student_fee)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);
-    `;
-  const values_activity = [
-    activity_id,
-    description,
-    event_start_timestamp,
-    event_end_timestamp,
-    Location,
-    capacity,
-    status,
-    register_start_timestamp,
-    register_end_timestamp,
-    non_student_fee,
-    Student_fee,
-  ];
+
   try {
+    const query_activity = `
+      INSERT INTO activity (activity_id,title, description, event_start_timestamp, event_end_timestamp, Location, capacity, status, register_start_timestamp, register_end_timestamp, non_student_fee, Student_fee, activity_tag)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 , $11, $12, $13);
+      `;
+    const values_activity = [
+      activity_id,
+      title,
+      description,
+      event_start_timestamp,
+      event_end_timestamp,
+      location,
+      capacity,
+      status,
+      register_start_timestamp,
+      register_end_timestamp,
+      non_student_fee,
+      student_fee,
+      category,
+    ];
     await client.query(query_activity, values_activity);
 
     const query_chatgroup = `
-    INSERT INTO chatgroup (chatgroup_id, activity_id, chatname)
+    INSERT INTO chat_group (chatgroup_id, activity_id, chat_name)
     VALUES ($1, $2, $3);
     `;
-    const values_chatgroup = [chatgroup_id, activity_id, chatname];
+    const values_chatgroup = [chatgroup_id, activity_id, title];
     await client.query(query_chatgroup, values_chatgroup);
 
     const query_activity_member = `
@@ -112,21 +113,21 @@ export const createActivity = async (req: Request, res: Response) => {
     const values_activity_member = [activity_id, member_id];
     await client.query(query_activity_member, values_activity_member);
 
-    const query_activity_requirement = `
-    INSERT INTO activity_requirement (activity_id, requirement)
-    VALUES ($1, $2);
-    `;
-    const values_activity_requirement = [activity_id, requirement];
-    await client.query(query_activity_requirement, values_activity_requirement);
+    // const query_activity_requirement = `
+    // INSERT INTO activity_requirement (activity_id, requirement)
+    // VALUES ($1, $2);
+    // `;
+    // const values_activity_requirement = [activity_id, requirement];
+    // await client.query(query_activity_requirement, values_activity_requirement);
 
-    activity_tags.forEach(async (activity_tag: string) => {
-      const query_activity_tag = `  
-    INSERT INTO ACTIVITY_TOPIC_TAG (activity_id, Activity_tag)
-    VALUES ($1, $2);
-    `;
-      const values_activity_tag = [activity_id, activity_tag];
-      await client.query(query_activity_tag, values_activity_tag);
-    });
+    // activity_tags.forEach(async (activity_tag: string) => {
+    //   const query_activity_tag = `
+    // INSERT INTO ACTIVITY_TOPIC_TAG (activity_id, Activity_tag)
+    // VALUES ($1, $2);
+    // `;
+    //   const values_activity_tag = [activity_id, activity_tag];
+    //   await client.query(query_activity_tag, values_activity_tag);
+    // });
 
     const query_activity_role = `
     INSERT INTO activity_role (Member_id, activity_id, activity_role)
@@ -135,11 +136,11 @@ export const createActivity = async (req: Request, res: Response) => {
     const values_activity_role = [member_id, activity_id];
     await client.query(query_activity_role, values_activity_role);
 
-    res.status(201).json({ activity_id: activity_id, chatgroup_id: chatgroup_id });
+    res.status(201).json({ message: 'You have successfully created an activity!' });
   } catch (err) {
     res.status(400).json(err);
   } finally {
-    client.end();
+    await client.end();
   }
 };
 export const getActivityByDescription = async (req: Request, res: Response) => {
