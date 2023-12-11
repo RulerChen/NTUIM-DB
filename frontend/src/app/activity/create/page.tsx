@@ -49,7 +49,7 @@ export default function Page() {
     } else if (data.event_end_timestamp < data.register_end_timestamp) {
       toast.error('活動結束時間不得晚於註冊結束時間');
       return;
-    } else if (data.non_student_fee < data.student_fee) {
+    } else if (data.non_student_fee > data.student_fee) {
       toast.error('非學生價不得低於學生價');
       return;
     }
