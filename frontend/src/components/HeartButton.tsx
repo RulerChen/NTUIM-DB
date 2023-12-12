@@ -21,7 +21,7 @@ const HeartButton = ({ id, isFollow }: HeartButtonProps) => {
     fetchFollowActivity();
     if (isFollow) {
       toast.success('取消收藏成功');
-    } else {
+    } else if (!isFollow) {
       toast.success('收藏成功');
     }
   };

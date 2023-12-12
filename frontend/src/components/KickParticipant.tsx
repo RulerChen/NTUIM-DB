@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch } from 'react';
 import {
   CardTitle,
   CardDescription,
@@ -9,6 +9,8 @@ import {
   Card,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import useActivity from '@/hooks/useActivity';
+import toast from 'react-hot-toast';
 
 type Participant = {
   member_id: string;
@@ -17,14 +19,23 @@ type Participant = {
 };
 
 type KickParticipantProps = {
-  participants: Participant[] | undefined;
+  participants: Participant[];
+  setParticipants: Dispatch<Participant[]>;
+  activityId: string;
+  setCapacity: Dispatch<number>;
 };
 
-export default function KickParticipant({ participants }: KickParticipantProps) {
+export default function KickParticipant({
+  participants,
+  setParticipants,
+  activityId,
+  setCapacity,
+}: KickParticipantProps) {
+  const { kickMember, getActivityCapacity, getActivityMember } = useActivity();
   const [page, setPage] = useState<number>(1);
-  const [showParticipants, setShowParticipants] = useState<Participant[] | undefined>();
+  const [showParticipants, setShowParticipants] = useState<Participant[]>();
 
-  const last_page = participants ? Math.ceil(participants.length / 10) : 1;
+  const last_page = participants ? Math.ceil(participants.length / 12) : 1;
 
   function handlePrevClick() {
     if (page === 1) return;
@@ -36,10 +47,19 @@ export default function KickParticipant({ participants }: KickParticipantProps) 
     setPage(page + 1);
   }
 
+  async function handleClick(member_id: string) {
+    await kickMember({ member_id, activity_id: activityId });
+    const { number_of_participant } = await getActivityCapacity(activityId);
+    const people = await getActivityMember(activityId);
+    setCapacity(number_of_participant);
+    setParticipants(people);
+    toast.success('You out 😝');
+  }
+
   useEffect(() => {
     if (!participants) return;
-    const start = (page - 1) * 10;
-    const end = start + 10;
+    const start = (page - 1) * 12;
+    const end = start + 12;
     setShowParticipants(participants.slice(start, end));
   }, [page, participants]);
 
@@ -54,7 +74,12 @@ export default function KickParticipant({ participants }: KickParticipantProps) 
           {showParticipants?.map((participant, index) => (
             <div className="flex items-center justify-between my-4" key={index}>
               <span className="text-gray-900">{participant?.name}</span>
-              <Button className="text-white bg-red-500 hover:bg-red-600">移除</Button>
+              <Button
+                className="text-white bg-red-500 hover:bg-red-600"
+                onClick={() => handleClick(participant?.member_id)}
+              >
+                移除
+              </Button>
             </div>
           ))}
         </div>

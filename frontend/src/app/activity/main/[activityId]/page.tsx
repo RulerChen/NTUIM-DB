@@ -23,6 +23,13 @@ type Activity = ActivityData & {
   name: string;
 };
 
+type Comment = {
+  comment: string;
+  member_id: string;
+  activity_id: string;
+  score: number;
+};
+
 type Identity = 'Host' | 'Participant' | '';
 
 export default function Page({ params }: { params: { activityId: string } }) {
@@ -41,7 +48,7 @@ export default function Page({ params }: { params: { activityId: string } }) {
 
   const [activity, setActivity] = useState<Activity>();
   const [capacity, setCapacity] = useState<number>();
-  const [comments, setComments] = useState<string[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [rating, setRating] = useState<number>(0);
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [identity, setIdentity] = useState<Identity>('');
@@ -66,10 +73,9 @@ export default function Page({ params }: { params: { activityId: string } }) {
     const fetchActivity = async () => {
       const activity = await getActivityById(params.activityId);
       const { number_of_participant } = await getActivityCapacity(params.activityId);
-      const { comment } = await getActivityComments(params.activityId);
+      const comment = await getActivityComments(params.activityId);
       const { average_score } = await getActivityRating(params.activityId);
       const people = await getActivityMember(params.activityId);
-
       setActivity(activity);
       setCapacity(number_of_participant);
       setComments(comment);
@@ -95,7 +101,7 @@ export default function Page({ params }: { params: { activityId: string } }) {
   const handleClick = async () => {
     if (identity === 'Host' && activity) {
       await deleteActivity(activity.activity_id);
-      toast.success('活動已刪除');
+      if (member) toast.success('活動已刪除');
       router.push('/');
     } else if (identity === 'Participant' && activity) {
       await quitActivity(activity.activity_id);
@@ -103,14 +109,14 @@ export default function Page({ params }: { params: { activityId: string } }) {
       const people = await getActivityMember(params.activityId);
       setCapacity(number_of_participant);
       setParticipants(people);
-      toast.success('已退出活動');
+      if (member) toast.success('已退出活動');
     } else if (identity === '' && activity) {
       await joinActivity(activity.activity_id);
       const { number_of_participant } = await getActivityCapacity(params.activityId);
       const people = await getActivityMember(params.activityId);
       setCapacity(number_of_participant);
       setParticipants(people);
-      toast.success('已報名活動');
+      if (member) toast.success('已報名活動');
     }
   };
 
@@ -126,13 +132,20 @@ export default function Page({ params }: { params: { activityId: string } }) {
         identity={identity}
       />
       {member?.member_id === activity?.member_id && member?.member_id != undefined && (
-        <KickParticipant participants={participants} />
+        <KickParticipant
+          participants={participants}
+          setParticipants={setParticipants}
+          activityId={params.activityId}
+          setCapacity={setCapacity}
+        />
       )}
       {member?.member_id !== activity?.member_id &&
         member?.member_id != undefined &&
         activity?.member_id != undefined &&
         activity?.status !== 'cancel' &&
-        (status() === '已結束' || status() === '進行中') && <Rating />}
+        (status() === '已結束' || status() === '進行中') && (
+          <Rating activityId={params.activityId} comments={comments} setComments={setComments} />
+        )}
     </div>
   );
 }

@@ -14,6 +14,8 @@ import {
   deleteActivity,
   joinActivity,
   quitActivity,
+  rateActivity,
+  kickMember,
   // findActivityNeedAttention,
   // getActivityByTag,
   // getActivityByTime,
@@ -25,8 +27,6 @@ import {
   // getJoinedActivityByTag,
   // getMessage,
   // insertMessage,
-  // kickMember,
-  // rateActivity,
 } from '@/controllers/activity.controller';
 import express from 'express';
 import { isAuth } from '@/utils/isAuth';
@@ -71,6 +71,12 @@ router.post('/join', isAuth, joinActivity);
 // quitActivity
 router.delete('/quit', isAuth, quitActivity);
 
+//rateActivity
+router.post('/rate', rateActivity);
+
+//kickMember
+router.delete('/kick', kickMember);
+
 //getActivityByTime
 // router.get('/:event_start_timestamp/:event_end_timestamp', getActivityByTime);
 
@@ -95,14 +101,8 @@ router.get('/host', isAuth, getHostedActivity);
 //insertMessage
 // router.post('/chatgroup/message', insertMessage);
 
-//rateActivity
-// router.post('/rate', rateActivity);
-
 //getActivityNumber
 // router.get('/:activity_id/number', getActivityNumber);
-
-//kickMember
-// router.delete('/:activity_id/:member_id', kickMember);
 
 //findActivityNeedAttention
 // router.get('/attention', findActivityNeedAttention);

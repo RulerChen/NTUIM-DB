@@ -214,8 +214,7 @@ export const getActivityComments = async (req: Request, res: Response) => {
   const query = `
     SELECT *
     FROM activity_rating
-    where activity_id = $1
-    limit 3;
+    where activity_id = $1;
     `;
   const values = [activity_id];
   try {
@@ -553,8 +552,8 @@ export const insertMessage = async (req: Request, res: Response) => {
   }
 };
 export const rateActivity = async (req: Request, res: Response) => {
-  // console.log(req.body);
-  const { activity_id, member_id, score, comment } = req.body;
+  const { member_id } = req.user as any;
+  const { activity_id, score, comment } = req.body;
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
@@ -568,7 +567,7 @@ export const rateActivity = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(400).json(err);
   } finally {
-    client.end();
+    await client.end();
   }
 };
 export const getActivityMember = async (req: Request, res: Response) => {
@@ -592,24 +591,27 @@ export const getActivityMember = async (req: Request, res: Response) => {
   }
 };
 export const kickMember = async (req: Request, res: Response) => {
-  // console.log(req.body);
-  const { activity_id, member_id } = req.body;
+  const { activity_id, member_id } = req.query;
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
     delete from activity_role
     where activity_id = $1 and member_id = $2;
-    insert into MEMBER_QUIT_ACTIVITY (activity_id, member_id, quit_timestamp)
-    values ($1, $2, CURRENT_TIMESTAMP);
     `;
   const values = [activity_id, member_id];
   try {
     await client.query(query, values);
+    const query_quit = `
+    insert into MEMBER_QUIT_ACTIVITY (activity_id, member_id, quit_timestamp)
+    values ($1, $2, CURRENT_TIMESTAMP);
+    `;
+    const values_quit = [activity_id, member_id];
+    await client.query(query_quit, values_quit);
     res.status(201).json("You've successfully kicked the member!");
   } catch (err) {
     res.status(400).json(err);
   } finally {
-    client.end();
+    await client.end();
   }
 };
 export const findActivityNeedAttention = async (req: Request, res: Response) => {

@@ -92,7 +92,7 @@ export type insertMessagePayload = Pick<ChatgroupData, 'chatgroup_id'> & {
 export type rateActivityPayload = Pick<ActivityData, 'activity_id'> & {
   score: number;
   comment: string;
-} & Pick<MemberData, 'member_id'>;
+};
 
 export type getActivityRatingPayload = Pick<ActivityData, 'activity_id'>;
 

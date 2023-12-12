@@ -28,10 +28,17 @@ type Activity = ActivityData & {
   name: string;
 };
 
+type Comment = {
+  comment: string;
+  member_id: string;
+  activity_id: string;
+  score: number;
+};
+
 type ActivityCardProps = {
   activity: Activity | undefined;
   capacity: number | undefined;
-  comments: string[] | undefined;
+  comments: Comment[] | undefined;
   status: () => string | undefined;
   rating: number | undefined;
   handleClick: () => void;
@@ -198,18 +205,23 @@ export default function ActivityCard({
             <FaRegStar className="w-5 h-5 text-gray-700" />
             <div>
               <span className="text-gray-600">評分 :</span>
-              <span className="ml-2 text-gray-900">{rating ? rating : 0} / 5</span>
+              <span className="ml-2 text-gray-900">{rating ? rating.toFixed(2) : 0} / 5</span>
             </div>
           </div>
-          {comments?.map((comment, index) => (
-            <div className="flex items-center space-x-3 mt-4" key={index}>
-              <FaReply className="w-5 h-5 text-gray-700" />
-              <div>
-                <span className="text-gray-600">評論:</span>
-                <span className="ml-2 text-gray-900">{comment ? comment : '目前沒有評論'}</span>
+          {comments?.map((comment, index) => {
+            if (index >= 2) return;
+            return (
+              <div className="flex items-center space-x-3 mt-4" key={index}>
+                <FaReply className="w-5 h-5 text-gray-700" />
+                <div>
+                  <span className="text-gray-600">評論:</span>
+                  <span className="ml-2 text-gray-900">
+                    {comment.comment ? comment.comment : '目前沒有評論'}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
       <CardFooter className="bg-gray-50 p-6">

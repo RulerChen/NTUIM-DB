@@ -176,13 +176,20 @@ export default function useActivity() {
   };
 
   //rateActivity
-  const rateActivity = async ({ activity_id, member_id, score, comment }: rateActivityPayload) => {
-    return instance.post(`/activity/rate`, { activity_id, member_id, score, comment });
+  const rateActivity = async ({ activity_id, score, comment }: rateActivityPayload) => {
+    const { data } = await instance.post(`/activity/rate`, { activity_id, score, comment });
+    return data;
   };
 
   //kickMember
   const kickMember = async ({ activity_id, member_id }: kickMemberPayload) => {
-    return instance.delete(`/activity/${activity_id}/${member_id}`);
+    const { data } = await instance.delete(`/activity/kick`, {
+      params: {
+        activity_id,
+        member_id,
+      },
+    });
+    return data;
   };
 
   //findActivityNeedAttention

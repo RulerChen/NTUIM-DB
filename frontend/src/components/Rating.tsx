@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { Dispatch, useState } from 'react';
 import {
   CardTitle,
   CardDescription,
@@ -11,11 +11,55 @@ import {
 import { Button } from '@/components/ui/button';
 import { FaRegStar } from 'react-icons/fa';
 
-export default function Rating() {
+import useActivity from '@/hooks/useActivity';
+import { useMember } from '@/hooks/useMember';
+import toast from 'react-hot-toast';
+
+type Comment = {
+  comment: string;
+  member_id: string;
+  activity_id: string;
+  score: number;
+};
+
+type RatingProp = {
+  activityId: string;
+  comments: Comment[];
+  setComments: Dispatch<Comment[]>;
+};
+
+export default function Rating({ activityId, comments, setComments }: RatingProp) {
+  const { rateActivity, getActivityComments } = useActivity();
+  const { member } = useMember();
   const [star, setStar] = useState(0);
+  const [comment, setComment] = useState('');
 
   const handleRating = (rate: number) => {
     setStar(rate);
+  };
+
+  const handleClick = async () => {
+    if (star === 0) {
+      toast.error('請選擇評分');
+      return;
+    }
+    if (comment === '') {
+      toast.error('請留下評論');
+      return;
+    }
+    if (
+      comments.some(
+        (c: Comment) => c.member_id === member?.member_id && c.activity_id === activityId
+      )
+    ) {
+      toast.error('已評分');
+      return;
+    } else {
+      await rateActivity({ score: star, comment, activity_id: activityId });
+      const data = await getActivityComments(activityId);
+      setComments(data);
+      toast.success('評分成功');
+    }
   };
 
   return (
@@ -55,11 +99,15 @@ export default function Rating() {
         <textarea
           aria-label="Leave a comment"
           className="w-full h-24 p-3 border border-gray-300 rounded-md flex-grow"
-          placeholder="Type your comment here..."
+          placeholder="留下一些評論吧 ..."
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
         />
       </CardContent>
       <CardFooter className="bg-gray-50 p-6 flex justify-between">
-        <Button className="w-full text-white bg-blue-500 hover:bg-blue-600">提交評論</Button>
+        <Button className="w-full text-white bg-blue-500 hover:bg-blue-600" onClick={handleClick}>
+          提交評論
+        </Button>
       </CardFooter>
     </Card>
   );
