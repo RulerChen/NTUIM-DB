@@ -4,11 +4,16 @@ import { Separator } from '@/components/ui/separator';
 
 const UserSideBar = () => {
   return (
-    <div className="rounded-xl shadow-md bg-white my-10">
+    <div className="rounded-xl shadow-md bg-white my-9">
       <div className="flex flex-col p-4">
         <Button className="bg-white text-black rounded-lg h-[10vh] hover:bg-neutral-100 transition font-semibold">
           <Link href="/user/profile" className="text-lg">
             修改個人資料
+          </Link>
+        </Button>
+        <Button className="bg-white text-black rounded-lg h-[10vh] hover:bg-neutral-100 transition font-semibold">
+          <Link href="/user/password" className="text-lg">
+            變更個人密碼
           </Link>
         </Button>
         <Separator orientation="horizontal" className="my-2 bg-black" />

@@ -11,7 +11,7 @@ interface InputProps {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
   disabled?: boolean;
-  defaultValue?: string;
+  defaultValue?: string | number;
 }
 
 const Input = ({
