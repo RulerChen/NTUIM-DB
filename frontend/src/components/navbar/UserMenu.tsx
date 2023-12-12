@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import MenuItem from './MenuItem';
@@ -10,17 +10,16 @@ import Avatar from '../Avatar';
 import { AiOutlineMenu } from 'react-icons/ai';
 
 import { useMember } from '@/hooks/useMember';
-// import toast from '@/context/toast';
 
 const UserMenu = () => {
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
   const { member, logout } = useMember();
+  const divRef = useRef<HTMLDivElement>(null);
 
   const handleClick = (path: string) => {
     router.push(path);
-    setIsOpen(!isOpen);
   };
 
   const handleLogout = () => {
@@ -29,6 +28,18 @@ const UserMenu = () => {
     router.push('/');
   };
 
+  useEffect(() => {
+    const clickOutside = (e: MouseEvent) => {
+      if (divRef.current && !divRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('click', clickOutside);
+    return () => {
+      window.removeEventListener('click', clickOutside);
+    };
+  }, []);
+
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
@@ -36,6 +47,7 @@ const UserMenu = () => {
           新增活動
         </Button>
         <div
+          ref={divRef}
           onClick={() => setIsOpen(!isOpen)}
           className="p-4 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
         >
@@ -53,9 +65,10 @@ const UserMenu = () => {
                 {/* TODO: add route */}
                 <MenuItem label="進入會員中心" onClick={() => handleClick('/user')} />
                 <MenuItem label="修改個人資料" onClick={() => handleClick('/user/profile')} />
-                <MenuItem label="我主持的活動" onClick={() => handleClick('/unchange_route')} />
-                <MenuItem label="我追蹤的活動" onClick={() => handleClick('/unchange_route')} />
-                <MenuItem label="我參加的活動" onClick={() => handleClick('/unchange_route')} />
+                <MenuItem label="修改個人密碼" onClick={() => handleClick('/user/password')} />
+                <MenuItem label="我主持的活動" onClick={() => handleClick('/user/host')} />
+                <MenuItem label="我追蹤的活動" onClick={() => handleClick('/user/follow')} />
+                <MenuItem label="我參加的活動" onClick={() => handleClick('/user/join')} />
                 <MenuItem label="聊天室" onClick={() => handleClick('/unchange_route')} />
                 <hr />
                 <MenuItem label="登出" onClick={handleLogout} />

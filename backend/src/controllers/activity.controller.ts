@@ -137,6 +137,7 @@ export const createActivity = async (req: Request, res: Response) => {
 
     res.status(201).json({ message: 'You have successfully created an activity!' });
   } catch (err) {
+    console.log(err);
     res.status(400).json(err);
   } finally {
     await client.end();
@@ -315,7 +316,7 @@ export const quitActivity = async (req: Request, res: Response) => {
 };
 export const getJoinedActivity = async (req: Request, res: Response) => {
   // console.log(req.body);
-  const { member_id } = req.body;
+  const { member_id } = req.user as any;
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
@@ -358,7 +359,7 @@ export const getFollowedActivity = async (req: Request, res: Response) => {
 };
 export const getHostedActivity = async (req: Request, res: Response) => {
   // console.log(req.body);
-  const { member_id } = req.body;
+  const { member_id } = req.user as any;
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
