@@ -1,5 +1,6 @@
 'use client';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import toast from 'react-hot-toast';
 
 import useActivity from '@/hooks/useActivity';
 import { useMember } from '@/hooks/useMember';
@@ -18,6 +19,11 @@ const HeartButton = ({ id, isFollow }: HeartButtonProps) => {
     if (!member) return;
     await followActivity({ activity_id: id });
     fetchFollowActivity();
+    if (isFollow) {
+      toast.success('取消收藏成功');
+    } else if (!isFollow) {
+      toast.success('收藏成功');
+    }
   };
 
   return (

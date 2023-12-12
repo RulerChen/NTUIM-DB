@@ -3,8 +3,6 @@ import {
   getActivityByTitlePayload,
   getActivityByTagPayload,
   getActivityByTimePayload,
-  getActivityNumberPayload,
-  getActivityRatingPayload,
   getChatgroupPayload,
   // getFollowedActivityPayload,
   // getHostedActivityPayload,
@@ -12,9 +10,9 @@ import {
   // getJoinedActivityPayload,
   getMessagePayload,
   insertMessagePayload,
-  joinActivityPayload,
+  // joinActivityPayload,
   kickMemberPayload,
-  quitActivityPayload,
+  // quitActivityPayload,
   rateActivityPayload,
   // getFollowedActivityPayload,
 } from '@/lib/shared_types';
@@ -38,6 +36,64 @@ export default function useActivity() {
     const { data } = await instance.get('/activity/title', {
       params: {
         title,
+      },
+    });
+    return data;
+  };
+
+  // getActivityById
+  const getActivityById = async (activity_id: string) => {
+    const { data } = await instance.get(`/activity/id`, {
+      params: {
+        activity_id,
+      },
+    });
+    return data;
+  };
+
+  // get remained capacity of activity
+  const getActivityCapacity = async (activity_id: string) => {
+    const { data } = await instance.get(`/activity/capacity`, {
+      params: {
+        activity_id,
+      },
+    });
+    return data;
+  };
+
+  // getActivityCommments
+  const getActivityComments = async (activity_id: string) => {
+    const { data } = await instance.get(`/activity/comment`, {
+      params: {
+        activity_id,
+      },
+    });
+    return data;
+  };
+
+  const getActivityRating = async (activity_id: string) => {
+    const { data } = await instance.get(`/activity/rating`, {
+      params: {
+        activity_id,
+      },
+    });
+    return data;
+  };
+
+  //getActivityMember
+  const getActivityMember = async (activity_id: string) => {
+    const { data } = await instance.get(`/activity/member`, {
+      params: {
+        activity_id,
+      },
+    });
+    return data;
+  };
+
+  const deleteActivity = async (activity_id: string) => {
+    const { data } = await instance.delete(`/activity`, {
+      params: {
+        activity_id,
       },
     });
     return data;
@@ -67,13 +123,19 @@ export default function useActivity() {
   };
 
   //joinActivity
-  const joinActivity = async ({ activity_id, member_id }: joinActivityPayload) => {
-    return instance.post('/activity/join', { activity_id, member_id });
+  const joinActivity = async (activity_id: string) => {
+    const { data } = await instance.post('/activity/join', { activity_id });
+    return data;
   };
 
   //quitActivity
-  const quitActivity = async ({ activity_id, member_id }: quitActivityPayload) => {
-    return instance.delete(`/activity/${activity_id}/${member_id}`);
+  const quitActivity = async (activity_id: string) => {
+    const { data } = await instance.delete(`/activity/quit`, {
+      params: {
+        activity_id,
+      },
+    });
+    return data;
   };
 
   //getJoinedActivity
@@ -114,28 +176,20 @@ export default function useActivity() {
   };
 
   //rateActivity
-  const rateActivity = async ({ activity_id, member_id, score, comment }: rateActivityPayload) => {
-    return instance.post(`/activity/rate`, { activity_id, member_id, score, comment });
-  };
-
-  //getActivityRating
-  const getActivityRating = async ({ activity_id }: getActivityRatingPayload) => {
-    return instance.get(`/activity/${activity_id}/rating`);
-  };
-
-  //getActivityNumber
-  const getActivityNumber = async ({ activity_id }: getActivityNumberPayload) => {
-    return instance.get(`/activity/${activity_id}/number`);
-  };
-
-  //getActivityMember
-  const getActivityMember = async ({ activity_id }: getActivityNumberPayload) => {
-    return instance.get(`/activity/${activity_id}/member`);
+  const rateActivity = async ({ activity_id, score, comment }: rateActivityPayload) => {
+    const { data } = await instance.post(`/activity/rate`, { activity_id, score, comment });
+    return data;
   };
 
   //kickMember
   const kickMember = async ({ activity_id, member_id }: kickMemberPayload) => {
-    return instance.delete(`/activity/${activity_id}/${member_id}`);
+    const { data } = await instance.delete(`/activity/kick`, {
+      params: {
+        activity_id,
+        member_id,
+      },
+    });
+    return data;
   };
 
   //findActivityNeedAttention
@@ -150,9 +204,13 @@ export default function useActivity() {
 
   return {
     getActivityByTitle,
+    getActivityById,
+    getActivityCapacity,
+    getActivityComments,
     getActivityByTime,
     getActivityByTag,
     getJoinedActivityByTag,
+    deleteActivity,
     followActivity,
     joinActivity,
     quitActivity,
@@ -164,7 +222,6 @@ export default function useActivity() {
     insertMessage,
     rateActivity,
     getActivityRating,
-    getActivityNumber,
     getActivityMember,
     kickMember,
     findActivityNeedAttention,

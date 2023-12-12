@@ -14,9 +14,6 @@ export type ActivityData = {
   non_student_fee: number;
   student_fee: number;
   activity_tag: string;
-
-  //雖然不屬於activity table，但是為了方便，所以放在這裡
-  requirement: string;
 };
 
 const MemberDataSchema = z.object({
@@ -95,7 +92,7 @@ export type insertMessagePayload = Pick<ChatgroupData, 'chatgroup_id'> & {
 export type rateActivityPayload = Pick<ActivityData, 'activity_id'> & {
   score: number;
   comment: string;
-} & Pick<MemberData, 'member_id'>;
+};
 
 export type getActivityRatingPayload = Pick<ActivityData, 'activity_id'>;
 
