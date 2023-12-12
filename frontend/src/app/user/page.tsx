@@ -32,46 +32,56 @@ export default function Page() {
       <section>
         <UserProfile></UserProfile>
       </section>
-      <section>
+      <section className="space-y-6 pb-10 m-0 sm:m-4 lg:m-10">
         <Container>
           <div className="text-sm lg:text-lg font-semibold">我主持的活動</div>
-          <div className="pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-            {hostActivities?.map((card) => (
-              <Card
-                key={card.activity_id}
-                data={card}
-                follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
-              />
-            ))}
-          </div>
+          {hostActivities && hostActivities.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
+              {hostActivities.map((card) => (
+                <Card
+                  key={card.activity_id}
+                  data={card}
+                  follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-sm lg:text-lg font-semibold">目前沒有主持的活動</div>
+          )}
         </Container>
-      </section>
-      <section>
+
         <Container>
           <div className="text-sm lg:text-lg font-semibold">我追蹤的活動</div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-            {followActivities?.map((card) => (
-              <Card
-                key={card.activity_id}
-                data={card}
-                follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
-              />
-            ))}
-          </div>
+          {followActivities && followActivities.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
+              {followActivities.map((card) => (
+                <Card
+                  key={card.activity_id}
+                  data={card}
+                  follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-sm lg:text-lg font-semibold">目前沒有追蹤的活動</div>
+          )}
         </Container>
-      </section>
-      <section>
+
         <Container>
           <div className="text-sm lg:text-lg font-semibold">我參加的活動</div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-            {joinedActivities?.map((card) => (
-              <Card
-                key={card.activity_id}
-                data={card}
-                follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
-              />
-            ))}
-          </div>
+          {joinedActivities && joinedActivities.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
+              {joinedActivities.map((card) => (
+                <Card
+                  key={card.activity_id}
+                  data={card}
+                  follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-sm lg:text-lg font-semibold">目前沒有參加的活動</div>
+          )}
         </Container>
       </section>
     </main>

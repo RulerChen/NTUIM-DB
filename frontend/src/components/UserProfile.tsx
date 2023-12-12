@@ -7,8 +7,8 @@ const UserProfileForm = () => {
   const { member, student } = useMember();
 
   return (
-    <div className="mx-auto sm:w-full sm:max-w-md py-10 sm:py-10 lg:max-w-xl xl:max-w-2xl">
-      <div className="bg-white px-4 sm:px-10 py-8 shadow sm:rounded-xl space-y-6 text-sm sm:text-lg">
+    <div className="mx-4 sm:mx-auto text-center sm:text-left sm:w-full max-w-xs sm:max-w-md py-10 sm:py-10 lg:max-w-xl xl:max-w-2xl">
+      <div className="bg-white px-4 sm:px-10 py-8 shadow rounded-xl space-y-6 text-sm sm:text-lg">
         <div className="text-xl font-semibold">使用者個人資料</div>
         <Separator orientation="horizontal" className="bg-black" />
         <div className={cn('grid grid-cols-1 sm:grid-cols-2 gap-4')}>

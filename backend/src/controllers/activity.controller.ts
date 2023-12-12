@@ -434,10 +434,15 @@ export const getFollowedActivity = async (req: Request, res: Response) => {
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
-    select mfa.activity_id
-    from member_follow_activity as mfa
-    where mfa.member_id = $1
+    select *
+    from activity as a
+    inner join member_follow_activity as mfa on a.activity_id = mfa.activity_id
+    where mfa.member_id = $1 and status = 'active';
     `;
+
+  // select mfa.activity_id
+  // from member_follow_activity as mfa
+  // where mfa.member_id = $1
   const values = [member_id];
   try {
     const result = await client.query(query, values);
