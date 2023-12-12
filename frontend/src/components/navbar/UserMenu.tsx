@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import Avatar from '../Avatar';
 
 import { AiOutlineMenu } from 'react-icons/ai';
+import { VscAdd } from 'react-icons/vsc';
 
 import { useMember } from '@/hooks/useMember';
 
@@ -43,8 +44,13 @@ const UserMenu = () => {
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
-        <Button variant="outline" onClick={() => router.push('/activity/create')}>
-          新增活動
+        <Button
+          className="text-sm font-medium text-neutral-500 hover:text-neutral-800 transition"
+          variant="outline"
+          onClick={() => router.push('/activity/create')}
+        >
+          <div className="hidden m-0 md:block md:mr-2">新增活動</div>
+          <VscAdd size={20}></VscAdd>
         </Button>
         <div
           ref={divRef}

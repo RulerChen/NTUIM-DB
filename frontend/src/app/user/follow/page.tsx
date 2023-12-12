@@ -26,19 +26,19 @@ export default function Page() {
         我追蹤的活動
       </div>
       <Container>
-        <div className="pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-          {followActivities && followActivities.length > 0 ? (
-            followActivities.map((card) => (
+        {followActivities && followActivities.length > 0 ? (
+          <div className="pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
+            {followActivities.map((card) => (
               <Card
                 key={card.activity_id}
                 data={card}
                 follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
               />
-            ))
-          ) : (
-            <div className="text-sm lg:text-lg font-semibold">目前沒有追蹤的活動</div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="pt-10 text-sm lg:text-lg font-semibold">目前沒有追蹤的活動</div>
+        )}
       </Container>
     </main>
   );
