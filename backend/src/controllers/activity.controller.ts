@@ -346,7 +346,7 @@ export const getFollowedActivity = async (req: Request, res: Response) => {
     select *
     from activity as a
     inner join member_follow_activity as mfa on a.activity_id = mfa.activity_id
-    where mfa.member_id = $1
+    where mfa.member_id = $1 and status = 'active';
     `;
 
   // select mfa.activity_id
