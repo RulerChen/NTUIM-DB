@@ -35,14 +35,18 @@ export default function Page() {
       <section>
         <Container>
           <div className="text-sm lg:text-lg font-semibold">我主持的活動</div>
-          <div className="pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-            {hostActivities?.map((card) => (
-              <Card
-                key={card.activity_id}
-                data={card}
-                follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
-              />
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
+            {hostActivities && hostActivities.length > 0 ? (
+              hostActivities.map((card) => (
+                <Card
+                  key={card.activity_id}
+                  data={card}
+                  follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
+                />
+              ))
+            ) : (
+              <div className="text-sm lg:text-lg font-semibold">目前沒有主持的活動</div>
+            )}
           </div>
         </Container>
       </section>
@@ -50,13 +54,17 @@ export default function Page() {
         <Container>
           <div className="text-sm lg:text-lg font-semibold">我追蹤的活動</div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-            {followActivities?.map((card) => (
-              <Card
-                key={card.activity_id}
-                data={card}
-                follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
-              />
-            ))}
+            {followActivities && followActivities.length > 0 ? (
+              followActivities.map((card) => (
+                <Card
+                  key={card.activity_id}
+                  data={card}
+                  follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
+                />
+              ))
+            ) : (
+              <div className="text-sm lg:text-lg font-semibold">目前沒有追蹤的活動</div>
+            )}
           </div>
         </Container>
       </section>
@@ -64,13 +72,17 @@ export default function Page() {
         <Container>
           <div className="text-sm lg:text-lg font-semibold">我參加的活動</div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-            {joinedActivities?.map((card) => (
-              <Card
-                key={card.activity_id}
-                data={card}
-                follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
-              />
-            ))}
+            {joinedActivities && joinedActivities.length > 0 ? (
+              joinedActivities.map((card) => (
+                <Card
+                  key={card.activity_id}
+                  data={card}
+                  follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
+                />
+              ))
+            ) : (
+              <div className="text-sm lg:text-lg font-semibold">目前沒有參加的活動</div>
+            )}
           </div>
         </Container>
       </section>
