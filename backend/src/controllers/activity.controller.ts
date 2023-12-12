@@ -164,6 +164,89 @@ export const getActivityByTitle = async (req: Request, res: Response) => {
     await client.end();
   }
 };
+export const getActivityById = async (req: Request, res: Response) => {
+  const { activity_id } = req.query;
+
+  const client = new Client(dbConfig);
+  await client.connect();
+  const query = `
+    SELECT a.*, m.name, m.member_id
+    FROM activity AS a
+    JOIN activity_role AS ar ON a.activity_id = ar.activity_id
+    JOIN member AS m ON ar.member_id = m.member_id
+    where a.activity_id = $1 and ar.activity_role = 'Host';
+    `;
+  const values = [activity_id];
+  try {
+    const result = await client.query(query, values);
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    res.status(400).json(err);
+  } finally {
+    await client.end();
+  }
+};
+export const getActivityCapacity = async (req: Request, res: Response) => {
+  const { activity_id } = req.query;
+
+  const client = new Client(dbConfig);
+  await client.connect();
+  const query = `
+  select count(*) as number_of_participant
+  from activity_role
+  where activity_id = $1
+    `;
+  const values = [activity_id];
+  try {
+    const result = await client.query(query, values);
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    res.status(400).json(err);
+  } finally {
+    await client.end();
+  }
+};
+export const getActivityComments = async (req: Request, res: Response) => {
+  const { activity_id } = req.query;
+
+  const client = new Client(dbConfig);
+  await client.connect();
+  const query = `
+    SELECT *
+    FROM activity_rating
+    where activity_id = $1
+    limit 3;
+    `;
+  const values = [activity_id];
+  try {
+    const result = await client.query(query, values);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(400).json(err);
+  } finally {
+    await client.end();
+  }
+};
+export const getActivityRating = async (req: Request, res: Response) => {
+  const { activity_id } = req.query;
+  const client = new Client(dbConfig);
+  await client.connect();
+  const query = `
+    select avg(score) as average_score
+    from activity_rating
+    where activity_id = $1
+    group by activity_id;
+    `;
+  const values = [activity_id];
+  try {
+    const result = await client.query(query, values);
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    res.status(400).json(err);
+  } finally {
+    client.end();
+  }
+};
 export const getActivityByTime = async (req: Request, res: Response) => {
   // only input tag and time
   // // console.log(req.body);
@@ -459,47 +542,6 @@ export const rateActivity = async (req: Request, res: Response) => {
     client.end();
   }
 };
-export const getActivityRating = async (req: Request, res: Response) => {
-  // console.log(req.body);
-  const { activity_id } = req.body;
-  const client = new Client(dbConfig);
-  await client.connect();
-  const query = `
-    select avg(score) as average_score
-    from activity_rating
-    where activity_id = $1
-    group by activity_id;
-    `;
-  const values = [activity_id];
-  try {
-    const result = await client.query(query, values);
-    res.status(200).json(result.rows[0]);
-  } catch (err) {
-    res.status(400).json(err);
-  } finally {
-    client.end();
-  }
-};
-export const getActivityNumber = async (req: Request, res: Response) => {
-  // console.log(req.body);
-  const { activity_id } = req.body;
-  const client = new Client(dbConfig);
-  await client.connect();
-  const query = `
-    select count(*) as number_of_participant
-    from activity_role
-    where activity_id = $1
-    `;
-  const values = [activity_id];
-  try {
-    const result = await client.query(query, values);
-    res.status(200).json(result.rows[0]);
-  } catch (err) {
-    res.status(400).json(err);
-  } finally {
-    client.end();
-  }
-};
 export const getActivityMember = async (req: Request, res: Response) => {
   // console.log(req.body);
   const { activity_id } = req.body;
@@ -509,7 +551,7 @@ export const getActivityMember = async (req: Request, res: Response) => {
     select m.name, m.member_id, ar.activity_role
     from activity_role as ar
     inner join member as m on ar.member_id = m.member_id
-    where ar.activity_id = $1
+    where ar.activity_id = $1 and ar.activity_role = 'Participant';
     `;
   const values = [activity_id];
   try {

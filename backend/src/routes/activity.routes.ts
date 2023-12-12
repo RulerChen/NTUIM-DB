@@ -6,12 +6,15 @@ import {
   getActivityByTitle,
   getJoinedActivity,
   getHostedActivity,
+  getActivityById,
+  getActivityCapacity,
+  getActivityComments,
+  getActivityRating,
+  getActivityMember,
   // findActivityNeedAttention,
   // getActivityByTag,
   // getActivityByTime,
-  // getActivityMember,
   // getActivityNumber,
-  // getActivityRating,
   // getAllMember,
   // getChatgroup,
   // getHostedActivity,
@@ -42,6 +45,21 @@ router.get('/follow', isAuth, getFollowedActivity);
 
 // getActivityByTitle
 router.get('/title', getActivityByTitle);
+
+// getActivityById;
+router.get('/id', getActivityById);
+
+// getActivityCapacity
+router.get('/capacity', getActivityCapacity);
+
+// getActivityComments
+router.get('/comment', getActivityComments);
+
+// getActivityRating
+router.get('/rating', getActivityRating);
+
+//getActivityMember
+router.get('/member', getActivityMember);
 
 //getActivityByTime
 // router.get('/:event_start_timestamp/:event_end_timestamp', getActivityByTime);
@@ -76,14 +94,8 @@ router.get('/host', isAuth, getHostedActivity);
 //rateActivity
 // router.post('/rate', rateActivity);
 
-//getActivityRating
-// router.get('/:activity_id/rating', getActivityRating);
-
 //getActivityNumber
 // router.get('/:activity_id/number', getActivityNumber);
-
-//getActivityMember
-// router.get('/:activity_id/member', getActivityMember);
 
 //kickMember
 // router.delete('/:activity_id/:member_id', kickMember);
