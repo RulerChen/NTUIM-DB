@@ -49,8 +49,14 @@ export default function Page() {
     } else if (data.register_end_timestamp > data.event_start_timestamp) {
       toast.error('註冊結束時間不得晚於活動開始時間');
       return;
-    } else if (data.non_student_fee > data.student_fee) {
+    } else if (data.non_student_fee < data.student_fee) {
       toast.error('非學生價不得低於學生價');
+      return;
+    } else if (data.register_start_timestamp < new Date().toISOString()) {
+      toast.error('註冊開始時間不得早於現在時間');
+      return;
+    } else if (data.event_start_timestamp < new Date().toISOString()) {
+      toast.error('活動開始時間不得早於現在時間');
       return;
     }
     data = {
