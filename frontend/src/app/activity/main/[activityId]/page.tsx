@@ -1,5 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 import useActivity from '@/hooks/useActivity';
 import { useMember } from '@/hooks/useMember';
@@ -8,22 +10,7 @@ import KickParticipant from '@/components/KickParticipant';
 import Rating from '@/components/Rating';
 import ActivityCard from '@/components/ActivityCard';
 
-type Activity = {
-  activity_id: string;
-  title: string;
-  description: string;
-  event_start_timestamp: Date;
-  event_end_timestamp: Date;
-  register_start_timestamp: Date;
-  register_end_timestamp: Date;
-  location: string;
-  capacity: number;
-  student_fee: number;
-  non_student_fee: number;
-  activity_tag: string;
-  name: string;
-  member_id: string;
-};
+import type { ActivityData } from '@/lib/shared_types';
 
 type Participant = {
   member_id: string;
@@ -31,13 +18,24 @@ type Participant = {
   activity_role: string;
 };
 
+type Activity = ActivityData & {
+  member_id: string;
+  name: string;
+};
+
+type Identity = 'Host' | 'Participant' | '';
+
 export default function Page({ params }: { params: { activityId: string } }) {
+  const router = useRouter();
   const {
     getActivityById,
     getActivityCapacity,
     getActivityComments,
     getActivityRating,
     getActivityMember,
+    deleteActivity,
+    quitActivity,
+    joinActivity,
   } = useActivity();
   const { member } = useMember();
 
@@ -46,6 +44,7 @@ export default function Page({ params }: { params: { activityId: string } }) {
   const [comments, setComments] = useState<string[]>([]);
   const [rating, setRating] = useState<number>(0);
   const [participants, setParticipants] = useState<Participant[]>([]);
+  const [identity, setIdentity] = useState<Identity>('');
 
   const status = useCallback(() => {
     if (!activity) return;
@@ -55,13 +54,13 @@ export default function Page({ params }: { params: { activityId: string } }) {
     const registrationStart = new Date(activity.register_start_timestamp);
     const registrationEnd = new Date(activity.register_end_timestamp);
 
+    if (activity?.status === 'cancel') return '已刪除';
     if (now < registrationStart) return '即將開始註冊';
     if (now > registrationStart && now < registrationEnd) return '註冊中';
-    if (capacity === 0) return '已額滿';
     if (now > registrationEnd && now < eventStart) return '即將開始活動';
     if (now > eventStart && now < eventEnd) return '進行中';
-    if (now > eventEnd) return '結束';
-  }, [activity, capacity]);
+    if (now > eventEnd) return '已結束';
+  }, [activity]);
 
   useEffect(() => {
     const fetchActivity = async () => {
@@ -81,6 +80,40 @@ export default function Page({ params }: { params: { activityId: string } }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.activityId]);
 
+  useEffect(() => {
+    if (participants && member && activity) {
+      if (member?.member_id === activity?.member_id) {
+        setIdentity('Host');
+      } else if (participants.find((p) => p.member_id === member?.member_id)) {
+        setIdentity('Participant');
+      } else {
+        setIdentity('');
+      }
+    }
+  }, [participants, member, activity]);
+
+  const handleClick = async () => {
+    if (identity === 'Host' && activity) {
+      await deleteActivity(activity.activity_id);
+      toast.success('活動已刪除');
+      router.push('/');
+    } else if (identity === 'Participant' && activity) {
+      await quitActivity(activity.activity_id);
+      const { number_of_participant } = await getActivityCapacity(params.activityId);
+      const people = await getActivityMember(params.activityId);
+      setCapacity(number_of_participant);
+      setParticipants(people);
+      toast.success('已退出活動');
+    } else if (identity === '' && activity) {
+      await joinActivity(activity.activity_id);
+      const { number_of_participant } = await getActivityCapacity(params.activityId);
+      const people = await getActivityMember(params.activityId);
+      setCapacity(number_of_participant);
+      setParticipants(people);
+      toast.success('已報名活動');
+    }
+  };
+
   return (
     <div className="flex flex-wrap justify-center">
       <ActivityCard
@@ -89,11 +122,17 @@ export default function Page({ params }: { params: { activityId: string } }) {
         comments={comments}
         status={status}
         rating={rating}
-        isHost={member?.member_id === activity?.member_id}
-        participants={participants}
+        handleClick={handleClick}
+        identity={identity}
       />
-      {member?.member_id === activity?.member_id && <KickParticipant participants={participants} />}
-      {member?.member_id !== activity?.member_id && status() === '結束' && <Rating />}
+      {member?.member_id === activity?.member_id && member?.member_id != undefined && (
+        <KickParticipant participants={participants} />
+      )}
+      {member?.member_id !== activity?.member_id &&
+        member?.member_id != undefined &&
+        activity?.member_id != undefined &&
+        activity?.status !== 'cancel' &&
+        (status() === '已結束' || status() === '進行中') && <Rating />}
     </div>
   );
 }

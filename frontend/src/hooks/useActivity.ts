@@ -10,9 +10,9 @@ import {
   // getJoinedActivityPayload,
   getMessagePayload,
   insertMessagePayload,
-  joinActivityPayload,
+  // joinActivityPayload,
   kickMemberPayload,
-  quitActivityPayload,
+  // quitActivityPayload,
   rateActivityPayload,
   // getFollowedActivityPayload,
 } from '@/lib/shared_types';
@@ -90,6 +90,15 @@ export default function useActivity() {
     return data;
   };
 
+  const deleteActivity = async (activity_id: string) => {
+    const { data } = await instance.delete(`/activity`, {
+      params: {
+        activity_id,
+      },
+    });
+    return data;
+  };
+
   //getActivityByTime
   const getActivityByTime = async ({
     event_start_timestamp,
@@ -114,13 +123,19 @@ export default function useActivity() {
   };
 
   //joinActivity
-  const joinActivity = async ({ activity_id, member_id }: joinActivityPayload) => {
-    return instance.post('/activity/join', { activity_id, member_id });
+  const joinActivity = async (activity_id: string) => {
+    const { data } = await instance.post('/activity/join', { activity_id });
+    return data;
   };
 
   //quitActivity
-  const quitActivity = async ({ activity_id, member_id }: quitActivityPayload) => {
-    return instance.delete(`/activity/${activity_id}/${member_id}`);
+  const quitActivity = async (activity_id: string) => {
+    const { data } = await instance.delete(`/activity/quit`, {
+      params: {
+        activity_id,
+      },
+    });
+    return data;
   };
 
   //getJoinedActivity
@@ -188,6 +203,7 @@ export default function useActivity() {
     getActivityByTime,
     getActivityByTag,
     getJoinedActivityByTag,
+    deleteActivity,
     followActivity,
     joinActivity,
     quitActivity,

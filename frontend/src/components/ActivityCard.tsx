@@ -1,5 +1,4 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
 import {
   CardTitle,
   CardDescription,
@@ -22,22 +21,11 @@ import {
 import { FaLocationCrosshairs, FaTag } from 'react-icons/fa6';
 import { categories } from '@/components/navbar/Categories';
 import { cn } from '@/lib/utils';
+import type { ActivityData } from '@/lib/shared_types';
 
-type Activity = {
-  activity_id: string;
-  title: string;
-  description: string;
-  event_start_timestamp: Date;
-  event_end_timestamp: Date;
-  register_start_timestamp: Date;
-  register_end_timestamp: Date;
-  location: string;
-  capacity: number;
-  student_fee: number;
-  non_student_fee: number;
-  activity_tag: string;
-  name: string;
+type Activity = ActivityData & {
   member_id: string;
+  name: string;
 };
 
 type ActivityCardProps = {
@@ -46,12 +34,8 @@ type ActivityCardProps = {
   comments: string[] | undefined;
   status: () => string | undefined;
   rating: number | undefined;
-  isHost: boolean;
-  participants: {
-    member_id: string;
-    name: string;
-    activity_role: string;
-  }[];
+  handleClick: () => void;
+  identity: string | undefined;
 };
 
 function formatDateTime(isoString: Date | undefined): string {
@@ -76,28 +60,24 @@ function getLabelByType(type: string | undefined): string {
 export default function ActivityCard({
   activity,
   capacity,
+  rating,
   comments,
   status,
-  rating,
-  isHost,
-  participants,
+  handleClick,
+  identity,
 }: ActivityCardProps) {
-  const [join, setJoin] = useState<string>('');
-
-  useEffect(() => {
-    if (participants) {
-      if (isHost) setJoin('Host');
-      else if (participants.find((p) => p.member_id === activity?.member_id))
-        setJoin('Participant');
-    }
-  }, [participants, isHost, activity?.member_id]);
-
-  const ButtonName = useCallback(() => {
-    if (join === 'Host') return '解散活動';
-    else if (join === 'Participant') return '離開活動';
-    else return '註冊活動';
-  }, [join]);
-
+  const ButtonName = () => {
+    if (identity === 'Host') return '刪除活動';
+    if (identity === 'Participant') return '退出活動';
+    if (identity === '') return '報名活動';
+  };
+  const disabled = () => {
+    if (identity === 'Host') return false;
+    if (identity === 'Participant' && (status() !== '已結束' || status() !== '已取消'))
+      return false;
+    if (identity === '' && status() !== '註冊中') return false;
+    return true;
+  };
   return (
     <Card className="w-screen max-w-xl mx-auto mt-10 shadow-lg rounded-lg overflow-hidden flex flex-col">
       <CardHeader className="bg-gray-50 p-6">
@@ -110,13 +90,15 @@ export default function ActivityCard({
           <span className="text-gray-600">狀態:</span>
           <Badge
             className={cn(
-              'ml-2',
-              'text-gray-100',
-              status() === '結束' || status() === '已額滿' ? 'bg-red-500' : 'bg-green-500'
+              'ml-2 text-gray-100',
+              status() === '已結束' || status() === '已刪除' ? 'bg-red-500' : 'bg-green-500'
             )}
           >
             {status ? status() : ''}
           </Badge>
+          {capacity && capacity === 0 && (
+            <Badge className="ml-2 text-gray-100 bg-red-500">已額滿</Badge>
+          )}
         </div>
         <div className="border-t border-gray-200 pt-4">
           <div className="flex items-center space-x-3">
@@ -231,7 +213,18 @@ export default function ActivityCard({
         </div>
       </CardContent>
       <CardFooter className="bg-gray-50 p-6">
-        <Button className="w-full text-white bg-blue-500 hover:bg-blue-600">{ButtonName()}</Button>
+        <Button
+          className={cn(
+            'w-full text-white',
+            identity === 'Host' || identity === 'Participant'
+              ? 'bg-red-500 hover:bg-red-700'
+              : 'bg-blue-500 hover:bg-blue-700'
+          )}
+          onClick={handleClick}
+          disabled={disabled()}
+        >
+          {ButtonName()}
+        </Button>
       </CardFooter>
     </Card>
   );

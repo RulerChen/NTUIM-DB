@@ -11,6 +11,9 @@ import {
   getActivityComments,
   getActivityRating,
   getActivityMember,
+  deleteActivity,
+  joinActivity,
+  quitActivity,
   // findActivityNeedAttention,
   // getActivityByTag,
   // getActivityByTime,
@@ -22,9 +25,7 @@ import {
   // getJoinedActivityByTag,
   // getMessage,
   // insertMessage,
-  // joinActivity,
   // kickMember,
-  // quitActivity,
   // rateActivity,
 } from '@/controllers/activity.controller';
 import express from 'express';
@@ -61,6 +62,15 @@ router.get('/rating', getActivityRating);
 //getActivityMember
 router.get('/member', getActivityMember);
 
+// deleteActivity
+router.delete('/', isAuth, deleteActivity);
+
+//joinActivity
+router.post('/join', isAuth, joinActivity);
+
+// quitActivity
+router.delete('/quit', isAuth, quitActivity);
+
 //getActivityByTime
 // router.get('/:event_start_timestamp/:event_end_timestamp', getActivityByTime);
 
@@ -69,12 +79,6 @@ router.get('/member', getActivityMember);
 
 //getJoinedActivityByTag
 // router.get('/:activity_tag/join', getJoinedActivityByTag);
-
-//joinActivity
-// router.post('/join', joinActivity);
-
-//quitActivity
-// router.delete('/:activity_id/:member_id', quitActivity);
 
 //getJoinedActivity
 router.get('/join', isAuth, getJoinedActivity);

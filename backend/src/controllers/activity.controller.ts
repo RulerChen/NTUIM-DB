@@ -356,19 +356,23 @@ export const followActivity = async (req: Request, res: Response) => {
   }
 };
 export const joinActivity = async (req: Request, res: Response) => {
-  // console.log(req.body);
-  const { member_id, activity_id } = req.body;
+  const { activity_id } = req.body;
+  const { member_id } = req.user as any;
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
     INSERT INTO MEMBER_JOIN_ACTIVITY (activity_id, member_id, join_timestamp)
     VALUES ($1, $2, CURRENT_TIMESTAMP);
+    `;
+  const values = [activity_id, member_id];
+  try {
+    await client.query(query, values);
+    const query_role = `
     INSERT INTO activity_role(activity_id, member_id, activity_role)
     VALUES ($1, $2, 'Participant');
     `;
-  const values = [activity_id, member_id];
-  await client.query(query, values);
-  try {
+    const values_role = [activity_id, member_id];
+    await client.query(query_role, values_role);
     res.status(201).json("You've successfully joined the activity!");
   } catch (err) {
     res.status(400).json(err);
@@ -378,18 +382,23 @@ export const joinActivity = async (req: Request, res: Response) => {
 };
 export const quitActivity = async (req: Request, res: Response) => {
   // console.log(req.body);
-  const { member_id, activity_id } = req.body;
+  const { member_id } = req.user as any;
+  const { activity_id } = req.query;
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
     insert into MEMBER_QUIT_ACTIVITY (activity_id, member_id, quit_timestamp)
     values ($1, $2, CURRENT_TIMESTAMP);
+    `;
+  const values = [activity_id, member_id];
+  try {
+    await client.query(query, values);
+    const query_role = `
     delete from activity_role
     where activity_id = $1 and member_id = $2;
     `;
-  const values = [activity_id, member_id];
-  await client.query(query, values);
-  try {
+    const values_role = [activity_id, member_id];
+    await client.query(query_role, values_role);
     res.status(201).json("You've successfully quit the activity!");
   } catch (err) {
     res.status(400).json(err);
@@ -457,6 +466,26 @@ export const getHostedActivity = async (req: Request, res: Response) => {
   try {
     const result = await client.query(query, values);
     res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(400).json(err);
+  } finally {
+    client.end();
+  }
+};
+export const deleteActivity = async (req: Request, res: Response) => {
+  const { activity_id } = req.query;
+
+  const client = new Client(dbConfig);
+  await client.connect();
+  const query = `
+    update activity
+    set status = 'cancel'
+    where activity_id = $1;
+    `;
+  const values = [activity_id];
+  try {
+    await client.query(query, values);
+    res.status(201).json("You've successfully deleted the activity!");
   } catch (err) {
     res.status(400).json(err);
   } finally {
@@ -543,8 +572,7 @@ export const rateActivity = async (req: Request, res: Response) => {
   }
 };
 export const getActivityMember = async (req: Request, res: Response) => {
-  // console.log(req.body);
-  const { activity_id } = req.body;
+  const { activity_id } = req.query;
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
@@ -560,7 +588,7 @@ export const getActivityMember = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(400).json(err);
   } finally {
-    client.end();
+    await client.end();
   }
 };
 export const kickMember = async (req: Request, res: Response) => {
