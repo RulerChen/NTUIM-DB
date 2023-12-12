@@ -27,7 +27,9 @@ const UserProfileForm = () => {
           <div className="flex flex-col">
             <label className=" font-semibold">年齡</label>
             <div className="">{member?.age}</div>
-            <label className="mt-3 font-semibold">身分</label>
+          </div>
+          <div className="flex flex-col">
+            <label className="font-semibold">身分</label>
             <div className="">{member?.member_role === 'Student' ? '學生' : '一般會員'}</div>
           </div>
           {member?.member_role === 'Student' && (
@@ -42,7 +44,6 @@ const UserProfileForm = () => {
               <div className="">{student?.department}</div>
             </div>
           )}
-          {member?.member_role === 'Student' && <div className={cn('none')}></div>}
           {member?.member_role === 'Student' && (
             <div className="flex flex-col">
               <label className=" font-semibold">年級</label>

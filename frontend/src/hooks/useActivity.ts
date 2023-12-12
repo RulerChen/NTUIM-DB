@@ -7,15 +7,16 @@ import {
   getActivityRatingPayload,
   getChatgroupPayload,
   // getFollowedActivityPayload,
-  getHostedActivityPayload,
+  // getHostedActivityPayload,
   getJoinedActivityByTagPayload,
-  getJoinedActivityPayload,
+  // getJoinedActivityPayload,
   getMessagePayload,
   insertMessagePayload,
   joinActivityPayload,
   kickMemberPayload,
   quitActivityPayload,
   rateActivityPayload,
+  // getFollowedActivityPayload,
 } from '@/lib/shared_types';
 import instance from '@/lib/axios';
 
@@ -76,12 +77,8 @@ export default function useActivity() {
   };
 
   //getJoinedActivity
-  const getJoinedActivity = async ({ member_id }: getJoinedActivityPayload) => {
-    const { data } = await instance.get(`/activity/join/`, {
-      params: {
-        member_id,
-      },
-    });
+  const getJoinedActivity = async () => {
+    const { data } = await instance.get(`/activity/join/`);
     return data;
   };
 
@@ -92,8 +89,9 @@ export default function useActivity() {
   };
 
   //getHostedActivity
-  const getHostedActivity = async ({ member_id }: getHostedActivityPayload) => {
-    return instance.get(`/activity/host/${member_id}`);
+  const getHostedActivity = async () => {
+    const { data } = await instance.get(`/activity/host/`);
+    return data;
   };
 
   //getChatgroup

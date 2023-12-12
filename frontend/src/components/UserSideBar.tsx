@@ -16,11 +16,6 @@ const UserSideBar = () => {
             變更個人密碼
           </Link>
         </Button>
-        <Button className="bg-white text-black rounded-lg h-[10vh] hover:bg-neutral-100 transition font-semibold">
-          <Link href="/user/password" className="text-lg">
-            變更個人密碼
-          </Link>
-        </Button>
         <Separator orientation="horizontal" className="my-2 bg-black" />
         <Button className="bg-white text-black rounded-lg h-[10vh] hover:bg-neutral-100 transition font-semibold">
           <Link href="/user/unroute" className="text-sm lg:text-lg">

@@ -4,6 +4,8 @@ import {
   followActivity,
   getFollowedActivity,
   getActivityByTitle,
+  getJoinedActivity,
+  getHostedActivity,
   // findActivityNeedAttention,
   // getActivityByTag,
   // getActivityByTime,
@@ -57,10 +59,10 @@ router.get('/title', getActivityByTitle);
 // router.delete('/:activity_id/:member_id', quitActivity);
 
 //getJoinedActivity
-// router.get('/join/:member_id', getJoinedActivity);
+router.get('/join', isAuth, getJoinedActivity);
 
 //getHostedActivity
-// router.get('/host/:member_id', getHostedActivity);
+router.get('/host', isAuth, getHostedActivity);
 
 //getChatgroup
 // router.get('/:activity_id/chatgroup', getChatgroup);
