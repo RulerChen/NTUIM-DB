@@ -6,10 +6,8 @@ import { UpdateUserPasswordPayload } from '@/lib/shared_types';
 import axios from '@/lib/axios';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
-import { useMember } from '@/hooks/useMember';
 
 const UserProfileForm = () => {
-  const { member } = useMember();
   const {
     register,
     handleSubmit,
@@ -31,7 +29,6 @@ const UserProfileForm = () => {
       toast.error('兩次密碼輸入不一致');
       return;
     }
-    console.log(member?.password);
     const userPassword: UpdateUserPasswordPayload = {
       old_password: data.old_password,
       new_password: data.new_password,

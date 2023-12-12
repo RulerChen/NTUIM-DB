@@ -38,7 +38,6 @@ const UserProfileForm = () => {
   }, [member?.member_role, setValue]);
 
   useEffect(() => {
-    console.log(student);
     if (student) {
       setValue('school_name', student.school_name);
       setValue('department', student.department);
@@ -51,7 +50,6 @@ const UserProfileForm = () => {
       ...data,
       age: Number(data.age),
     };
-    const role = member?.member_role;
     const hashed_password = member?.password;
     const user: UpdateUserPayload = {
       name: data.username,
@@ -59,7 +57,7 @@ const UserProfileForm = () => {
       email: data.email,
       password: hashed_password!,
       age: data.age,
-      member_role: data.isStudent ? 'Student' : role!,
+      member_role: isStudent ? 'Student' : 'Non-student',
       school_name: data.school_name,
       department: data.department,
       grade: data.grade,
@@ -67,7 +65,6 @@ const UserProfileForm = () => {
     axios
       .put(`/user/`, user)
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
           toast.success('更新成功');
         }

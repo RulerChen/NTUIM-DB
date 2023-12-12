@@ -18,18 +18,24 @@ const UserSideBar = () => {
         </Button>
         <Separator orientation="horizontal" className="my-2 bg-black" />
         <Button className="bg-white text-black rounded-lg h-[10vh] hover:bg-neutral-100 transition font-semibold">
-          <Link href="/user/unroute" className="text-sm lg:text-lg">
+          <Link href="/user/host" className="text-sm lg:text-lg">
             我主持的活動
           </Link>
         </Button>
         <Button className="bg-white text-black rounded-lg h-[10vh] hover:bg-neutral-100 transition font-semibold">
-          <Link href="/user/unroute" className="text-sm lg:text-lg">
+          <Link href="/user/follow" className="text-sm lg:text-lg">
             我追蹤的活動
           </Link>
         </Button>
         <Button className="bg-white text-black rounded-lg h-[10vh] hover:bg-neutral-100 transition font-semibold">
-          <Link href="/user/unroute" className="text-sm lg:text-lg">
+          <Link href="/user/join" className="text-sm lg:text-lg">
             我參加的活動
+          </Link>
+        </Button>
+        <Separator orientation="horizontal" className="my-2 bg-black" />
+        <Button className="bg-white text-black rounded-lg h-[10vh] hover:bg-neutral-100 transition font-semibold">
+          <Link href="/user/unroute" className="text-sm lg:text-lg">
+            聊天室
           </Link>
         </Button>
       </div>
