@@ -25,7 +25,7 @@ cd ../backend && npm install
 4. 開啟檔案
 
 需要開啟兩個 terminal 分別執行 backend 和 frontend
-    
+
 ```bash
 cd backend && npm run dev
 ```

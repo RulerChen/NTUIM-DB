@@ -8,7 +8,7 @@ import {
   // getActivityByTag,
   // getActivityByTime,
   // getActivityMember,
-  // getActivityNumber,
+  getActivityNumber,
   // getActivityRating,
   getAllMember,
   // getChatgroup,
@@ -22,7 +22,7 @@ import {
   // quitActivity,
   // rateActivity,
   deleteActivity,
-  deleteUser
+  deleteUser,
 } from '@/controllers/activity.controller';
 import express from 'express';
 import { isAuth } from '@/utils/isAuth';
@@ -80,7 +80,7 @@ router.get('/title', getActivityByTitle);
 // router.get('/:activity_id/rating', getActivityRating);
 
 //getActivityNumber
-// router.get('/:activity_id/number', getActivityNumber);
+router.get('/:activity_id/number', getActivityNumber);
 
 //getActivityMember
 // router.get('/:activity_id/member', getActivityMember);

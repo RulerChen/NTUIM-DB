@@ -485,7 +485,7 @@ export const getActivityNumber = async (req: Request, res: Response) => {
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
-    select count(*) as number_of_participant
+    select COALESCE(COUNT(*), 0) as number_of_participant
     from activity_role
     where activity_id = $1
     `;
@@ -597,7 +597,7 @@ export const deleteActivity = async (req: Request, res: Response) => {
   } finally {
     client.end();
   }
-}
+};
 
 export const deleteUser = async (req: Request, res: Response) => {
   const { member_id } = req.body;
@@ -616,4 +616,4 @@ export const deleteUser = async (req: Request, res: Response) => {
   } finally {
     client.end();
   }
-}
+};
