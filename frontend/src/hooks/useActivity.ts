@@ -16,7 +16,6 @@ import {
   kickMemberPayload,
   quitActivityPayload,
   rateActivityPayload,
-  deleteActivityPayload,
 } from '@/lib/shared_types';
 import instance from '@/lib/axios';
 
@@ -118,12 +117,7 @@ export default function useActivity() {
 
   //rateActivity
   const rateActivity = async ({ activity_id, member_id, score, comment }: rateActivityPayload) => {
-    return instance.post(`/activity/rate`, {
-      activity_id,
-      member_id,
-      score,
-      comment,
-    });
+    return instance.post(`/activity/rate`, { activity_id, member_id, score, comment });
   };
 
   //getActivityRating
@@ -153,13 +147,7 @@ export default function useActivity() {
 
   //getAllMember
   const getAllMember = async () => {
-    const { data } = await instance.get(`/activity/member`);
-    return data;
-  };
-
-  //deleteActivity
-  const deleteActivity = async ({ activity_id }: deleteActivityPayload) => {
-    return instance.delete(`/activity/${activity_id}`);
+    return instance.get(`/activity/member`);
   };
 
   return {
@@ -184,6 +172,5 @@ export default function useActivity() {
     findActivityNeedAttention,
     getAllActivity,
     getAllMember,
-    deleteActivity,
   };
 }

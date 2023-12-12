@@ -45,10 +45,6 @@ const StudentDataSchema = z.object({
 
 export type CardData = Omit<ActivityData, 'requirement'>;
 
-export type AdminAcData = Omit<ActivityData, 'requirement'> & {
-  number_of_join: number;
-};
-
 export type MemberData = z.infer<typeof MemberDataSchema>;
 
 export type ChatgroupData = z.infer<typeof ChatgroupDataSchema>;
@@ -58,10 +54,7 @@ export type StudentData = z.infer<typeof StudentDataSchema>;
 export type UpdateUserPayload = Omit<MemberData, 'member_id'> &
   Omit<StudentData, 'member_id' | 'student_id'>;
 
-export type UpdateUserPasswordPayload = {
-  old_password: string;
-  new_password: string;
-};
+export type UpdateUserPasswordPayload = { old_password: string; new_password: string };
 
 export type UpdateUserResponse = StudentData;
 
@@ -111,5 +104,3 @@ export type getActivityNumberPayload = Pick<ActivityData, 'activity_id'>;
 export type getActivityMemberPayload = Pick<ActivityData, 'activity_id'>;
 
 export type kickMemberPayload = Pick<ActivityData, 'activity_id'> & Pick<MemberData, 'member_id'>;
-
-export type deleteActivityPayload = Pick<ActivityData, 'activity_id'>;

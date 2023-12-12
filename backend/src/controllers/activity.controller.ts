@@ -485,7 +485,7 @@ export const getActivityNumber = async (req: Request, res: Response) => {
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
-    select COALESCE(COUNT(*), 0) as number_of_participant
+    select count(*) as number_of_participant
     from activity_role
     where activity_id = $1
     `;
@@ -579,41 +579,3 @@ export const getAllMember = async (req: Request, res: Response) => {
 };
 
 // done first part
-
-export const deleteActivity = async (req: Request, res: Response) => {
-  const { activity_id } = req.body;
-  const client = new Client(dbConfig);
-  await client.connect();
-  const query = `
-    delete from activity
-    where activity_id = $1
-    `;
-  const values = [activity_id];
-  try {
-    await client.query(query, values);
-    res.status(200).json("You've successfully deleted the activity!");
-  } catch (err) {
-    res.status(400).json(err);
-  } finally {
-    client.end();
-  }
-};
-
-export const deleteUser = async (req: Request, res: Response) => {
-  const { member_id } = req.body;
-  const client = new Client(dbConfig);
-  await client.connect();
-  const query = `
-    delete from member
-    where member_id = $1
-    `;
-  const values = [member_id];
-  try {
-    await client.query(query, values);
-    res.status(200).json("You've successfully deleted the user!");
-  } catch (err) {
-    res.status(400).json(err);
-  } finally {
-    client.end();
-  }
-};
