@@ -19,6 +19,8 @@
 - 註冊登入帳號 / OAuth 登入
 - 可以瀏覽 / 追隨 / 參加 / 新增 / 評論活動
 - 活動主持人可以踢人 / 結束活動
+- 查看 / 更新個人資料
+- 活動聊天室
 
 ## 開啟方式
 
@@ -42,10 +44,11 @@ cd ../backend && npm install
 
 3. 建立 .env 檔案
 
-把我傳的 .env 檔案貼到 backend 資料夾裡面，並依照自己的 postgresql 設定修改，並且開啟 pgadmin
+把我 .env 檔案貼到 backend 資料夾裡面，並依照自己的 postgresql 設定修改，並且開啟 pgadmin
 
-需要依據 `backend/.env.example` 的東西，需要額外連接 google 和 facebook 的 api，
-另外我有使用 mongoDB 來存 session，所以也需要去申請一個 mongoDB 的帳號。
+需要依據 `backend/.env.example` 的欄位寫到 `.env` 中，需要額外連接 [google](https://console.cloud.google.com/) 和 [facebook](https://developers.facebook.com/?locale=zh_TW) 的 api，另外我有使用 [mongoDB](https://www.mongodb.com/zh-cn) 來存 session，所以也需要去申請一個 mongoDB 的帳號。
+
+另外 google 和 facebook 的 api 需要設定 callback url，分別是 `http://localhost:8080/api/user/google/callback` 和 `http://localhost:8080/api/user/facebook/callback`。
 
 4. 開啟檔案
 
@@ -60,5 +63,3 @@ cd frontend && npm run dev
 ```
 
 5. 打開 `localhost:3000`，開始使用
-
-6. 到 vscode extension 商店搜尋 eslint (橘色最多人裝的那個)並安裝，就可以套用我設定好的排版規則
