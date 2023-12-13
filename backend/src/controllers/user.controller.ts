@@ -73,14 +73,43 @@ export const updateUser = async (req: Request, res: Response) => {
   const values = [email, name, age, phone, member_role, member_id];
 
   try {
+    let student_exist = true;
     await client.query(query, values);
+    const query_student_existed = `
+    SELECT * FROM student
+    WHERE member_id = $1;
+    `;
+    const values_student_existed = [member_id];
+    const result_student_existed = await client.query(
+      query_student_existed,
+      values_student_existed
+    );
+    if (result_student_existed.rows.length === 0) {
+      student_exist = false;
+    }
     if (member_role === 'Student') {
+      if (!student_exist) {
+        const student_id = uuidv4();
+        const query_student = `
+        INSERT INTO student (member_id, student_id, school_name, department, grade)
+        VALUES ($1, $2, $3, $4, $5);
+        `;
+        const values_student = [member_id, student_id, school_name, department, grade];
+        await client.query(query_student, values_student);
+      }
       const query_student = `
       UPDATE student
       SET school_name = $1, department = $2, grade = $3
       WHERE member_id = $4;
       `;
       const values_student = [school_name, department, grade, member_id];
+      await client.query(query_student, values_student);
+    } else if (student_exist) {
+      const query_student = `
+        DELETE FROM student
+        WHERE member_id = $1;
+        `;
+      const values_student = [member_id];
       await client.query(query_student, values_student);
     }
     res.status(200).json("You've successfully updated your profile!");
