@@ -218,7 +218,7 @@ export default function ActivityCard({
                 <div>
                   <span className="text-gray-600">評論:</span>
                   <span className="ml-2 text-gray-900">
-                    {comment.comment ? comment.comment : '目前沒有評論'}
+                    {comment.comment ? comment.comment.slice(0, 25) + '...' : '目前沒有評論'}
                   </span>
                 </div>
               </div>
