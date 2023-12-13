@@ -43,6 +43,7 @@ type ActivityCardProps = {
   rating: number | undefined;
   handleClick: () => void;
   identity: string | undefined;
+  isLoading: boolean;
 };
 
 function formatDateTime(isoString: Date | undefined): string {
@@ -72,6 +73,7 @@ export default function ActivityCard({
   status,
   handleClick,
   identity,
+  isLoading,
 }: ActivityCardProps) {
   const ButtonName = () => {
     if (identity === 'Host') return '刪除活動';
@@ -233,7 +235,7 @@ export default function ActivityCard({
               : 'bg-blue-500 hover:bg-blue-700'
           )}
           onClick={handleClick}
-          disabled={disabled()}
+          disabled={disabled() || isLoading}
         >
           {ButtonName()}
         </Button>

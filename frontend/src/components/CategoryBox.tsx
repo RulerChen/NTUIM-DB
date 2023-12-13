@@ -21,8 +21,6 @@ const CategoryBox = ({ icon: Icon, label, selected, href }: CategoryBoxProps) =>
     <div
       onClick={handleClick}
       className={`
-        h-[12vh]
-        md:h-[10vh]
         flex 
         flex-col 
         items-center 
