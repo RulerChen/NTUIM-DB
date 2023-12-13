@@ -43,6 +43,7 @@ type ActivityCardProps = {
   rating: number | undefined;
   handleClick: () => void;
   identity: string | undefined;
+  isLoading: boolean;
 };
 
 function formatDateTime(isoString: Date | undefined): string {
@@ -72,6 +73,7 @@ export default function ActivityCard({
   status,
   handleClick,
   identity,
+  isLoading,
 }: ActivityCardProps) {
   const ButtonName = () => {
     if (identity === 'Host') return '刪除活動';
@@ -82,7 +84,7 @@ export default function ActivityCard({
     if (identity === 'Host') return false;
     if (identity === 'Participant' && (status() !== '已結束' || status() !== '已取消'))
       return false;
-    if (identity === '' && status() !== '註冊中') return false;
+    if (identity === '' && status() === '註冊中') return false;
     return true;
   };
   return (
@@ -216,7 +218,7 @@ export default function ActivityCard({
                 <div>
                   <span className="text-gray-600">評論:</span>
                   <span className="ml-2 text-gray-900">
-                    {comment.comment ? comment.comment : '目前沒有評論'}
+                    {comment.comment ? comment.comment.slice(0, 25) + '...' : '目前沒有評論'}
                   </span>
                 </div>
               </div>
@@ -230,10 +232,11 @@ export default function ActivityCard({
             'w-full text-white',
             identity === 'Host' || identity === 'Participant'
               ? 'bg-red-500 hover:bg-red-700'
-              : 'bg-blue-500 hover:bg-blue-700'
+              : 'bg-blue-500 hover:bg-blue-700',
+            disabled() ? 'opacity-50 cursor-not-allowed' : ''
           )}
-          onClick={handleClick}
-          disabled={disabled()}
+          onClick={() => handleClick()}
+          disabled={disabled() || isLoading}
         >
           {ButtonName()}
         </Button>
