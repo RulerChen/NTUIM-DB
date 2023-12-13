@@ -18,7 +18,8 @@ export default function Page() {
       setJoinedActivities(followedData);
     };
     fetchData();
-  }, [getJoinedActivity]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <main className="min-h-full bg-gray-100">
