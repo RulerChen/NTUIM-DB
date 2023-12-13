@@ -84,7 +84,7 @@ export default function ActivityCard({
     if (identity === 'Host') return false;
     if (identity === 'Participant' && (status() !== '已結束' || status() !== '已取消'))
       return false;
-    if (identity === '' && status() !== '註冊中') return false;
+    if (identity === '' && status() === '註冊中') return false;
     return true;
   };
   return (
@@ -232,9 +232,10 @@ export default function ActivityCard({
             'w-full text-white',
             identity === 'Host' || identity === 'Participant'
               ? 'bg-red-500 hover:bg-red-700'
-              : 'bg-blue-500 hover:bg-blue-700'
+              : 'bg-blue-500 hover:bg-blue-700',
+            disabled() ? 'opacity-50 cursor-not-allowed' : ''
           )}
-          onClick={handleClick}
+          onClick={() => handleClick()}
           disabled={disabled() || isLoading}
         >
           {ButtonName()}
