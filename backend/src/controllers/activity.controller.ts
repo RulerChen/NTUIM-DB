@@ -359,12 +359,36 @@ export const joinActivity = async (req: Request, res: Response) => {
   const { member_id } = req.user as any;
   const client = new Client(dbConfig);
   await client.connect();
+ 
+  await client.query('BEGIN');
+  
+  // capacity check
+  const capacity_query = `
+    SELECT
+      (SELECT capacity
+        FROM activity
+        WHERE activity_id = $1) - 
+      (SELECT COUNT(*) AS number_of_participant
+      FROM activity_role
+      WHERE activity_id = $1) 
+      AS RESULT;`;  
+
   const query = `
     INSERT INTO MEMBER_JOIN_ACTIVITY (activity_id, member_id, join_timestamp)
     VALUES ($1, $2, CURRENT_TIMESTAMP);
     `;
   const values = [activity_id, member_id];
   try {
+    // 12/14
+    const result = await client.query(capacity_query, [activity_id]);
+    const capacity_remain = result.rows[0].result
+    // console.log("capacity_remain:", capacity_remain)
+
+    if (capacity_remain <= 0 ) {
+      throw new Error("Capacity is exceeded.");
+    }
+
+
     await client.query(query, values);
     const query_role = `
     INSERT INTO activity_role(activity_id, member_id, activity_role)
@@ -372,8 +396,13 @@ export const joinActivity = async (req: Request, res: Response) => {
     `;
     const values_role = [activity_id, member_id];
     await client.query(query_role, values_role);
+
+    //12/14
+    await client.query('COMMIT');
+
     res.status(201).json("You've successfully joined the activity!");
   } catch (err) {
+    await client.query('ROLLBACK');
     res.status(400).json(err);
   } finally {
     client.end();

@@ -18,7 +18,8 @@ export default function Page() {
       setHostActivities(followedData);
     };
     fetchData();
-  }, [getHostedActivity]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <main className="min-h-full bg-gray-100">

@@ -52,6 +52,7 @@ export default function Page({ params }: { params: { activityId: string } }) {
   const [rating, setRating] = useState<number>(0);
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [identity, setIdentity] = useState<Identity>('');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const status = useCallback(() => {
     if (!activity) return;
@@ -95,10 +96,12 @@ export default function Page({ params }: { params: { activityId: string } }) {
       } else {
         setIdentity('');
       }
+      setIsLoading(false);
     }
   }, [participants, member, activity]);
 
   const handleClick = async () => {
+    setIsLoading(true);
     if (identity === 'Host' && activity) {
       await deleteActivity(activity.activity_id);
       if (member) toast.success('活動已刪除');
@@ -118,6 +121,7 @@ export default function Page({ params }: { params: { activityId: string } }) {
       setParticipants(people);
       if (member) toast.success('已報名活動');
     }
+    setIsLoading(false);
   };
 
   return (
@@ -130,6 +134,7 @@ export default function Page({ params }: { params: { activityId: string } }) {
         rating={rating}
         handleClick={handleClick}
         identity={identity}
+        isLoading={isLoading}
       />
       {member?.member_id === activity?.member_id && member?.member_id != undefined && (
         <KickParticipant

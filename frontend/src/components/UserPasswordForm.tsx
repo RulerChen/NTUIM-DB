@@ -6,8 +6,12 @@ import { UpdateUserPasswordPayload } from '@/lib/shared_types';
 import axios from '@/lib/axios';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
+import { useMember } from '@/hooks/useMember';
+import { useRouter } from 'next/navigation';
 
 const UserProfileForm = () => {
+  const { fetchMember } = useMember();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -38,10 +42,11 @@ const UserProfileForm = () => {
       .then((res) => {
         if (res.status === 200) {
           toast.success('更新成功');
+          fetchMember();
+          router.push('/user');
         }
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         toast.error('更新失敗');
       });
   };

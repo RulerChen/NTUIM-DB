@@ -12,11 +12,11 @@ const UserProfileForm = () => {
         <div className="text-xl font-semibold">使用者個人資料</div>
         <Separator orientation="horizontal" className="bg-black" />
         <div className={cn('grid grid-cols-1 sm:grid-cols-2 gap-4')}>
-          <div className={cn('flex flex-col rounded-lg border-slate-100 border-2')}>
+          <div className={cn('flex flex-col')}>
             <label className="font-semibold">使用者名稱</label>
             <div className="">{member?.name}</div>
           </div>
-          <div className="flex flex-col rounded-lg border-slate-100 border-2">
+          <div className="flex flex-col">
             <label className=" font-semibold">電子郵件</label>
             <div className="">{member?.email}</div>
           </div>

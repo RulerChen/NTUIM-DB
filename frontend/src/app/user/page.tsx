@@ -25,7 +25,8 @@ export default function Page() {
       setJoinedActivities(joinedData);
     };
     fetchData();
-  }, [getFollowedActivity, getHostedActivity, getJoinedActivity]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <main className="flex flex-col justify-center bg-gray-100 space-y-6">
