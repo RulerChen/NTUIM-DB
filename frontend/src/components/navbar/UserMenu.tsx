@@ -75,7 +75,8 @@ const UserMenu = () => {
                 <MenuItem label="我主持的活動" onClick={() => handleClick('/user/host')} />
                 <MenuItem label="我追蹤的活動" onClick={() => handleClick('/user/follow')} />
                 <MenuItem label="我參加的活動" onClick={() => handleClick('/user/join')} />
-                <MenuItem label="聊天室" onClick={() => handleClick('/unchange_route')} />
+                <MenuItem label="聊天室" onClick={() => handleClick('/chatroom')} />
+                <MenuItem label="admin" onClick={() => handleClick('/admin')} />
                 <hr />
                 <MenuItem label="登出" onClick={handleLogout} />
               </>
