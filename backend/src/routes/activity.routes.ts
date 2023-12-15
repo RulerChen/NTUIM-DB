@@ -20,13 +20,13 @@ import {
   // getActivityByTag,
   // getActivityByTime,
   // getActivityNumber,
-  // getAllMember,
-  // getChatgroup,
+  getAllMember,
+  getChatgroup,
   // getHostedActivity,
   // getJoinedActivity,
   // getJoinedActivityByTag,
-  // getMessage,
-  // insertMessage,
+  getMessage,
+  insertMessage,
 } from '@/controllers/activity.controller';
 import express from 'express';
 import { isAuth } from '@/utils/isAuth';
@@ -93,13 +93,13 @@ router.get('/join', isAuth, getJoinedActivity);
 router.get('/host', isAuth, getHostedActivity);
 
 //getChatgroup
-// router.get('/:activity_id/chatgroup', getChatgroup);
+router.get('/:activity_id/chatgroup', getChatgroup);
 
 //getMessage
-// router.get('/chatgroup/:chatgroup_id/message', getMessage);
+router.get('/chatgroup/:chatgroup_id/message', getMessage);
 
 //insertMessage
-// router.post('/chatgroup/message', insertMessage);
+router.post('/chatgroup/message', insertMessage);
 
 //getActivityNumber
 // router.get('/:activity_id/number', getActivityNumber);
@@ -108,6 +108,6 @@ router.get('/host', isAuth, getHostedActivity);
 // router.get('/attention', findActivityNeedAttention);
 
 //getAllMember
-// router.get('/member', getAllMember);
+router.get('/allmember', getAllMember);
 
 export default router;

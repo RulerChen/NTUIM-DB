@@ -158,7 +158,8 @@ export default function useActivity() {
 
   //getChatgroup
   const getChatgroup = async ({ activity_id }: getChatgroupPayload) => {
-    return instance.get(`/activity/${activity_id}/chatgroup`);
+    const { data } = await instance.get(`/activity/${activity_id}/chatgroup`);
+    return data;
   };
 
   //getMessage
@@ -177,7 +178,11 @@ export default function useActivity() {
 
   //rateActivity
   const rateActivity = async ({ activity_id, score, comment }: rateActivityPayload) => {
-    const { data } = await instance.post(`/activity/rate`, { activity_id, score, comment });
+    const { data } = await instance.post(`/activity/rate`, {
+      activity_id,
+      score,
+      comment,
+    });
     return data;
   };
 
@@ -199,7 +204,8 @@ export default function useActivity() {
 
   //getAllMember
   const getAllMember = async () => {
-    return instance.get(`/activity/member`);
+    const { data } = await instance.get(`/activity/allmember`);
+    return data;
   };
 
   return {

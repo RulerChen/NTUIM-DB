@@ -526,13 +526,13 @@ export const deleteActivity = async (req: Request, res: Response) => {
   }
 };
 export const getChatgroup = async (req: Request, res: Response) => {
-  // console.log(req.body);
-  const { activity_id } = req.body;
+  // console.log(req.params);
+  const { activity_id } = req.params;
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
     select *
-    from chatgroup
+    from chat_group
     where activity_id = $1;
     `;
   const values = [activity_id];
@@ -547,12 +547,12 @@ export const getChatgroup = async (req: Request, res: Response) => {
 };
 export const getMessage = async (req: Request, res: Response) => {
   // console.log(req.body);
-  const { chatgroup_id } = req.body;
+  const { chatgroup_id } = req.params;
   const client = new Client(dbConfig);
   await client.connect();
   const query = `
     select *
-    message as m
+    from message as m
     where m.chatgroup_id = $1;
     `;
   const values = [chatgroup_id];

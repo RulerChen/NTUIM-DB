@@ -10,6 +10,17 @@ import routes from '@/routes';
 import { env } from '@/utils/env';
 import '@/config/passport.config';
 
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+
+type Message = {
+  message_id: string;
+  chatgroup_id: string;
+  member_id: string;
+  message_time: Date;
+  message_text: string;
+};
+
 const app = express();
 
 app.use(
@@ -19,6 +30,26 @@ app.use(
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   })
 );
+
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+  },
+});
+
+io.on('connection', (socket) => {
+  // New user has connected
+  console.log('A user connected');
+  // User has disconnected
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
+  // User has sent a message
+  socket.on('send_message', (newMessage: Message) => {
+    io.emit('receive_message', newMessage);
+  });
+});
 
 app.set('trust proxy', 1);
 
@@ -50,6 +81,6 @@ app.use('/api', routes);
 
 createTable();
 
-app.listen(8080, () => {
+server.listen(8080, () => {
   console.log('server is running on http://localhost:8080');
 });

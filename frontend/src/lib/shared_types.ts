@@ -40,6 +40,14 @@ const StudentDataSchema = z.object({
   grade: z.number().int().gte(0),
 });
 
+export type Message = {
+  message_id: string;
+  chatgroup_id: string;
+  member_id: string;
+  message_time: Date;
+  message_text: string;
+};
+
 export type CardData = Omit<ActivityData, 'requirement'>;
 
 export type MemberData = z.infer<typeof MemberDataSchema>;
@@ -51,7 +59,10 @@ export type StudentData = z.infer<typeof StudentDataSchema>;
 export type UpdateUserPayload = Omit<MemberData, 'member_id'> &
   Omit<StudentData, 'member_id' | 'student_id'>;
 
-export type UpdateUserPasswordPayload = { old_password: string; new_password: string };
+export type UpdateUserPasswordPayload = {
+  old_password: string;
+  new_password: string;
+};
 
 export type UpdateUserResponse = StudentData;
 
