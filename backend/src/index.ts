@@ -81,6 +81,6 @@ app.use('/api', routes);
 
 createTable();
 
-app.listen(8080, () => {
+server.listen(8080, () => {
   console.log('server is running on http://localhost:8080');
 });

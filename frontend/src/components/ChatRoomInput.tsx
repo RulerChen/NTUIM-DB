@@ -1,7 +1,7 @@
 import { MessagesContext } from '@/context/message';
-import { randomUUID } from 'crypto';
 import { useContext, useState } from 'react';
 import { useMember } from '@/hooks/useMember';
+import { nanoid } from 'nanoid';
 
 interface ChatRoomInputProps {
   id: string;
@@ -17,10 +17,9 @@ const ChatRoomInput: React.FC<ChatRoomInputProps> = ({ id }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!content) return;
-    alert(JSON.stringify(chatroom_id));
     sendMessage({
-      message_id: randomUUID(),
-      chatroom_id: chatroom_id as string,
+      message_id: nanoid(),
+      chatgroup_id: chatroom_id as string,
       member_id: member.member_id,
       message_text: content,
     });

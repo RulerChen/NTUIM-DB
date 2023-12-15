@@ -552,7 +552,7 @@ export const getMessage = async (req: Request, res: Response) => {
   await client.connect();
   const query = `
     select *
-    message as m
+    from message as m
     where m.chatgroup_id = $1;
     `;
   const values = [chatgroup_id];

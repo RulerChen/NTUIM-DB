@@ -1,13 +1,14 @@
 'use client';
 import { MessagesContext } from '@/context/message';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useMember } from '@/hooks/useMember';
 import Avatar from './Avatar';
 import useActivity from '@/hooks/useActivity';
-import { getMessagePayload } from '@/lib/shared_types';
+import { getMessagePayload, Message } from '@/lib/shared_types';
 
 function ChatRoomMessages({ id }: { id: string }) {
   const { messages, setMessages } = useContext(MessagesContext);
+  const [text, setText] = useState<Message[]>([]);
   const { getMessage } = useActivity();
   const { member } = useMember();
 
@@ -15,14 +16,16 @@ function ChatRoomMessages({ id }: { id: string }) {
     const fetchData = async () => {
       const payload: getMessagePayload = { chatgroup_id: id };
       const newData = await getMessage(payload);
-      setMessages(newData);
+      console.log(newData);
+      setText(newData.data);
+      setMessages(newData.data);
     };
     fetchData();
-  }, [id, setMessages]);
+  }, [getMessage]);
 
   return (
     <div className="px-2 pt-4">
-      {messages?.map((message, index) => {
+      {text?.map((message, index) => {
         const isSender = message.member_id === member?.member_id;
         return (
           <div key={index} className="w-full pt-1">

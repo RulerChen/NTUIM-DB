@@ -51,6 +51,7 @@ export function MessagesProvider({ children }: Props) {
         message_time: new Date(),
       };
       const data = await insertMessage(newMessage);
+      console.log(data);
       if (data) {
         socket.emit('send_message', data.message);
       }
