@@ -17,10 +17,10 @@ export default function Page({ params }: { params: { chatroomID: string } }) {
       <div className="w-full h-full overflow-hidden flex flex-col shadow-lg">
         <nav className="w-full shadow-md p-3 text-md font-semibold">Chatroom</nav>
         <div className="overflow-y-scroll grow">
-          <ChatRoomMessages id={id} />
+          <ChatRoomMessages id={id!} />
         </div>
         <div className="p-2">
-          <ChatRoomInput id={id} />
+          <ChatRoomInput id={id!} />
         </div>
       </div>
       <Link href="/chatroom">上一頁</Link>

@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 export default function Page() {
   const { getAllActivity, getActivityCapacity, deleteActivity } = useActivity();
   const [cardData, setCardData] = useState<CardData[]>([]);
-  const [activityCounts, setActivityCounts] = useState({});
+  const [activityCounts, setActivityCounts] = useState<{ [key: string]: number }>({});
 
   const handleDelete = async (activity_id: string) => {
     await deleteActivity(activity_id);
@@ -21,7 +21,7 @@ export default function Page() {
       const data = await getAllActivity('all');
       setCardData(data);
 
-      const counts = {};
+      const counts: { [key: string]: number } = {};
       for (const activity of data) {
         const response = await getActivityCapacity(activity.activity_id);
         counts[activity.activity_id] = response.number_of_participant;

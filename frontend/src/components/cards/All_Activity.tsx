@@ -2,7 +2,7 @@ import type { CardData } from '@/lib/shared_types';
 
 interface AllActivityProps {
   data: CardData;
-  count: string;
+  count: number;
   onDelete: (activity_id: string) => void;
 }
 
