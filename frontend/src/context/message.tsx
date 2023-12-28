@@ -52,8 +52,8 @@ export function MessagesProvider({ children }: Props) {
       };
       const data = await insertMessage(newMessage);
       console.log(data);
-      if (data) {
-        socket.emit('send_message', data.message);
+      if (data && data.data) {
+        socket.emit('send_message', data.data.message);
       }
     } catch (error) {
       console.log(error);

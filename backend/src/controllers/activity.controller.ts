@@ -359,9 +359,9 @@ export const joinActivity = async (req: Request, res: Response) => {
   const { member_id } = req.user as any;
   const client = new Client(dbConfig);
   await client.connect();
- 
+
   await client.query('BEGIN');
-  
+
   // capacity check
   const capacity_query = `
     SELECT
@@ -371,7 +371,7 @@ export const joinActivity = async (req: Request, res: Response) => {
       (SELECT COUNT(*) AS number_of_participant
       FROM activity_role
       WHERE activity_id = $1) 
-      AS RESULT;`;  
+      AS RESULT;`;
 
   const query = `
     INSERT INTO MEMBER_JOIN_ACTIVITY (activity_id, member_id, join_timestamp)
@@ -381,13 +381,12 @@ export const joinActivity = async (req: Request, res: Response) => {
   try {
     // 12/14
     const result = await client.query(capacity_query, [activity_id]);
-    const capacity_remain = result.rows[0].result
+    const capacity_remain = result.rows[0].result;
     // console.log("capacity_remain:", capacity_remain)
 
-    if (capacity_remain <= 0 ) {
-      throw new Error("Capacity is exceeded.");
+    if (capacity_remain <= 0) {
+      throw new Error('Capacity is exceeded.');
     }
-
 
     await client.query(query, values);
     const query_role = `

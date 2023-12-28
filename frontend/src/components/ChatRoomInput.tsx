@@ -20,7 +20,7 @@ const ChatRoomInput: React.FC<ChatRoomInputProps> = ({ id }) => {
     sendMessage({
       message_id: nanoid(),
       chatgroup_id: chatroom_id as string,
-      member_id: member.member_id,
+      member_id: member!.member_id,
       message_text: content,
     });
     setContent('');
