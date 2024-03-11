@@ -3,15 +3,14 @@ import compression from 'compression';
 import cors from 'cors';
 import session from 'express-session';
 import passport from 'passport';
-import MongoStore from 'connect-mongo';
+import pgSession from 'connect-pg-simple';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
-import { createTable } from '@/models/init';
+import { pool, databaseConnection } from '@/models/init';
 import routes from '@/routes';
 import { env } from '@/utils/env';
 import '@/config/passport.config';
-
-import { createServer } from 'http';
-import { Server } from 'socket.io';
 
 type Message = {
   message_id: string;
@@ -23,10 +22,12 @@ type Message = {
 
 const app = express();
 
+databaseConnection();
+
 app.use(
   cors({
     credentials: true,
-    origin: 'http://localhost:3000',
+    origin: `${env.CLIENT_URL}`,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   })
 );
@@ -59,18 +60,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret: env.SECRET_KEY,
-    name: 'database_user',
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
-      collectionName: 'sessions',
+    name: 'session',
+    store: new (pgSession(session))({
+      pool: pool,
+      createTableIfMissing: true,
     }),
     resave: false,
     saveUninitialized: false,
     cookie: {
-      path: '/',
       maxAge: 1000 * 60 * 60 * 24 * 7,
-      secure: false,
-      domain: 'localhost',
+      secure: process.env.NODE_ENV === 'production',
+      ...(process.env.NODE_ENV === 'production' && {
+        sameSite: 'none',
+      }),
     },
   })
 );
@@ -78,8 +80,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api', routes);
-
-createTable();
 
 server.listen(8080, () => {
   console.log('server is running on http://localhost:8080');

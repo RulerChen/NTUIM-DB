@@ -1,13 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { Client } from 'pg';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import passport from 'passport';
 
-import { dbConfig } from '@/config/db.config';
+import { pool } from '@/models/init';
 
 export const register = async (req: Request, res: Response) => {
-  console.log(req.body);
   const {
     email,
     username,
@@ -20,70 +18,62 @@ export const register = async (req: Request, res: Response) => {
     grade,
   } = req.body;
   const member_id = uuidv4();
-
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-  const client = new Client(dbConfig);
-  await client.connect();
-  const query = `
-    INSERT INTO member (member_id, email, name, password, age, phone, member_role)
-    VALUES ($1, $2, $3, $4, $5, $6, $7);
-    `;
-  const values = [
-    member_id,
-    email,
-    username,
-    hashedPassword,
-    age,
-    phone_number,
-    isStudent ? 'Student' : 'Non-student',
-  ];
-
   try {
-    await client.query(query, values);
+    const query = `
+      INSERT INTO member (member_id, email, name, password, age, phone, member_role)
+      VALUES ($1, $2, $3, $4, $5, $6, $7);
+      `;
+    const values = [
+      member_id,
+      email,
+      username,
+      hashedPassword,
+      age,
+      phone_number,
+      isStudent ? 'Student' : 'Non-student',
+    ];
+    await pool.query(query, values);
     if (isStudent) {
       const student_id = uuidv4();
+
       const query_student = `
       INSERT INTO student (member_id, student_id, school_name, department, grade)
       VALUES ($1, $2, $3, $4, $5);
       `;
       const values_student = [member_id, student_id, school_name, department, grade];
-      await client.query(query_student, values_student);
+      await pool.query(query_student, values_student);
     }
     res.status(201).json("You've successfully registered!");
   } catch (err) {
     res.status(400).json(err);
-  } finally {
-    client.end();
   }
 };
 
 export const updateUser = async (req: Request, res: Response) => {
   const { member_id } = req.user as any;
   const { email, name, age, phone, member_role, school_name, department, grade } = req.body;
-  console.log(req.body);
-  const client = new Client(dbConfig);
-  await client.connect();
-  const query = `
-    UPDATE member
-    SET email = $1, name = $2, age = $3, phone = $4, member_role = $5
-    WHERE member_id = $6;
-    `;
-  const values = [email, name, age, phone, member_role, member_id];
 
   try {
     let student_exist = true;
-    await client.query(query, values);
+    const query = `
+      UPDATE member
+      SET email = $1, name = $2, age = $3, phone = $4, member_role = $5
+      WHERE member_id = $6;
+      `;
+    const values = [email, name, age, phone, member_role, member_id];
+
+    await pool.query(query, values);
+
     const query_student_existed = `
     SELECT * FROM student
     WHERE member_id = $1;
     `;
     const values_student_existed = [member_id];
-    const result_student_existed = await client.query(
-      query_student_existed,
-      values_student_existed
-    );
+    const result_student_existed = await pool.query(query_student_existed, values_student_existed);
+
     if (result_student_existed.rows.length === 0) {
       student_exist = false;
     }
@@ -95,7 +85,7 @@ export const updateUser = async (req: Request, res: Response) => {
         VALUES ($1, $2, $3, $4, $5);
         `;
         const values_student = [member_id, student_id, school_name, department, grade];
-        await client.query(query_student, values_student);
+        await pool.query(query_student, values_student);
       }
       const query_student = `
       UPDATE student
@@ -103,21 +93,19 @@ export const updateUser = async (req: Request, res: Response) => {
       WHERE member_id = $4;
       `;
       const values_student = [school_name, department, grade, member_id];
-      await client.query(query_student, values_student);
+      await pool.query(query_student, values_student);
     } else if (student_exist) {
       const query_student = `
         DELETE FROM student
         WHERE member_id = $1;
         `;
       const values_student = [member_id];
-      await client.query(query_student, values_student);
+      await pool.query(query_student, values_student);
     }
     res.status(200).json("You've successfully updated your profile!");
   } catch (err) {
     console.log(err);
     res.status(400).json(err);
-  } finally {
-    client.end();
   }
 };
 
@@ -131,31 +119,23 @@ export const updateUserPassword = async (req: Request, res: Response) => {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(new_password, saltRounds);
 
-  const client = new Client(dbConfig);
-  await client.connect();
-  const query = `
-    UPDATE member
-    SET password = $1
-    WHERE member_id = $2;
-    `;
-  const values = [hashedPassword, member_id];
-
   try {
-    await client.query(query, values);
+    const query = `
+      UPDATE member
+      SET password = $1
+      WHERE member_id = $2;
+      `;
+    const values = [hashedPassword, member_id];
+    await pool.query(query, values);
     res.status(200).json("You've successfully updated your password!");
   } catch (err) {
     console.log(err);
     res.status(400).json(err);
-  } finally {
-    client.end();
   }
 };
 
 export const getStudentInfo = async (req: Request, res: Response) => {
   const { member_id } = req.user as any;
-  console.log(member_id);
-  const client = new Client(dbConfig);
-  await client.connect();
   const query = `
   select * from student 
   where member_id = $1;
@@ -163,12 +143,10 @@ export const getStudentInfo = async (req: Request, res: Response) => {
   const values = [member_id];
 
   try {
-    const result = await client.query(query, values);
+    const result = await pool.query(query, values);
     res.status(200).json(result.rows[0]);
   } catch (err) {
     res.status(400).json(err);
-  } finally {
-    client.end();
   }
 };
 

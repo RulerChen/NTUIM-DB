@@ -1,25 +1,29 @@
-import { Client } from 'pg';
 import fs from 'fs';
 import path from 'path';
+import pg from 'pg';
+import { env } from '@/utils/env';
 
-import { dbConfig } from '@/config/db.config';
+const pool = new pg.Pool({
+  host: `${env.PGHOST}`,
+  user: `${env.PGUSER}`,
+  password: `${env.PGPASSWORD}`,
+  port: env.PGPORT,
+  database: `${env.PGDATABASE}`,
+});
 
-export async function createTable() {
-  const client = new Client(dbConfig);
+pool.on('error', () => {
+  process.exit(-1);
+});
 
+const databaseConnection = async () => {
   const sqlQuery = fs.readFileSync(path.join(__dirname, '/init.sql'), 'utf8');
-
-  async function initSQL() {
-    try {
-      await client.connect();
-      await client.query(sqlQuery);
-      console.log('SQL init success');
-    } catch (err) {
-      console.error('SQL init error', err);
-    } finally {
-      client.end();
-    }
+  try {
+    await pool.connect();
+    await pool.query(sqlQuery);
+    console.log('Database connection successful');
+  } catch (error) {
+    console.log(error);
   }
+};
 
-  initSQL();
-}
+export { databaseConnection, pool };

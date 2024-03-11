@@ -1,16 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "target": "es6",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "baseUrl": "src",
-    "outDir": "dist",
+    "baseUrl": ".",
+    "outDir": "build",
     "sourceMap": true,
     "strict": true,
+    "esModuleInterop": true,
+    "types": ["node"],
+    "resolveJsonModule": true,
+    "plugins": [{ "transform": "typescript-transform-paths" }, { "transform": "typescript-transform-paths", "afterDeclarations": true }],
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["./src/**/*"],
+  "include": ["process.env.d.ts", "./**/*.ts", "script/**/*.ts"],
   "exclude": ["node_modules"]
 }

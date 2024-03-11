@@ -11,7 +11,7 @@ import {
   updateUserPassword,
 } from '@/controllers/user.controller';
 import { isAuth } from '@/utils/isAuth';
-import { frontendUrl } from '@/utils/url';
+import { env } from '@/utils/env';
 
 const router = express.Router();
 
@@ -25,7 +25,7 @@ router.get(
 router.get(
   '/google/callback',
   passport.authenticate('google', {
-    successReturnToOrRedirect: `${frontendUrl}`,
+    successReturnToOrRedirect: `${env.CLIENT_URL}`,
   })
 );
 
@@ -33,7 +33,7 @@ router.get('/facebook', passport.authorize('facebook', { scope: ['email'] }));
 router.get(
   '/facebook/callback',
   passport.authenticate('facebook', {
-    successReturnToOrRedirect: `${frontendUrl}`,
+    successReturnToOrRedirect: `${env.CLIENT_URL}`,
   })
 );
 

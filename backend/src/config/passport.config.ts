@@ -2,12 +2,11 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 
-import passport from 'passport';
-import { Client } from 'pg';
-import bcrypt from 'bcrypt';
+import { pool } from '@/models/init';
 import { v4 as uuidv4 } from 'uuid';
+import passport from 'passport';
+import bcrypt from 'bcrypt';
 
-import { dbConfig } from '@/config/db.config';
 import { env } from '@/utils/env';
 import { backendurl } from '@/utils/url';
 
@@ -17,13 +16,11 @@ passport.use(
       usernameField: 'email',
     },
     async function (email, password, done) {
-      const client = new Client(dbConfig);
-      await client.connect();
-      const query = `SELECT * FROM member WHERE email = $1`;
-      const values = [email];
-
       try {
-        const result = await client.query(query, values);
+        const query = `SELECT * FROM member WHERE email = $1`;
+        const values = [email];
+        const result = await pool.query(query, values);
+
         if (result.rows.length === 0) {
           return done(null, false, { message: 'Incorrect email' });
         } else {
@@ -36,8 +33,6 @@ passport.use(
         }
       } catch (err) {
         return done(err);
-      } finally {
-        await client.end();
       }
     }
   )
@@ -53,13 +48,12 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       const { email, name } = profile._json;
       const { id } = profile;
-      const client = new Client(dbConfig);
-      await client.connect();
-      const query = `SELECT * FROM member WHERE email = $1`;
-      const values = [email];
 
       try {
-        const result = await client.query(query, values);
+        const query = `SELECT * FROM member WHERE email = $1`;
+        const values = [email];
+        const result = await pool.query(query, values);
+
         if (result.rows.length === 0) {
           const randomPassword = uuidv4();
           const saltRounds = 10;
@@ -69,17 +63,14 @@ passport.use(
           INSERT INTO member (member_id, email, name, password, member_role)
           VALUES ($1, $2, $3, $4, $5)
           `;
-
           const values_add = [id, email, name, hashedPassword, 'Non-student'];
-          await client.query(query_add, values_add);
+          await pool.query(query_add, values_add);
         }
-        const res = await client.query(query, values);
+        const res = await pool.query(query, values);
         const user = res.rows[0];
         return done(null, user);
       } catch (err) {
         return done(err as Error);
-      } finally {
-        await client.end();
       }
     }
   )
@@ -96,13 +87,12 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       const { email, name } = profile._json;
       const { id } = profile;
-      const client = new Client(dbConfig);
-      await client.connect();
-      const query = `SELECT * FROM member WHERE email = $1`;
-      const values = [email];
 
       try {
-        const result = await client.query(query, values);
+        const query = `SELECT * FROM member WHERE email = $1`;
+        const values = [email];
+        const result = await pool.query(query, values);
+
         if (result.rows.length === 0) {
           const randomPassword = uuidv4();
           const saltRounds = 10;
@@ -114,15 +104,13 @@ passport.use(
           `;
 
           const values_add = [id, email, name, hashedPassword, 'Non-student'];
-          await client.query(query_add, values_add);
+          await pool.query(query_add, values_add);
         }
-        const res = await client.query(query, values);
+        const res = await pool.query(query, values);
         const user = res.rows[0];
         return done(null, user);
       } catch (err) {
         return done(err as Error);
-      } finally {
-        await client.end();
       }
     }
   )
@@ -130,19 +118,14 @@ passport.use(
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 passport.serializeUser((user: any, done) => {
-  // console.log('serializeUser', user.member_id);
   done(null, user.member_id);
 });
 
 passport.deserializeUser(async (member_id: string, done) => {
-  // console.log('deserializeUser', member_id);
-  const client = new Client(dbConfig);
-  await client.connect();
-  const query = `SELECT * FROM member WHERE member_id = $1`;
-  const values = [member_id];
-
   try {
-    const result = await client.query(query, values);
+    const query = `SELECT * FROM member WHERE member_id = $1`;
+    const values = [member_id];
+    const result = await pool.query(query, values);
     if (result.rows.length === 0) {
       return done(null, false);
     } else {
@@ -151,7 +134,5 @@ passport.deserializeUser(async (member_id: string, done) => {
     }
   } catch (err) {
     return done(err);
-  } finally {
-    await client.end();
   }
 });

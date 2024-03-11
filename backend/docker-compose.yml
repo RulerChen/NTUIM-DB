@@ -1,19 +1,15 @@
-version: "3.1"
-
 services:
   postgresql:
-    image: postgres
+    image: postgres:16.1-alpine
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      PGDATA: /var/lib/postgresql/data
     volumes:
       - ./pg-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
-# adminer is a simple frontend for you to interact with the database
   adminer:
     image: adminer
     ports:
