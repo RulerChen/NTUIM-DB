@@ -44,27 +44,10 @@ cd ../backend && npm install
 
 3. 建立 .env 檔案
 
-把我 .env 檔案貼到 backend 資料夾裡面，
+把 .env 檔案貼到 backend 資料夾裡面，
 
-```
-PGHOST=localhost
-PGUSER=postgres
-PGDATABASE=postgres
-PGPASSWORD=123
-PGPORT=5432
-
-CLIENT_URL=http://localhost:3000
-
-SECRET_KEY=secret
-
-GOOGLE_CLIENT_ID=123
-GOOGLE_CLIENT_SECRET=123
-
-FACEBOOK_APP_ID=123
-FACEBOOK_APP_SECRET=123
-```
-
-需要依據 `backend/.env.example` 的欄位寫到 `.env` 中，需要額外連接 [google](https://console.cloud.google.com/) 和 [facebook](https://developers.facebook.com/?locale=zh_TW) 的 api。
+需要依據 `backend/.env.example` 的欄位寫到 `.env` 中，需要額外連接 [google](https://console.cloud.google.com/) 和 [facebook](https://developers.facebook.com/?locale=zh_TW) 的 api，
+以及 linepay 的 api，
 
 另外 google 和 facebook 的 api 需要設定 callback url，分別是 `http://localhost:8080/api/user/google/callback` 和 `http://localhost:8080/api/user/facebook/callback`。
 
