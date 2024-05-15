@@ -24,6 +24,7 @@ const MemberDataSchema = z.object({
   age: z.number().int().gte(0),
   phone: z.string().min(1).max(20),
   member_role: z.enum(['Admin', 'Student', 'Non-student']),
+  money: z.number().int().gte(0),
 });
 
 const ChatgroupDataSchema = z.object({

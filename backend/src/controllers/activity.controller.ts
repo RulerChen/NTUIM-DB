@@ -241,56 +241,8 @@ export const followActivity = async (req: Request, res: Response) => {
     res.status(400).json(err);
   }
 };
-export const joinActivity = async (req: Request, res: Response) => {
-  const { activity_id } = req.body;
-  const { member_id } = req.user as any;
 
-  await pool.query('BEGIN');
-
-  // capacity check
-  const capacity_query = `
-    SELECT
-      (SELECT capacity
-        FROM activity
-        WHERE activity_id = $1) - 
-      (SELECT COUNT(*) AS number_of_participant
-      FROM activity_role
-      WHERE activity_id = $1) 
-      AS RESULT;`;
-
-  const query = `
-    INSERT INTO MEMBER_JOIN_ACTIVITY (activity_id, member_id, join_timestamp)
-    VALUES ($1, $2, CURRENT_TIMESTAMP);
-    `;
-  const values = [activity_id, member_id];
-  try {
-    // 12/14
-    const result = await pool.query(capacity_query, [activity_id]);
-    const capacity_remain = result.rows[0].result;
-    // console.log("capacity_remain:", capacity_remain)
-
-    if (capacity_remain <= 0) {
-      throw new Error('Capacity is exceeded.');
-    }
-
-    await pool.query(query, values);
-    const query_role = `
-    INSERT INTO activity_role(activity_id, member_id, activity_role)
-    VALUES ($1, $2, 'Participant');
-    `;
-    const values_role = [activity_id, member_id];
-    await pool.query(query_role, values_role);
-
-    await pool.query('COMMIT');
-
-    res.status(201).json("You've successfully joined the activity!");
-  } catch (err) {
-    await pool.query('ROLLBACK');
-    res.status(400).json(err);
-  }
-};
 export const quitActivity = async (req: Request, res: Response) => {
-  // console.log(req.body);
   const { member_id } = req.user as any;
   const { activity_id } = req.query;
   const query = `

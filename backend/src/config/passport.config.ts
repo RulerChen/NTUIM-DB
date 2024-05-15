@@ -2,13 +2,12 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 
-import { pool } from '@/models/init';
 import { v4 as uuidv4 } from 'uuid';
 import passport from 'passport';
 import bcrypt from 'bcrypt';
 
+import { pool } from '@/models/init';
 import { env } from '@/utils/env';
-import { backendurl } from '@/utils/url';
 
 passport.use(
   new LocalStrategy(
@@ -43,7 +42,7 @@ passport.use(
     {
       clientID: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `${backendurl}/user/google/callback`,
+      callbackURL: `${env.SERVER_URL}/user/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       const { email, name } = profile._json;
@@ -81,7 +80,7 @@ passport.use(
     {
       clientID: env.FACEBOOK_APP_ID,
       clientSecret: env.FACEBOOK_APP_SECRET,
-      callbackURL: `${backendurl}/user/facebook/callback`,
+      callbackURL: `${env.SERVER_URL}/user/facebook/callback`,
       profileFields: ['id', 'displayName', 'photos', 'email'],
     },
     async (accessToken, refreshToken, profile, done) => {

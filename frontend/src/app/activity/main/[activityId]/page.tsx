@@ -114,12 +114,8 @@ export default function Page({ params }: { params: { activityId: string } }) {
       setParticipants(people);
       if (member) toast.success('已退出活動');
     } else if (identity === '' && activity) {
-      await joinActivity(activity.activity_id);
-      const { number_of_participant } = await getActivityCapacity(params.activityId);
-      const people = await getActivityMember(params.activityId);
-      setCapacity(number_of_participant);
-      setParticipants(people);
-      if (member) toast.success('已報名活動');
+      const url = await joinActivity(activity.activity_id);
+      window.location.replace(url);
     }
     setIsLoading(false);
   };

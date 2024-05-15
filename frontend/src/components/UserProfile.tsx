@@ -32,6 +32,10 @@ const UserProfileForm = () => {
             <label className="font-semibold">身分</label>
             <div className="">{member?.member_role === 'Student' ? '學生' : '一般會員'}</div>
           </div>
+          <div className="flex flex-col">
+            <label className="font-semibold">餘額</label>
+            <div className="">{member?.money}</div>
+          </div>
           {member?.member_role === 'Student' && (
             <div className="flex flex-col">
               <label className=" font-semibold">學校</label>

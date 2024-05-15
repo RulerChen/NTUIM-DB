@@ -124,8 +124,8 @@ export default function useActivity() {
 
   //joinActivity
   const joinActivity = async (activity_id: string) => {
-    const { data } = await instance.post('/activity/join', { activity_id });
-    return data;
+    const { data } = await instance.post('/linepay', { activity_id });
+    return data.data.url;
   };
 
   //quitActivity

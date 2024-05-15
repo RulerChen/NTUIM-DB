@@ -15,6 +15,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["process.env.d.ts", "./**/*.ts", "script/**/*.ts"],
+  "include": ["./**/*.ts", "script/**/*.ts"],
   "exclude": ["node_modules"]
 }
