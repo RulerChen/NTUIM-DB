@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from "next/navigation";
 
-import { CiMicrophoneOn } from 'react-icons/ci';
+import { CiMicrophoneOn } from "react-icons/ci";
 import {
   FaPencilAlt,
   FaList,
@@ -13,92 +13,114 @@ import {
   FaTree,
   FaGamepad,
   FaBook,
-} from 'react-icons/fa';
-import { MdMovie } from 'react-icons/md';
+} from "react-icons/fa";
+import { MdMovie } from "react-icons/md";
 
-import CategoryBox from '../CategoryBox';
-import Container from '../Container';
+import CategoryBox from "../CategoryBox";
+import Container from "../Container";
 
 export const categories = [
   {
-    label: '瀏覽全部',
+    label: "瀏覽全部",
     icon: FaList,
-    href: '/events?category=all',
-    type: 'all',
+    href: "/events?category=all",
+    type: "all",
   },
   {
-    label: '演講',
-    icon: CiMicrophoneOn,
-    href: '/events?category=lecture',
-    type: 'lecture',
-  },
-  {
-    label: '影音觀賞',
-    icon: MdMovie,
-    href: '/events?category=video',
-    type: 'video',
-  },
-  {
-    label: '工作坊',
-    icon: FaTools,
-    href: '/events?category=workshop',
-    type: 'workshop',
-  },
-  {
-    label: '聯誼',
-    icon: FaUsers,
-    href: '/events?category=fellowship',
-    type: 'fellowship',
-  },
-  {
-    label: '語言交換',
-    icon: FaLanguage,
-    href: '/events?category=languages',
-    type: 'languages',
-  },
-  {
-    label: '運動',
+    label: "找活動",
     icon: FaRunning,
-    href: '/events?category=sport',
-    type: 'sport',
+    href: "/events?category=all",
+    type: "activity",
   },
   {
-    label: '戶外活動',
+    label: "找打工",
     icon: FaTree,
-    href: '/events?category=activity',
-    type: 'activity',
-  },
-  {
-    label: '遊戲',
-    icon: FaGamepad,
-    href: '/events?category=game',
-    type: 'game',
-  },
-  {
-    label: '考試',
-    icon: FaPencilAlt,
-    href: '/events?category=exam',
-    type: 'exam',
-  },
-  {
-    label: '讀書會',
-    icon: FaBook,
-    href: '/events?category=study',
-    type: 'study',
-  },
-  {
-    label: '其他',
-    icon: CiMicrophoneOn,
-    href: '/events?category=other',
-    type: 'other',
+    href: "/events?category=all",
+    type: "job",
   },
 ];
 
+// export const categories = [
+//   {
+//     label: '瀏覽全部',
+//     icon: FaList,
+//     href: '/events?category=all',
+//     type: 'all',
+//   },
+//   {
+//     label: '演講',
+//     icon: CiMicrophoneOn,
+//     href: '/events?category=lecture',
+//     type: 'lecture',
+//   },
+//   {
+//     label: '影音觀賞',
+//     icon: MdMovie,
+//     href: '/events?category=video',
+//     type: 'video',
+//   },
+//   {
+//     label: '工作坊',
+//     icon: FaTools,
+//     href: '/events?category=workshop',
+//     type: 'workshop',
+//   },
+//   {
+//     label: '聯誼',
+//     icon: FaUsers,
+//     href: '/events?category=fellowship',
+//     type: 'fellowship',
+//   },
+//   {
+//     label: '語言交換',
+//     icon: FaLanguage,
+//     href: '/events?category=languages',
+//     type: 'languages',
+//   },
+//   {
+//     label: '運動',
+//     icon: FaRunning,
+//     href: '/events?category=sport',
+//     type: 'sport',
+//   },
+//   {
+//     label: '戶外活動',
+//     icon: FaTree,
+//     href: '/events?category=activity',
+//     type: 'activity',
+//   },
+//   {
+//     label: '遊戲',
+//     icon: FaGamepad,
+//     href: '/events?category=game',
+//     type: 'game',
+//   },
+//   {
+//     label: '考試',
+//     icon: FaPencilAlt,
+//     href: '/events?category=exam',
+//     type: 'exam',
+//   },
+//   {
+//     label: '讀書會',
+//     icon: FaBook,
+//     href: '/events?category=study',
+//     type: 'study',
+//   },
+//   {
+//     label: '其他',
+//     icon: CiMicrophoneOn,
+//     href: '/events?category=other',
+//     type: 'other',
+//   },
+// ];
+
 const Categories = () => {
   const params = useSearchParams();
-  const category = params?.get('category');
+  const category = params?.get("category");
   const pathname = usePathname();
-  const isMainPage = pathname === '/' || pathname === '/events' || pathname === '/search';
+  const isMainPage =
+    pathname === "/" || pathname === "/events" || pathname === "/search";
 
   if (!isMainPage) {
     return null;
