@@ -1,13 +1,13 @@
-"use client";
-import { useState, useEffect } from "react";
+'use client';
+import { useState, useEffect } from 'react';
 
-import Container from "@/components/Container";
-import Card from "@/components/cards/Card";
+import Container from '@/components/Container';
+import Card from '@/components/cards/Card';
 
-import useActivity from "@/hooks/useActivity";
-import { useMember } from "@/hooks/useMember";
-import type { CardData } from "@/lib/shared_types";
-import UserCategories from "@/components/navbar/UserCategories";
+import useActivity from '@/hooks/useActivity';
+import { useMember } from '@/hooks/useMember';
+import type { CardData } from '@/lib/shared_types';
+import UserCategories from '@/components/navbar/UserCategories';
 
 export default function Page() {
   const [joinedActivities, setJoinedActivities] = useState<CardData[]>([]);
@@ -31,9 +31,7 @@ export default function Page() {
             <Card
               key={card.activity_id}
               data={card}
-              follow={follow_activity.some(
-                (item) => item.activity_id === card.activity_id
-              )}
+              follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
             />
           ))}
         </div>

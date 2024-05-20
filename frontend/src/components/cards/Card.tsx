@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import HeartButton from "../HeartButton";
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import HeartButton from '../HeartButton';
 
-import type { CardData } from "@/lib/shared_types";
-import { FaLocationDot } from "react-icons/fa6";
+import type { CardData } from '@/lib/shared_types';
+import { FaLocationDot } from 'react-icons/fa6';
 
 interface CardProps {
   data: CardData;
@@ -26,7 +26,7 @@ const Card = ({ data, follow }: CardProps) => {
           <Image
             fill
             className="object-cover h-full w-full group-hover:scale-110 transition"
-            src={"/images/test.png"}
+            src={'/images/test.png'}
             alt="Listing"
             priority
           />
@@ -35,7 +35,7 @@ const Card = ({ data, follow }: CardProps) => {
           </div>
         </div>
         <div className="font-light text-neutral-500">
-          {data.activity_tag == "" ? "#tag" : data.activity_tag}
+          {data.activity_tag == '' ? '#tag' : data.activity_tag}
         </div>
         <div className="font-semibold text-2xl">{data.title}</div>
         <div className="flex items-center text-gray-400">

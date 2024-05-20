@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import Categories from "./Categories";
-import Container from "../Container";
-import Logo from "./Logo";
-import Search from "./Search";
-import UserMenu from "./UserMenu";
-import MyActivity from "./MyActivity";
-import { useEffect } from "react";
-import { useMember } from "@/hooks/useMember";
+import Categories from './Categories';
+import Container from '../Container';
+import Logo from './Logo';
+import Search from './Search';
+import UserMenu from './UserMenu';
+import MyActivity from './MyActivity';
+import { useEffect } from 'react';
+import { useMember } from '@/hooks/useMember';
 
 const Navbar = () => {
   const { fetchMember } = useMember();

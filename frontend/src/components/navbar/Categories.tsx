@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from 'next/navigation';
 
-import { CiMicrophoneOn } from "react-icons/ci";
+import { CiMicrophoneOn } from 'react-icons/ci';
 import {
   FaPencilAlt,
   FaList,
@@ -13,30 +13,30 @@ import {
   FaTree,
   FaGamepad,
   FaBook,
-} from "react-icons/fa";
-import { MdMovie } from "react-icons/md";
+} from 'react-icons/fa';
+import { MdMovie } from 'react-icons/md';
 
-import CategoryBox from "../CategoryBox";
-import Container from "../Container";
+import CategoryBox from '../CategoryBox';
+import Container from '../Container';
 
 export const categories = [
   {
-    label: "瀏覽全部",
+    label: '瀏覽全部',
     icon: FaList,
-    href: "/events?category=all",
-    type: "all",
+    href: '/events?category=all',
+    type: 'all',
   },
   {
-    label: "找活動",
+    label: '找活動',
     icon: FaRunning,
-    href: "/events?category=all",
-    type: "activity",
+    href: '/events?category=all',
+    type: 'activity',
   },
   {
-    label: "找打工",
+    label: '找打工',
     icon: FaTree,
-    href: "/events?category=all",
-    type: "job",
+    href: '/events?category=all',
+    type: 'job',
   },
 ];
 
@@ -117,10 +117,9 @@ export const categories = [
 
 const Categories = () => {
   const params = useSearchParams();
-  const category = params?.get("category");
+  const category = params?.get('category');
   const pathname = usePathname();
-  const isMainPage =
-    pathname === "/" || pathname === "/events" || pathname === "/search";
+  const isMainPage = pathname === '/' || pathname === '/events' || pathname === '/search';
 
   if (!isMainPage) {
     return null;

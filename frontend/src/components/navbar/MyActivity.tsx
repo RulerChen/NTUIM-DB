@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 const MyActivity = () => {
   const router = useRouter();
 
@@ -10,7 +10,7 @@ const MyActivity = () => {
     <div>
       <div
         className="px-4 py-3 hover:bg-neutral-100 transition font-semibold"
-        onClick={() => handleClick("/userActivities/")}
+        onClick={() => handleClick('/userActivities/')}
       >
         我的活動
       </div>
