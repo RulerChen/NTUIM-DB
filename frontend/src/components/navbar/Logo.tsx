@@ -8,7 +8,7 @@ const Logo = () => {
 
   return (
     <Image
-      onClick={() => router.push('/')}
+      onClick={() => router.push('/events?category=all')}
       className="hidden md:block cursor-pointer"
       src="/images/joinus.png"
       height="50"
