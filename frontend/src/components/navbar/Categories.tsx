@@ -13,6 +13,7 @@ import {
   FaTree,
   FaGamepad,
   FaBook,
+  FaToolbox,
 } from 'react-icons/fa';
 import { MdMovie } from 'react-icons/md';
 
@@ -25,6 +26,12 @@ export const categories = [
     icon: FaList,
     href: '/events?category=all',
     type: 'all',
+  },
+  {
+    label: '找打工',
+    icon: FaToolbox,
+    href: '/events?category=work',
+    type: 'work',
   },
   {
     label: '演講',
