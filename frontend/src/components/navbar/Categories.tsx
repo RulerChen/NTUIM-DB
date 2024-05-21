@@ -13,14 +13,16 @@ import {
   FaTree,
   FaGamepad,
   FaBook,
-  FaToolbox,
+  FaUser,
+  FaBriefcase,
+  FaHeart,
 } from 'react-icons/fa';
 import { MdMovie } from 'react-icons/md';
 
 import CategoryBox from '../CategoryBox';
 import Container from '../Container';
 
-export const categories = [
+export const mainPageCategories = [
   {
     label: '瀏覽全部',
     icon: FaList,
@@ -29,7 +31,7 @@ export const categories = [
   },
   {
     label: '找打工',
-    icon: FaToolbox,
+    icon: FaBriefcase,
     href: '/events?category=work',
     type: 'work',
   },
@@ -101,20 +103,61 @@ export const categories = [
   },
 ];
 
+export const userActivityCategories = [
+  {
+    label: '瀏覽全部',
+    icon: FaList,
+    href: '/events?category=all',
+    type: 'all',
+  },
+  {
+    label: '我的活動',
+    icon: FaUser,
+    href: '/events?category=all',
+    type: 'all',
+  },
+  {
+    label: '我的打工',
+    icon: FaBriefcase,
+    href: '/events?category=all',
+    type: 'all',
+  },
+  {
+    label: '追蹤中',
+    icon: FaHeart,
+    href: '/events?category=all',
+    type: 'all',
+  },
+];
+
 const Categories = () => {
   const params = useSearchParams();
   const category = params?.get('category');
   const pathname = usePathname();
   const isMainPage = pathname === '/' || pathname === '/events' || pathname === '/search';
-
-  if (!isMainPage) {
+  const isUserPage = pathname === '/new_user';
+  if (!isMainPage && !isUserPage) {
     return null;
   }
 
-  return (
+  return isMainPage ? (
     <Container>
       <div className="pt-4 flex flex-row items-start md:items-center justify-between overflow-x-auto">
-        {categories.map((item) => (
+        {mainPageCategories.map((item) => (
+          <CategoryBox
+            key={item.label}
+            label={item.label}
+            icon={item.icon}
+            href={item.href}
+            selected={category === item.type}
+          />
+        ))}
+      </div>
+    </Container>
+  ) : (
+    <Container>
+      <div className="pt-4 flex flex-row items-start md:items-center justify-start overflow-x-auto space-x-4">
+        {userActivityCategories.map((item) => (
           <CategoryBox
             key={item.label}
             label={item.label}
