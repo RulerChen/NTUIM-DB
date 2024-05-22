@@ -105,12 +105,6 @@ export const mainPageCategories = [
 
 export const userActivityCategories = [
   {
-    label: '瀏覽全部',
-    icon: FaList,
-    href: '/new_user?category=userAll',
-    type: 'userAll',
-  },
-  {
     label: '我的活動',
     icon: FaUser,
     href: '/new_user?category=userActivity',

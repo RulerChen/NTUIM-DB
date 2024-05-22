@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CardContent, Card } from '@/components/ui/card';
 
-import { categories } from '@/components/navbar/Categories';
+import { mainPageCategories } from '@/components/navbar/Categories';
 import clsx from 'clsx';
 
 export default function Page() {
@@ -198,7 +198,7 @@ export default function Page() {
               <div className="space-y-2">
                 <Label htmlFor="tags">選擇類別</Label>
                 <div className="flex flex-wrap gap-2" id="tags">
-                  {categories.map(
+                  {mainPageCategories.map(
                     (category) =>
                       category.type !== 'all' && (
                         <Badge

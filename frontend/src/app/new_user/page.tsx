@@ -13,10 +13,9 @@ import type { CardData } from '@/lib/shared_types';
 export default function Page() {
   const searchParams = useSearchParams();
   const category = searchParams.get('category');
-  console.log(category);
-  // category can be {'userAll', 'userActivity', 'userWork', 'userLike'}
+  // category can be {'userActivity', 'userWork', 'userLike'}
   const { member } = useMember();
-  const { getActivityMember } = useActivity();
+  const { getFollowedActivity, getJoinedActivity } = useActivity();
   const { follow_activity } = useMember();
 
   const [cardData, setCardData] = useState<CardData[]>([]);
@@ -24,11 +23,14 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       const member_id = member?.member_id;
-      console.log(member_id);
       if (!member_id) return;
-      const data = await getActivityMember(member_id);
-      setCardData(data);
-      console.log(data);
+      if (category === 'userActivity' || category === 'userWork') {
+        const data = await getJoinedActivity();
+        setCardData(data);
+      } else if (category === 'userLike') {
+        const data = await getFollowedActivity();
+        setCardData(data);
+      }
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -37,13 +39,21 @@ export default function Page() {
   return (
     <Container>
       <div className="pt-24 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-        {cardData?.map((card) => (
-          <Card
-            key={card.activity_id}
-            data={card}
-            follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
-          />
-        ))}
+        {cardData
+          ?.filter(
+            (card) =>
+              (category == 'userWork' && card.activity_tag === 'work') ||
+              (category == 'userActivity' && card.activity_tag !== 'work') ||
+              (category == 'userLike' &&
+                follow_activity.some((item) => item.activity_id === card.activity_id))
+          )
+          .map((card) => (
+            <Card
+              key={card.activity_id}
+              data={card}
+              follow={follow_activity.some((item) => item.activity_id === card.activity_id)}
+            />
+          ))}
       </div>
     </Container>
   );

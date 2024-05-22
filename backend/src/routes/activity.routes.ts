@@ -19,6 +19,7 @@ import {
   getChatgroup,
   getMessage,
   insertMessage,
+  joinActivity,
 } from '@/controllers/activity.controller';
 import express from 'express';
 import { isAuth } from '@/utils/isAuth';
@@ -61,5 +62,7 @@ router.get('/:activity_id/chatgroup', getChatgroup);
 router.get('/chatgroup/:chatgroup_id/message', getMessage);
 
 router.post('/chatgroup/message', insertMessage);
+
+router.post('/joinActivity/', joinActivity);
 
 export default router;

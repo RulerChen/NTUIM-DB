@@ -115,6 +115,7 @@ export default function Page({ params }: { params: { activityId: string } }) {
       if (member) toast.success('已退出活動');
     } else if (identity === '' && activity) {
       const url = await joinActivity(activity.activity_id);
+      // console.log(url);
       window.location.replace(url);
     }
     setIsLoading(false);

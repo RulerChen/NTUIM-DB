@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { pool } from '@/models/init';
 import { nowDate } from '@/utils/nowDate';
+import { createLinepayOrder } from '@/service/linepay.service';
+import { env } from '@/utils/env';
 
 // get 20 activities data
 export const getActivityAll = async (req: Request, res: Response) => {
@@ -443,5 +445,91 @@ export const getAllMember = async (req: Request, res: Response) => {
     res.status(200).json(result.rows);
   } catch (err) {
     res.status(400).json(err);
+  }
+};
+
+export const joinActivity = async (req: Request, res: Response) => {
+  const { member_role, member_id } = req.user as any;
+  const { activity_id } = req.body;
+
+  const query = `
+  SELECT student_fee, non_student_fee, title 
+  FROM activity 
+  WHERE activity_id = $1
+`;
+  const values = [activity_id];
+  const result = await pool.query(query, values);
+
+  const fee =
+    member_role === 'Student' ? result.rows[0].student_fee : result.rows[0].non_student_fee;
+
+  const joinavtivitysqlholder = async () => {
+    await pool.query('BEGIN');
+
+    const capacity_query = `
+        SELECT
+          (SELECT capacity
+            FROM activity
+            WHERE activity_id = $1) - 
+          (SELECT COUNT(*) AS number_of_participant
+          FROM activity_role
+          WHERE activity_id = $1) 
+          AS RESULT;`;
+
+    const query = `
+        INSERT INTO MEMBER_JOIN_ACTIVITY (activity_id, member_id, join_timestamp)
+        VALUES ($1, $2, CURRENT_TIMESTAMP);
+        `;
+    const values = [activity_id, member_id];
+    try {
+      const result = await pool.query(capacity_query, [activity_id]);
+      const capacity_remain = result.rows[0].result;
+
+      if (capacity_remain <= 0) {
+        return null;
+      }
+
+      await pool.query(query, values);
+      const query_role = `
+        INSERT INTO activity_role(activity_id, member_id, activity_role)
+        VALUES ($1, $2, 'Participant');
+        `;
+      const values_role = [activity_id, member_id];
+      await pool.query(query_role, values_role);
+
+      await pool.query('COMMIT');
+    } catch (error) {
+      await pool.query('ROLLBACK');
+      return null;
+    }
+  };
+
+  if (fee > 0) {
+    try {
+      const url = await createLinepayOrder(req, res);
+      res.status(200).send({
+        data: {
+          url,
+        },
+        message: '建單成功',
+        status: 'success',
+      });
+    } catch (err) {
+      res.status(400).json(err);
+    }
+  } else if (fee == 0) {
+    try {
+      const url = `${env.CLIENT_URL}/activity/main/${activity_id}`;
+      joinavtivitysqlholder();
+      res.status(200).send({
+        data: {
+          url,
+        },
+        message: '建單成功',
+        status: 'success',
+      });
+    } catch (err) {
+      res.status(400).json(err);
+    }
   }
 };
