@@ -35,15 +35,23 @@ const Card = ({ data, follow }: CardProps) => {
           </div>
         </div>
         <div className="font-light text-neutral-500">
-          {data.activity_tag == '' ? '#tag' : data.activity_tag}
+          {data.activity_tag === '' ? '#tag' : `#${data.activity_tag}`}
         </div>
         <div className="font-semibold text-2xl">{data.title}</div>
-        <div className="flex items-center text-gray-400">
-          <FaLocationDot className="mr-1" />
-          <div className="flex items-center text-sm text-gray-500">
-            <div className="mr-2">{data.location}</div>
+        <div className="font-semibold text-sm">{`活動時間: ${
+          new Date(data.event_start_timestamp).getMonth() + 1
+        }/${new Date(data.event_start_timestamp).getDate()}~${
+          new Date(data.event_end_timestamp).getMonth() + 1
+        }/${new Date(data.event_start_timestamp).getDate()}`}</div>
+        <div className="flex flex-row items-center gap-1">
+          <div className="font-semibold text-base">
+            {data.activity_tag === 'work'
+              ? '薪資: $ todo'
+              : data.student_fee == 0
+              ? '免費參加'
+              : '費用: $' + data.student_fee}
+            {/* {data.student_fee == 0 ? '免費參加' : '費用: $' + data.student_fee} */}
           </div>
-          <div className="text-xs text-gray-500">尚餘名額: {data.capacity}</div>
         </div>
       </div>
     </div>

@@ -47,6 +47,14 @@ const UserMenu = () => {
         <Button
           className="text-sm font-medium text-neutral-500 hover:text-neutral-800 transition"
           variant="outline"
+          onClick={() => router.push('/new_user')}
+        >
+          <div className="hidden m-0 md:block md:mr-2">我的活動</div>
+          {/* <VscAdd size={20}></VscAdd> */}
+        </Button>
+        <Button
+          className="text-sm font-medium text-neutral-500 hover:text-neutral-800 transition"
+          variant="outline"
           onClick={() => router.push('/activity/create')}
         >
           <div className="hidden m-0 md:block md:mr-2">新增活動</div>

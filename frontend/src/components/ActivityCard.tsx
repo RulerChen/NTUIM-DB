@@ -20,7 +20,7 @@ import {
   FaReply,
 } from 'react-icons/fa';
 import { FaLocationCrosshairs, FaTag } from 'react-icons/fa6';
-import { categories } from '@/components/navbar/Categories';
+import { mainPageCategories } from '@/components/navbar/Categories';
 import { cn } from '@/lib/utils';
 import type { ActivityData } from '@/lib/shared_types';
 
@@ -62,7 +62,7 @@ function formatDateTime(isoString: Date | undefined): string {
 
 function getLabelByType(type: string | undefined): string {
   if (!type) return '';
-  const category = categories.find((cat) => cat.type === type);
+  const category = mainPageCategories.find((cat) => cat.type === type);
   return category ? category.label : '';
 }
 
@@ -91,7 +91,7 @@ export default function ActivityCard({
   return (
     <Card className="w-screen max-w-4xl border-0 ">
       <Image
-        src="/images/test.png"
+        src="/images/placeholder.jpg"
         alt="Listing"
         width={900}
         height={300}
