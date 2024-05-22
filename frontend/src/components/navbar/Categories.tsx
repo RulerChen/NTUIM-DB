@@ -107,26 +107,26 @@ export const userActivityCategories = [
   {
     label: '瀏覽全部',
     icon: FaList,
-    href: '/events?category=all',
-    type: 'all',
+    href: '/new_user?category=userAll',
+    type: 'userAll',
   },
   {
     label: '我的活動',
     icon: FaUser,
-    href: '/events?category=all',
-    type: 'all',
+    href: '/new_user?category=userActivity',
+    type: 'userActivity',
   },
   {
     label: '我的打工',
     icon: FaBriefcase,
-    href: '/events?category=all',
-    type: 'all',
+    href: '/new_user?category=userWork',
+    type: 'userWork',
   },
   {
     label: '追蹤中',
     icon: FaHeart,
-    href: '/events?category=all',
-    type: 'all',
+    href: '/new_user?category=userLike',
+    type: 'userLike',
   },
 ];
 
