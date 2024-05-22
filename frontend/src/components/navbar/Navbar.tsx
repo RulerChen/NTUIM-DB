@@ -5,7 +5,7 @@ import Container from '../Container';
 import Logo from './Logo';
 import Search from './Search';
 import UserMenu from './UserMenu';
-import MyActivity from './MyActivity';
+// import MyActivity from './MyActivity';
 import { useEffect } from 'react';
 import { useMember } from '@/hooks/useMember';
 
@@ -24,7 +24,7 @@ const Navbar = () => {
           <div className="flex flex-row items-center justify-between gap-3 md:gap-0">
             <Logo />
             <Search />
-            <MyActivity />
+            {/* <MyActivity /> */}
             <UserMenu />
           </div>
         </Container>
