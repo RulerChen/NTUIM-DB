@@ -17,4 +17,7 @@ export const env = {
   LINE_PAY_SECRET: process.env.LINE_PAY_SECRET || '',
   LINE_PAY_VERSION: process.env.LINE_PAY_VERSION || 'v3',
   LINE_PAY_SITE: process.env.LINE_PAY_SITE || 'https://sandbox-api-pay.line.me',
+  CLOUD_NAME: process.env.CLOUD_NAME || '',
+  CLOUD_API_KEY: process.env.CLOUD_API_KEY || '',
+  CLOUD_API_SECRET: process.env.CLOUD_API_SECRET || '',
 };

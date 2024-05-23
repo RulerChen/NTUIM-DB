@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS ACTIVITY (
     Non_student_fee INT NOT NULL,
     Student_fee INT NOT NULL,
     Activity_tag VARCHAR(20) NOT NULL,
-    Linepay_id VARCHAR(100)
+    Linepay_id VARCHAR(100),
+    Img_url VARCHAR(500)
 );
 
 CREATE TABLE IF NOT EXISTS MEMBER_FOLLOW_ACTIVITY (

@@ -14,6 +14,7 @@ export type ActivityData = {
   non_student_fee: number;
   student_fee: number;
   activity_tag: string;
+  img_url: string;
 };
 
 const MemberDataSchema = z.object({

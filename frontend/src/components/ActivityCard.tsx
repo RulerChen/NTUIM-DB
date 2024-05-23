@@ -91,7 +91,7 @@ export default function ActivityCard({
   return (
     <Card className="w-screen max-w-4xl border-0 ">
       <Image
-        src="/images/placeholder.jpg"
+        src={activity?.img_url || '/images/placeholder.jpg'}
         alt="Listing"
         width={900}
         height={300}

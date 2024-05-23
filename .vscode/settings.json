@@ -3,6 +3,9 @@
     "eslint.format.enable": true,
     "editor.formatOnSave": true,
     "[typescript]": {
-        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
 }
