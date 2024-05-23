@@ -23,7 +23,7 @@ import { FaLocationCrosshairs, FaTag } from 'react-icons/fa6';
 import { mainPageCategories } from '@/components/navbar/Categories';
 import { cn } from '@/lib/utils';
 import type { ActivityData } from '@/lib/shared_types';
-
+import { FacebookShareButton, FacebookIcon } from 'react-share';
 type Activity = ActivityData & {
   member_id: string;
   name: string;
@@ -236,6 +236,12 @@ export default function ActivityCard({
             })}
           </div>
         </CardContent>
+        {/* todo */}
+        <div>
+          <FacebookShareButton url={window.location.href} title={'123'}>
+            <FacebookIcon round size={48} />
+          </FacebookShareButton>
+        </div>
         <CardFooter className=" p-6 flex flex-col">
           <Button
             className={cn(

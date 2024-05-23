@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import HeartButton from '../HeartButton';
 
 import type { CardData } from '@/lib/shared_types';
-import { FaLocationDot } from 'react-icons/fa6';
+// import { FaLocationDot } from 'react-icons/fa6';
 
 interface CardProps {
   data: CardData;
