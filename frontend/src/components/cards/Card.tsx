@@ -26,7 +26,7 @@ const Card = ({ data, follow }: CardProps) => {
           <Image
             fill
             className="object-cover h-full w-full group-hover:scale-110 transition"
-            src={'/images/test.png'}
+            src={data.img_url}
             alt="Listing"
             priority
           />

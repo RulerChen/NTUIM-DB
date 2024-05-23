@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { pool } from '@/models/init';
 import { nowDate } from '@/utils/nowDate';
 import { createLinepayOrder } from '@/service/linepay.service';
+import { upload } from '@/service/cloudinary.service';
 import { env } from '@/utils/env';
 
 // get 20 activities data
@@ -62,16 +63,24 @@ export const createActivity = async (req: Request, res: Response) => {
     non_student_fee,
     student_fee,
     category,
+    picture,
   } = req.body;
+
   const status = 'active';
 
   const activity_id = uuidv4();
   const chatgroup_id = uuidv4();
 
+  const profilePublicId = uuidv4();
+  const uploadResult = await upload(picture, `${profilePublicId}`, true, true);
+  if (!uploadResult?.public_id) {
+    throw new Error('File upload error.');
+  }
+
   try {
     const query_activity = `
-      INSERT INTO activity (activity_id,title, description, event_start_timestamp, event_end_timestamp, Location, capacity, status, register_start_timestamp, register_end_timestamp, non_student_fee, Student_fee, activity_tag)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 , $11, $12, $13);
+      INSERT INTO activity (activity_id,title, description, event_start_timestamp, event_end_timestamp, Location, capacity, status, register_start_timestamp, register_end_timestamp, non_student_fee, Student_fee, activity_tag, Img_url)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 , $11, $12, $13, $14);
       `;
     const values_activity = [
       activity_id,
@@ -87,6 +96,7 @@ export const createActivity = async (req: Request, res: Response) => {
       non_student_fee,
       student_fee,
       category,
+      uploadResult?.secure_url,
     ];
     await pool.query(query_activity, values_activity);
 
