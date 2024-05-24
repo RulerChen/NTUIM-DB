@@ -93,7 +93,8 @@ export default function ActivityCard({
     return true;
   };
   return (
-    <Card className="w-screen max-w-4xl border-0 ">
+    <div class="flex justify-center">
+    <Card className="w-screen max-w-4xl border-0">
       <Image
         src={activity?.img_url || '/images/placeholder.jpg'}
         alt="Listing"
@@ -242,6 +243,7 @@ export default function ActivityCard({
         </CardContent>
         {/* todo */}
         <CardFooter className=" p-6 flex flex-col">
+        <span className="text-gray-600">分享活動</span>
           <div className="mb-4 flex items-center justify-between">
             <LineShareButton
               disabled={false}
@@ -274,5 +276,6 @@ export default function ActivityCard({
         </CardFooter>
       </div>
     </Card>
+    </div>
   );
 }

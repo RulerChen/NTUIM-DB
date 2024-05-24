@@ -122,7 +122,7 @@ export default function Page({ params }: { params: { activityId: string } }) {
   };
 
   return (
-    <div className="flex flex-wrap justify-center">
+    <div className="flex flex-col justify-center">
       <ActivityCard
         activity={activity}
         capacity={capacity}
