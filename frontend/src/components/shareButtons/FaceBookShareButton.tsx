@@ -12,7 +12,7 @@ const FaceBookShareButton = () => {
 
   return (
     <FacebookShareButton url={currentUrl}>
-      <FacebookIcon round size={48} />
+      <FacebookIcon round size={40} style={{ marginLeft: '10px' }} />
     </FacebookShareButton>
   );
 };

@@ -98,7 +98,7 @@ export default function ActivityCard({
         src={activity?.img_url || '/images/placeholder.jpg'}
         alt="Listing"
         width={900}
-        height={300}
+        height={400}
         layout="intrinsic"
         className="mb-6"
       />
@@ -241,25 +241,23 @@ export default function ActivityCard({
           </div>
         </CardContent>
         {/* todo */}
-        <div>
-          <LineShareButton
-            disabled={false}
-            disabledStyle={{ opacity: 0.6 }}
-            windowWidth={600}
-            windowHeight={400}
-            beforeOnClick={() => Promise.resolve()}
-            openShareDialogOnClick={true}
-            onShareWindowClose={() => console.log('Share dialog closed')}
-            resetButtonStyle={true}
-            url={'http://localhost:3000' + usePathname()}
-          >
-            <LineIcon size={48} round={true} />
-          </LineShareButton>
-        </div>
-        <div>
-          <FaceBookShareButton />
-        </div>
         <CardFooter className=" p-6 flex flex-col">
+          <div className="mb-4 flex items-center justify-between">
+            <LineShareButton
+              disabled={false}
+              disabledStyle={{ opacity: 0.6 }}
+              windowWidth={600}
+              windowHeight={400}
+              beforeOnClick={() => Promise.resolve()}
+              openShareDialogOnClick={true}
+              onShareWindowClose={() => console.log('Share dialog closed')}
+              resetButtonStyle={true}
+              url={'http://localhost:3000' + usePathname()}
+            >
+              <LineIcon size={40} round={true} />
+            </LineShareButton>
+            <FaceBookShareButton />
+          </div>
           <Button
             className={cn(
               'w-full text-white',
