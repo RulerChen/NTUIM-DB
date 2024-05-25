@@ -69,6 +69,9 @@ export default function Page() {
     } else if (data.event_start_timestamp < new Date().toISOString()) {
       toast.error('活動開始時間不得早於現在時間');
       return;
+    } else if (image === '') {
+      toast.error('請上傳圖片');
+      return;
     }
     data = {
       ...data,
