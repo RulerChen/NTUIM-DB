@@ -8,7 +8,7 @@ import Navbar from '@/components/navbar/Navbar';
 const font = Nunito({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Database Final',
+  title: 'Join Us',
   description: 'Our final project for database.',
 };
 
