@@ -47,6 +47,8 @@ cd ../backend && npm install
 
 另外 google 和 facebook 的 api 需要設定 callback url，分別是 `http://localhost:8080/api/user/google/callback` 和 `http://localhost:8080/api/user/facebook/callback`。
 
+Cloudinary 的 api 也需要設定，用來存放圖片。
+
 4. 開啟檔案
 
 需要開啟兩個 terminal 分別執行 backend 和 frontend
