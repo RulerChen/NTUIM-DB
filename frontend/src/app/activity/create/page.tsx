@@ -37,6 +37,7 @@ export default function Page() {
       register_end_timestamp: '',
       student_fee: 0,
       non_student_fee: 0,
+      salary: undefined,
       category: '',
     },
   });
@@ -69,6 +70,14 @@ export default function Page() {
     } else if (data.event_start_timestamp < new Date().toISOString()) {
       toast.error('活動開始時間不得早於現在時間');
       return;
+    }  // Check whether it is a job or an activity
+    else if (topic === 'job' && data.salary === 0 || data.non_student_fee != 0 || data.student_fee != 0) {
+      toast.error('若tag為找打工，請填寫時薪欄位並請勿填寫學生價與非學生價');
+      return;
+    }
+    else if (topic !== 'job' && data.salary != undefined) {
+      toast.error('若tag不為找打工，請不要填寫時薪欄位');
+      return;
     } else if (image === '') {
       toast.error('請上傳圖片');
       return;
@@ -79,6 +88,7 @@ export default function Page() {
       capacity: Number(data.capacity),
       student_fee: Number(data.student_fee),
       non_student_fee: Number(data.non_student_fee),
+      salary: Number(data.salary),
       picture: image,
     };
 
@@ -191,7 +201,7 @@ export default function Page() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="student-fee">學生價</Label>
+                  <Label htmlFor="student-fee">學生價（若tag為找打工請不要填寫此欄位）</Label>
                   <Input
                     id="student-fee"
                     required
@@ -201,12 +211,22 @@ export default function Page() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="non-student-fee">非學生價</Label>
+                  <Label htmlFor="non-student-fee">非學生價（若tag為找打工請不要填寫此欄位）</Label>
                   <Input
                     id="non-student-fee"
                     required
                     type="number"
                     {...register('non_student_fee')}
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="salary">時薪（若tag為找打工請填寫此欄位）</Label>
+                  <Input
+                    id="salary"
+                    required
+                    type="number"
+                    {...register('salary')}
                     disabled={isSubmitting}
                   />
                 </div>
