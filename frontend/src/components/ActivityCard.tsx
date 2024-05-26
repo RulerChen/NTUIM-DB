@@ -27,6 +27,8 @@ import { LineShareButton, LineIcon } from 'react-share';
 // import { LineShareButton } from '@/components/shareButtons/LineShareButton';
 import { FaceBookShareButton } from './shareButtons/FaceBookShareButton';
 import { usePathname } from 'next/navigation';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
 
 type Activity = ActivityData & {
   member_id: string;
@@ -83,7 +85,8 @@ export default function ActivityCard({
   const ButtonName = () => {
     if (identity === 'Host') return '刪除活動';
     if (identity === 'Participant') return '退出活動';
-    if (identity === '') return '報名活動';
+    if (identity === '' && activity?.activity_tag != 'work') return '報名活動';
+    else return '應徵職缺'
   };
   const disabled = () => {
     if (identity === 'Host') return false;
@@ -273,6 +276,12 @@ export default function ActivityCard({
           >
             {ButtonName()}
           </Button>
+          {activity?.activity_tag === 'work' && (
+            <div className="space-y-2">
+              <Label htmlFor="cv">上傳履歷</Label>
+              <Input id="cv" type="file" />
+            </div>
+          )}
         </CardFooter>
       </div>
     </Card>
