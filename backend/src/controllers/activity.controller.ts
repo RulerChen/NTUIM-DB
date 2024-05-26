@@ -51,7 +51,7 @@ export const getActivityAll = async (req: Request, res: Response) => {
 
 export const createActivity = async (req: Request, res: Response) => {
   const { member_id } = req.user as any;
-  const {
+  let {
     title,
     description,
     event_start_timestamp,
@@ -64,7 +64,12 @@ export const createActivity = async (req: Request, res: Response) => {
     student_fee,
     category,
     picture,
+    salary,
   } = req.body;
+
+  if (salary) {
+    student_fee = salary;
+  }
 
   const status = 'active';
 
