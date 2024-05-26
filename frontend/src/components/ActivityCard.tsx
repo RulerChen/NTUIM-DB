@@ -276,7 +276,7 @@ export default function ActivityCard({
           >
             {ButtonName()}
           </Button>
-          {activity?.activity_tag === 'work' && (
+          {activity?.activity_tag === 'work' && identity == '' && (
             <div className="space-y-2">
               <Label htmlFor="cv">上傳履歷</Label>
               <Input id="cv" type="file" />
