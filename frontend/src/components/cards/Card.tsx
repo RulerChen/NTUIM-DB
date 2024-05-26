@@ -46,7 +46,7 @@ const Card = ({ data, follow }: CardProps) => {
         <div className="flex flex-row items-center gap-1">
           <div className="font-semibold text-base">
             {data.activity_tag === 'work'
-              ? '薪資: $ todo'
+              ? '薪資: $' + data.student_fee
               : data.student_fee == 0
               ? '免費參加'
               : '費用: $' + data.student_fee}
