@@ -7,7 +7,8 @@
     "dev": "nodemon",
     "lint": "eslint src/**/*.ts",
     "build": "tsc && tsc-alias && ts-node script/tool.ts",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +20,7 @@
     "@types/crypto-js": "^4.2.2",
     "@types/express": "^4.17.18",
     "@types/express-session": "^1.17.8",
+    "@types/jest": "^29.5.12",
     "@types/passport": "^1.0.13",
     "@types/passport-facebook": "^3.0.1",
     "@types/passport-google-oauth20": "^2.0.12",
@@ -31,8 +33,10 @@
     "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.7.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
+    "ts-jest": "^29.1.4",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.8",
     "tsconfig-paths": "^4.2.0",
